@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    moduleCodegen/type.cpp
+    moduleCodegen/type.cpp \
+    moduleCodegen/variable.cpp \
+    moduleCodegen/function.cpp
 
 HEADERS  += mainwindow.h \
-    moduleCodegen/type.hpp
+    moduleCodegen/type.hpp \
+    moduleCodegen/variable.hpp \
+    moduleCodegen/function.hpp
 
 FORMS    += mainwindow.ui

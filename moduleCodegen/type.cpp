@@ -24,3 +24,10 @@ void Type::setConst(bool c)
 {
 	m_isConst = c;
 }
+
+std::ostream& operator<<(std::ostream &out, const Type &type)
+{
+	if (type.m_isConst)
+		out << "const ";
+	return out << type.m_name.toStdString();
+}
