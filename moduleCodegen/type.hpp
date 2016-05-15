@@ -13,6 +13,8 @@ public:
 	void setName(QString name);
 	void setConst(bool c);
 
+	friend std::ostream& operator<<(std::ostream &out, const Type &type);
+
 private:
 	QString m_name;
 	bool m_isConst;
