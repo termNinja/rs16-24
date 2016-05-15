@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>724</width>
+    <width>759</width>
     <height>492</height>
    </rect>
   </property>
@@ -21,6 +21,19 @@
     <bool>true</bool>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QWidget" name="widget_2" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="sizeConstraint">
@@ -66,7 +79,7 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>147</height>
+           <height>158</height>
           </rect>
          </property>
          <attribute name="label">
@@ -134,7 +147,7 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>147</height>
+           <height>158</height>
           </rect>
          </property>
          <attribute name="label">
@@ -213,17 +226,6 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_5">
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="title">
-         <string>GroupBox</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -231,8 +233,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>724</width>
-     <height>25</height>
+     <width>759</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
