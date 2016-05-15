@@ -15,19 +15,19 @@ int main(int argc, char *argv[])
 	// TESTING CODE
 
 	// Type test
-	Type type(QString("double"), true);
-	std::cout << type << std::endl;
+    //Type type(QString("double"), true);
+//	std::cout << type << std::endl;
 
 	// Variable test
-	Variable var(type, QString("x"));
-	std::cout << var << std::endl;
+    //Variable var(type, QString("x"));
+    //std::cout << var << std::endl;
 
 	// Function test
-	std::vector<Variable> params;
-	params.push_back(var);
-	params.push_back(Variable(Type(QString("QString")), QString("y")));
-	Function fun(type, QString("calculate"), params);
-	std::cout << fun << std::endl;
+    //std::vector<Variable> params;
+    //params.push_back(var);
+    //params.push_back(Variable(Type(QString("QString")), QString("y")));
+    //Function fun(type, QString("calculate"), params);
+    //std::cout << fun << std::endl;
 
 	w.show();
 	return a.exec();
