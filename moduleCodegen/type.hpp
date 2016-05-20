@@ -3,6 +3,8 @@
 
 #include <QString>
 
+namespace codegen {
+
 class Type {
 public:
 	Type(QString name, bool isConst = false);
@@ -20,4 +22,5 @@ private:
 	bool m_isConst;
 };
 
+}
 #endif // TYPE_HPP

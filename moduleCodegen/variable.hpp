@@ -4,6 +4,8 @@
 #include <QString>
 #include "type.hpp"
 
+namespace codegen {
+
 class Variable {
 public:
 	Variable(Type type, QString name);
@@ -21,4 +23,5 @@ private:
 	QString m_name;
 };
 
+}
 #endif // VARIABLE_HPP

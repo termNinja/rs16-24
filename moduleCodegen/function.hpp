@@ -6,6 +6,8 @@
 #include "type.hpp"
 #include "variable.hpp"
 
+namespace codegen {
+
 class Function {
 public:
 	Function(Type returnType, QString functionName, const std::vector<Variable> &parameters);
@@ -27,4 +29,5 @@ private:
 	std::vector<Variable> m_parameters;
 };
 
+}
 #endif // FUNCTION_HPP

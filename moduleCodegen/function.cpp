@@ -1,5 +1,7 @@
 #include "function.hpp"
 
+namespace codegen {
+
 Function::Function(Type returnType, QString functionName, const std::vector<Variable> &parameters)
 	: m_returnType(returnType), m_name(functionName), m_parameters(parameters)
 {
@@ -48,4 +50,6 @@ std::ostream& operator<<(std::ostream &out, const Function &function)
 		out << function.m_parameters[i] << ", ";
 	out << function.m_parameters.back() << ")";
 	return out;
+}
+
 }

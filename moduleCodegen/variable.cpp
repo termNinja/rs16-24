@@ -1,5 +1,7 @@
 #include "variable.hpp"
 
+namespace codegen {
+
 Variable::Variable(Type type, QString name)
 	: m_type(type), m_name(name)
 {
@@ -28,4 +30,6 @@ void Variable::setName(QString name)
 std::ostream& operator<<(std::ostream &out, const Variable &var)
 {
 	return out << var.m_type <<  " " << var.m_name.toStdString();
+}
+
 }

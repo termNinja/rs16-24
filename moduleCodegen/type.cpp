@@ -1,5 +1,7 @@
 #include "type.hpp"
 
+namespace codegen {
+
 Type::Type(QString name, bool isConst)
 	: m_name(name), m_isConst(isConst)
 {
@@ -30,4 +32,6 @@ std::ostream& operator<<(std::ostream &out, const Type &type)
 	if (type.m_isConst)
 		out << "const ";
 	return out << type.m_name.toStdString();
+}
+
 }
