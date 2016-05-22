@@ -1,4 +1,5 @@
 #include "codegentester.hpp"
+#include "moduleAppController/resourcemanager.hpp"
 
 namespace codegen {
 
@@ -6,6 +7,7 @@ namespace codegen {
 /// True mapping for given language shall be done by a completely different module
 
 void codegenTester::peformTest() {
+	std::cout << "CODEGEN TEST:" << std::endl;
 
 	// Type test
 	Type type(QString("double"), true);

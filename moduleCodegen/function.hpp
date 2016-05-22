@@ -23,7 +23,7 @@ public:
 
 	friend std::ostream& operator<<(std::ostream &out, const Function &function);
 
-private:
+protected:
 	Type m_returnType;
 	QString m_name;
 	std::vector<Variable> m_parameters;
