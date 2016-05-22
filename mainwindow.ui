@@ -40,6 +40,13 @@
        <enum>QLayout::SetMinAndMaxSize</enum>
       </property>
       <item>
+       <widget class="QPushButton" name="choose_dir">
+        <property name="text">
+         <string>Choose directory</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="maximumSize">
          <size>
@@ -79,7 +86,7 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>158</height>
+           <height>131</height>
           </rect>
          </property>
          <attribute name="label">
@@ -147,7 +154,7 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>158</height>
+           <height>131</height>
           </rect>
          </property>
          <attribute name="label">
@@ -234,7 +241,7 @@
      <x>0</x>
      <y>0</y>
      <width>759</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

@@ -1,4 +1,7 @@
 #include "class.hpp"
+#include <iostream>
+
+using namespace std;
 
 namespace codegen {
 

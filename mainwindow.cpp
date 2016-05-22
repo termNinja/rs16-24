@@ -101,3 +101,15 @@ void MainWindow::addMethodClicked()
 }
 
 
+
+void MainWindow::on_choose_dir_clicked()
+{
+    QString path = QFileDialog::getExistingDirectory(
+                  this,
+                  tr("Please pick your directory to save code."),
+                  "/home",
+                  QFileDialog::ShowDirsOnly);
+
+    QString pathTONewDir = path + "/SourceCode";
+    QDir().mkdir(pathTONewDir);
+}

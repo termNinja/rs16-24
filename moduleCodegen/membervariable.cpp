@@ -1,4 +1,8 @@
 #include "membervariable.hpp"
+#include <iostream>
+
+using namespace std;
+
 
 namespace codegen {
 

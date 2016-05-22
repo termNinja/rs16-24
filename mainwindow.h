@@ -7,7 +7,10 @@
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include <QListView>
-#include<QStandardItem>
+#include <QStandardItem>
+#include <QDir>
+#include <QFileDialog>
+#include <QDir>
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +33,8 @@ private slots:
 
     void addMethodClicked();
 
+
+    void on_choose_dir_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -1,4 +1,7 @@
 #include "variable.hpp"
+#include <iostream>
+
+using namespace std;
 
 namespace codegen {
 

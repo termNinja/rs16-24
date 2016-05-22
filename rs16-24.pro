@@ -11,10 +11,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = rs16-24
 TEMPLATE = app
 
+QMAKE_CXXFLAGS+= -std=c++11
+QMAKE_LFLAGS +=  -std=c++11
+
 # Boost libs if needed
-# LIBS += \
-# 	   -lboost_system\
-# 	   -lboost_filesystem
+ LIBS += \
+	   -lboost_system\
+	   -lboost_filesystem
 
 SOURCES += main.cpp\
         mainwindow.cpp \
