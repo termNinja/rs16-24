@@ -30,7 +30,9 @@ SOURCES += main.cpp\
     moduleCodegen/membervariable.cpp \
     moduleLangExporter/langexporter.cpp \
     moduleAppController/resourcemanager.cpp \
-    moduleAppController/appcontrollertester.cpp
+    moduleAppController/appcontrollertester.cpp \
+    moduleLangExporter/cpplangexporter.cpp \
+    moduleLangExporter/langexportertester.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -42,6 +44,9 @@ HEADERS  += mainwindow.h \
     moduleCodegen/membervariable.hpp \
     moduleLangExporter/langexporter.hpp \
     moduleAppController/resourcemanager.hpp \
-    moduleAppController/appcontrollertester.hpp
+    moduleAppController/appcontrollertester.hpp \
+    moduleCodegen/membervisibility.hpp \
+    moduleLangExporter/cpplangexporter.hpp \
+    moduleLangExporter/langexportertester.hpp
 
 FORMS    += mainwindow.ui

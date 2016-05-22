@@ -5,7 +5,7 @@ using namespace std;
 
 namespace codegen {
 
-Class::Class(QString name, std::vector<MemberFunction> pubMemFun,
+Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
 			 std::vector<MemberFunction> privMemFun,
 			 std::vector<MemberFunction> protMemFun,
 			 std::vector<MemberVariable> pubMemVar,
@@ -16,7 +16,7 @@ Class::Class(QString name, std::vector<MemberFunction> pubMemFun,
 {
 }
 
-Class::Class(QString name, std::vector<MemberFunction> pubMemFun, std::vector<MemberVariable> privMemVar)
+Class::Class(std::string name, std::vector<MemberFunction> pubMemFun, std::vector<MemberVariable> privMemVar)
 	: m_name(name), m_pubMemFun(pubMemFun), m_privMemVar(privMemVar)
 {
 }
@@ -51,7 +51,7 @@ std::vector<MemberVariable> &Class::getProtectedMemberVariables()
 	return m_protMemVar;
 }
 
-QString Class::getName() const
+std::string Class::getName() const
 {
 	return m_name;
 }
@@ -59,7 +59,7 @@ QString Class::getName() const
 std::ostream &operator<<(std::ostream &out, const Class &c)
 {
 	std::string sep = "    ";
-	out << "class " << c.m_name.toStdString() << " {\n";
+	out << "class " << c.m_name << " {\n";
 
 	if (!c.m_pubMemFun.empty() || !c.m_pubMemVar.empty()) {
 		// write public content

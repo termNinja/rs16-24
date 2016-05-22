@@ -3,7 +3,6 @@
 
 #include <string>
 #include <fstream>
-#include <boost/filesystem.hpp>
 
 namespace app {
 

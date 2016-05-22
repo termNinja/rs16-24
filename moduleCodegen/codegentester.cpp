@@ -1,5 +1,6 @@
 #include "codegentester.hpp"
 #include "moduleAppController/resourcemanager.hpp"
+#include "moduleLangExporter/cpplangexporter.hpp"
 
 namespace codegen {
 
@@ -10,26 +11,26 @@ void codegenTester::peformTest() {
 	std::cout << "CODEGEN TEST:" << std::endl;
 
 	// Type test
-	Type type(QString("double"), true);
+	Type type("double", true);
 	std::cout << type << std::endl;
 
 	// Variable test
-	Variable var(type, QString("x"));
+	Variable var(type, "x");
 	std::cout << var << std::endl;
 
 	// Function test
 	std::vector<Variable> params;
 	params.push_back(var);
-	params.push_back(Variable(Type(QString("QString")), QString("y")));
-	Function fun(type, QString("calculate"), params);
+	params.push_back(Variable(Type("QString"), "y"));
+	Function fun(type, "calculate", params);
 	std::cout << fun << std::endl;
 
 	// Member Variable test
-	MemberVariable mvariable(type, QString("simpleVariable"), QString("NumericLib"));
+	MemberVariable mvariable(type, "simpleVariable", "NumericLib");
 	std::cout << mvariable << std::endl;
 
 	// Member function test
-	MemberFunction mfunction(type, QString("calculate"), params, QString("NumericLib"));
+	MemberFunction mfunction(type, "calculate", params, "NumericLib");
 	std::cout << mfunction << std::endl;
 
 	// ------------------------------------------------------------------------
@@ -38,29 +39,35 @@ void codegenTester::peformTest() {
 	std::cout << std::endl;
 
 	// construct member functions
-	MemberFunction mf1(type, QString("helloWorld"), params, QString("NumericLib"));
-	Variable v1(Type(QString("double")), QString("x"));
-	Variable v2(Type(QString("double")), QString("y"));
+	MemberFunction mf1(type, "helloWorld", params, "NumericLib");
+	Variable v1(Type("double"), "x");
+	Variable v2(Type("double"), "y");
 	std::vector<Variable> mf2Params;
 	mf2Params.push_back(v1);
 	mf2Params.push_back(v2);
-	MemberFunction mf2(type, QString("euclidianDistance"), mf2Params, QString("NumericLib"));
+	MemberFunction mf2(type, "euclidianDistance", mf2Params, "NumericLib");
 	std::vector<MemberFunction> numLibFunctions;
 	numLibFunctions.push_back(mf1);
 	numLibFunctions.push_back(mf2);
 
 	// construct member variables
-	MemberVariable mv1(type, QString("x"), QString("NumericLib"));
-	MemberVariable mv2(type, QString("y"), QString("NumericLib"));
+	MemberVariable mv1(type, "x", "NumericLib");
+	MemberVariable mv2(type, "y", "NumericLib");
 	std::vector<MemberVariable> numLibMemberVars;
 	numLibMemberVars.push_back(mv1);
 	numLibMemberVars.push_back(mv2);
 	Class c(
-		QString("NumericLib"),
+		"NumericLib",
 		numLibFunctions,
 		numLibMemberVars
 	);
 	std::cout << c << std::endl;
+
+	// ------------------------------------------------------------------------
+	// Class generation test
+	// ------------------------------------------------------------------------
+	lexp::CppLangExporter cppExporter;
+	std::cout << cppExporter.genClass(c) << std::endl;
 }
 
 } // namespace end: codegen

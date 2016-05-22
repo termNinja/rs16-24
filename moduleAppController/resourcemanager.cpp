@@ -1,4 +1,3 @@
-#include <boost/filesystem.hpp>
 #include <QDir>
 #include <QString>
 #include <iostream>

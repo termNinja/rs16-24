@@ -1,6 +1,7 @@
 #ifndef MEMBERVARIABLE_HPP
 #define MEMBERVARIABLE_HPP
 
+#include <string>
 #include "type.hpp"
 #include "variable.hpp"
 
@@ -10,13 +11,13 @@ class MemberVariable : public Variable
 {
 public:
 	// TODO: Switch QString owner to a const reference to real class
-	MemberVariable(Type type, QString name, QString owner);
+	MemberVariable(Type type, std::string name, std::string owner);
 
-	QString getOwnerName() const;
+	std::string getOwnerName() const;
 
 	friend std::ostream& operator<<(std::ostream& out, const MemberVariable &mv);
 private:
-	QString m_owner;
+	std::string m_owner;
 };
 
 } // namespace end: codegen
