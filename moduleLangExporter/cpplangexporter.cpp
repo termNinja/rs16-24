@@ -1,7 +1,5 @@
 #include "cpplangexporter.hpp"
 
-using std::unique_ptr;
-using std::stringstream;
 using std::string;
 
 namespace lexp {
