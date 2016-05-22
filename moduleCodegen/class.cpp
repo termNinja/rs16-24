@@ -57,21 +57,24 @@ std::ostream &operator<<(std::ostream &out, const Class &c)
 {
 	std::string sep = "    ";
 	out << "class " << c.m_name.toStdString() << " {\n";
-	out << "public:\n";
-	// write public content
-	for (auto a : c.m_pubMemFun) out << sep << a << "\n";
-	for (auto a : c.m_pubMemVar) out << sep << a << "\n";
+
+	if (!c.m_pubMemFun.empty() || !c.m_pubMemVar.empty()) {
+		// write public content
+		out << "public:\n";
+		for (auto a : c.m_pubMemFun) out << sep << a << "\n";
+		for (auto a : c.m_pubMemVar) out << sep << a << "\n";
+	}
 
 	if (!c.m_protMemFun.empty() || !c.m_protMemVar.empty()) {
-		out << "protected:\n";
 		// write protected content
+		out << "protected:\n";
 		for (auto a : c.m_protMemFun) out << sep << a << "\n";
 		for (auto a : c.m_protMemVar) out << sep << a << "\n";
 	}
 
 	if (!c.m_privMemFun.empty() || !c.m_privMemVar.empty()) {
-		out << "private:\n";
 		// write private content
+		out << "private:\n";
 		for (auto a : c.m_privMemFun) out << sep << a << "\n";
 		for (auto a : c.m_privMemVar) out << sep << a << "\n";
 	}
