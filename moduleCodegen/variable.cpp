@@ -2,7 +2,7 @@
 
 namespace codegen {
 
-Variable::Variable(Type type, QString name)
+Variable::Variable(Type type, std::string name)
 	: m_type(type), m_name(name)
 {
 }
@@ -12,7 +12,7 @@ const Type &Variable::getType() const
 	return m_type;
 }
 
-QString Variable::getName() const
+std::string Variable::getName() const
 {
 	return m_name;
 }
@@ -22,14 +22,14 @@ void Variable::setType(const Type &type)
 	m_type = type;
 }
 
-void Variable::setName(QString name)
+void Variable::setName(std::string name)
 {
 	m_name = name;
 }
 
 std::ostream& operator<<(std::ostream &out, const Variable &var)
 {
-	return out << var.m_type <<  " " << var.m_name.toStdString();
+	return out << var.m_type <<  " " << var.m_name;
 }
 
 } // namespace end: codegen

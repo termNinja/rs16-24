@@ -1,7 +1,7 @@
 #ifndef CLASS_HPP
 #define CLASS_HPP
 
-#include <QString>
+#include <string>
 #include <vector>
 #include "type.hpp"
 #include "membervariable.hpp"
@@ -11,10 +11,10 @@ namespace codegen {
 
 class Class {
 public:
-	Class(QString name);
+	Class(std::string name);
 
 	Class(
-			QString name,
+			std::string name,
 			std::vector<MemberFunction> pubMemFun,
 			std::vector<MemberFunction> privMemFun,
 			std::vector<MemberFunction> protMemFun,
@@ -25,7 +25,7 @@ public:
 
 	// Very commonly used construction
 	Class(
-			QString name,
+			std::string name,
 			std::vector<MemberFunction> pubMemFun,
 			std::vector<MemberVariable> privMemVar
 
@@ -38,12 +38,12 @@ public:
 	std::vector<MemberVariable>& getPrivateMemberVariables();
 	std::vector<MemberVariable>& getProtectedMemberVariables();
 
-	QString getName() const;
+	std::string getName() const;
 
 	friend std::ostream& operator<<(std::ostream& out, const Class &c);
 
 private:
-	QString m_name;
+	std::string m_name;
 	std::vector<MemberFunction> m_pubMemFun;
 	std::vector<MemberFunction> m_privMemFun;
 	std::vector<MemberFunction> m_protMemFun;

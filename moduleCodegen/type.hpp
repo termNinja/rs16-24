@@ -2,23 +2,24 @@
 #define TYPE_HPP
 
 #include <QString>
+#include <string>
 
 namespace codegen {
 
 class Type {
 public:
-	Type(QString name, bool isConst = false);
+	Type(std::string name, bool isConst = false);
 
-	QString getName() const;
+	std::string getName() const;
 	bool isConst() const;
 
-	void setName(QString name);
+	void setName(std::string name);
 	void setConst(bool c);
 
 	friend std::ostream& operator<<(std::ostream &out, const Type &type);
 
 private:
-	QString m_name;
+	std::string m_name;
 	bool m_isConst;
 };
 

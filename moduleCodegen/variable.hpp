@@ -2,25 +2,26 @@
 #define VARIABLE_HPP
 
 #include <QString>
+#include <string>
 #include "type.hpp"
 
 namespace codegen {
 
 class Variable {
 public:
-	Variable(Type type, QString name);
+	Variable(Type type, std::string name);
 
 	const Type& getType() const;
-	QString getName() const;
+	std::string getName() const;
 
 	void setType(const Type &type);
-	void setName(QString name);
+	void setName(std::string name);
 
 	friend std::ostream& operator<<(std::ostream& out, const Variable &var);
 
 protected:
 	Type m_type;
-	QString m_name;
+	std::string m_name;
 };
 
 }
