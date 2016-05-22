@@ -1,4 +1,5 @@
 #include "codegentester.hpp"
+
 namespace codegen {
 
 /// Overloaded operator << is just for logging and testing purposes.
@@ -32,6 +33,7 @@ void codegenTester::peformTest() {
 	// ------------------------------------------------------------------------
 	// Class test
 	// ------------------------------------------------------------------------
+	std::cout << std::endl;
 
 	// construct member functions
 	MemberFunction mf1(type, QString("helloWorld"), params, QString("NumericLib"));
