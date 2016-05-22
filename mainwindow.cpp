@@ -98,8 +98,6 @@ void MainWindow::addMethodClicked()
     QStandardItem* Items = new QStandardItem("new method");
     lMethodsModel->appendRow(Items);
     qlv->setModel(lMethodsModel);
-
-
 }
 
 

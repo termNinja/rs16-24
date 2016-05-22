@@ -18,9 +18,9 @@ private:
 	ResourceManager();
 
 	ResourceManager(const ResourceManager &) = delete;
-	ResourceManager(const ResourceManager &&) = delete;
+    ResourceManager(const ResourceManager &&) = delete;
 	ResourceManager& operator=(const ResourceManager&) = delete;
-	ResourceManager& operator=(const ResourceManager&&) = delete;
+    ResourceManager& operator=(const ResourceManager&&) = delete;
 
 	static void initResourceManager();
 
