@@ -52,4 +52,4 @@ std::ostream& operator<<(std::ostream &out, const Function &function)
 	return out;
 }
 
-}
+} // namespace end: codegen

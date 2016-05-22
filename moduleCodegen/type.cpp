@@ -34,4 +34,4 @@ std::ostream& operator<<(std::ostream &out, const Type &type)
 	return out << type.m_name.toStdString();
 }
 
-}
+} // namespace end: codegen

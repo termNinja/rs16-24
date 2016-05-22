@@ -32,4 +32,4 @@ std::ostream& operator<<(std::ostream &out, const Variable &var)
 	return out << var.m_type <<  " " << var.m_name.toStdString();
 }
 
-}
+} // namespace end: codegen

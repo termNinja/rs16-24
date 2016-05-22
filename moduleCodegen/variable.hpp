@@ -18,7 +18,7 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& out, const Variable &var);
 
-private:
+protected:
 	Type m_type;
 	QString m_name;
 };
