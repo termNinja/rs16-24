@@ -6,6 +6,9 @@
 #include "type.hpp"
 #include "variable.hpp"
 #include "function.hpp"
+#include "membervariable.hpp"
+#include "memberfunction.hpp"
+#include "class.hpp"
 
 namespace codegen {
 
