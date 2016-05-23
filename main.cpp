@@ -11,18 +11,18 @@
 
 int main(int argc, char *argv[])
 {
-//    QApplication a(argc, argv);
-//    MainWindow w;
+    QApplication a(argc, argv);
+    MainWindow w;
 
-	codegen::codegenTester codegenTester;
-	app::AppControllerTester appControllerTester;
+    codegen::codegenTester codegenTester;
+    app::AppControllerTester appControllerTester;
 
-	std::cout << "======================================================" << std::endl;
-	codegenTester.peformTest();
-	std::cout << "======================================================" << std::endl;
-	appControllerTester.performTest();
-	std::cout << "======================================================" << std::endl;
+    std::cout << "======================================================" << std::endl;
+    codegenTester.peformTest();
+    std::cout << "======================================================" << std::endl;
+    appControllerTester.performTest();
+    std::cout << "======================================================" << std::endl;
 
-//	w.show();
-//	return a.exec();
+    w.show();
+    return a.exec();
 }

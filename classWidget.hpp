@@ -1,0 +1,4 @@
+#ifndef CLASSWIDGET_HPP
+#define CLASSWIDGET_HPP
+
+#endif // CLASSWIDGET_HPP
