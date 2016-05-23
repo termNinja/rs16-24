@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = rs16-24
@@ -32,7 +31,8 @@ SOURCES += main.cpp\
     moduleAppController/resourcemanager.cpp \
     moduleAppController/appcontrollertester.cpp \
     moduleLangExporter/cpplangexporter.cpp \
-    moduleLangExporter/langexportertester.cpp
+    moduleLangExporter/langexportertester.cpp \
+    classwidget.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -47,6 +47,7 @@ HEADERS  += mainwindow.h \
     moduleAppController/appcontrollertester.hpp \
     moduleCodegen/membervisibility.hpp \
     moduleLangExporter/cpplangexporter.hpp \
-    moduleLangExporter/langexportertester.hpp
+    moduleLangExporter/langexportertester.hpp \
+    classwidget.hpp
 
 FORMS    += mainwindow.ui
