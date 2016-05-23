@@ -26,7 +26,7 @@ void MainWindow::on_pushButton_10_clicked()
 {
     bool ok;
     QString name = QInputDialog::getText(this, tr("Class name"),
-                                               tr("Input class name"), QLineEdit::Normal,
+                                               tr("Input class name "), QLineEdit::Normal,
                                                "class name", &ok);
 
     QWidget *parent  = ui->widget_2;

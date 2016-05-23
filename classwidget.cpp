@@ -31,7 +31,7 @@ ClassWidget::ClassWidget(QWidget *parent , QStandardItemModel* lMembersModel,
     vblClass->addWidget(lclassName);
 
     //listview for member variables, lMembersModel is used as data source for lvMembers.
-    lvMembers = new QListView();
+    lvMembers = new QListWidget();
     vblClass->addWidget(lvMembers);
     lMembersModel = new QStandardItemModel();
     lvMembers->setMaximumHeight(100);
@@ -42,7 +42,7 @@ ClassWidget::ClassWidget(QWidget *parent , QStandardItemModel* lMembersModel,
     QObject::connect(btnAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
 
     //creating second half of a classObject(methods listview and button), same as the first half
-    lvMethods = new QListView();
+    lvMethods = new QListWidget();
     vblClass->addWidget(lvMethods);
     lMethodsModel = new QStandardItemModel();
     lvMethods->setMaximumHeight(100);
@@ -56,35 +56,30 @@ ClassWidget::ClassWidget(QWidget *parent , QStandardItemModel* lMembersModel,
     parent->show();
 }
 
+void ClassWidget::mousePressEvent(QMouseEvent *e)
+{
+
+
+}
+
 
 
 void ClassWidget::addMemberClicked()
 {
-
-//    QVBoxLayout *qbl =(QVBoxLayout*)(((QPushButton*)sender())->parentWidget()->layout());
-//    QListView *qlv = ((QListView*)(qbl->itemAt(0)->widget()));
-
-//    QStandardItem* Items = new QStandardItem("new member");
-//    lMembersModel->appendRow(Items);
-
-//    qlv->setModel(lMembersModel);
+    bool ok;
+    QString member = QInputDialog::getText(this, tr("Add member"),
+                                               tr("Add member"), QLineEdit::Normal,
+                                               "member", &ok);
+    lvMembers->addItem(member);
 }
 
 void ClassWidget::addMethodClicked()
 {
-//    QVBoxLayout *qbl =(QVBoxLayout*)(((QPushButton*)sender())->parentWidget()->layout());
-//    QListView *qlv = ((QListView*)(qbl->itemAt(2)->widget()));
-
-//    QStandardItem* Items = new QStandardItem("new method");
-//    lMethodsModel->appendRow(Items);
-//    qlv->setModel(lMethodsModel);
-}
-
-void ClassWidget::mousePressEvent(QMouseEvent *e)
-{
-    if(e->button() == Qt::LeftButton){
-        pressed = true;
-    }
+    bool ok;
+    QString method = QInputDialog::getText(this, tr("Add method"),
+                                               tr("Add method"), QLineEdit::Normal,
+                                               "method", &ok);
+    lvMethods->addItem(method.append("(").append(")"));
 }
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e)

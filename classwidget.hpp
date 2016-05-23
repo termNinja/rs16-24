@@ -13,6 +13,8 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QLabel>
+#include <QInputDialog>
+#include <QListWidget>
 
 class ClassWidget : public QWidget
 {
@@ -37,9 +39,9 @@ public slots:
 private:
     QWidget *wClassWraper;
     QVBoxLayout *vblClass;
-    QListView *lvMembers;
+    QListWidget *lvMembers;
     QPushButton *btnAddMember;
-    QListView *lvMethods;
+    QListWidget *lvMethods;
     QPushButton *btnAddMethod;
     QStandardItemModel* lMembersModel;
     QStandardItemModel* lMethodsModel;
