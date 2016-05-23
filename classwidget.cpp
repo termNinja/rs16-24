@@ -1,7 +1,8 @@
 #include "classwidget.hpp"
 #include <iostream>
 
-classwidget::classwidget(QWidget *parent , QStandardItemModel* lMembersModel,   QStandardItemModel* lMethodsModel ){
+ClassWidget::ClassWidget(QWidget *parent , QStandardItemModel* lMembersModel,
+                         QStandardItemModel* lMethodsModel , QString name ){
 
     pressed = false;
     //set color to widget so its easy to see dimensions
@@ -21,7 +22,7 @@ classwidget::classwidget(QWidget *parent , QStandardItemModel* lMembersModel,   
     wClassWraper->setLayout(vblClass);
 
     //add class name
-    lclassName = new QLabel("Name of class");
+    lclassName = new QLabel(name);
     lclassName->setMaximumWidth(200);
     Pal.setColor(QPalette::Background, Qt::white);
     lclassName->setAutoFillBackground(true);
@@ -57,8 +58,9 @@ classwidget::classwidget(QWidget *parent , QStandardItemModel* lMembersModel,   
 
 
 
-void classwidget::addMemberClicked()
+void ClassWidget::addMemberClicked()
 {
+
 //    QVBoxLayout *qbl =(QVBoxLayout*)(((QPushButton*)sender())->parentWidget()->layout());
 //    QListView *qlv = ((QListView*)(qbl->itemAt(0)->widget()));
 
@@ -68,7 +70,7 @@ void classwidget::addMemberClicked()
 //    qlv->setModel(lMembersModel);
 }
 
-void classwidget::addMethodClicked()
+void ClassWidget::addMethodClicked()
 {
 //    QVBoxLayout *qbl =(QVBoxLayout*)(((QPushButton*)sender())->parentWidget()->layout());
 //    QListView *qlv = ((QListView*)(qbl->itemAt(2)->widget()));
@@ -78,19 +80,19 @@ void classwidget::addMethodClicked()
 //    qlv->setModel(lMethodsModel);
 }
 
-void classwidget::mousePressEvent(QMouseEvent *e)
+void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
     if(e->button() == Qt::LeftButton){
         pressed = true;
     }
 }
 
-void classwidget::mouseReleaseEvent(QMouseEvent *e)
+void ClassWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     pressed = false;
 }
 
-void classwidget::mouseMoveEvent(QMouseEvent *e)
+void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if(pressed == true)
     {

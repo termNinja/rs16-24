@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include "classwidget.hpp"
+#include <QInputDialog>
 
 namespace Ui {
 class MainWindow;

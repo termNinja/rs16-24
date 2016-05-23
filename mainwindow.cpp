@@ -24,8 +24,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_10_clicked()
 {
+    bool ok;
+    QString name = QInputDialog::getText(this, tr("Class name"),
+                                               tr("Input class name"), QLineEdit::Normal,
+                                               "class name", &ok);
+
     QWidget *parent  = ui->widget_2;
-    classwidget *w = new classwidget(parent , lMembersModel , lMethodsModel);
+    ClassWidget *w = new ClassWidget(parent , lMembersModel , lMethodsModel, name);
 }
 
 void MainWindow::on_pushButton_clicked()

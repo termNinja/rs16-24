@@ -14,13 +14,13 @@
 #include <QPoint>
 #include <QLabel>
 
-class classwidget : public QWidget
+class ClassWidget : public QWidget
 {
     Q_OBJECT
 public:
-    classwidget(QWidget *parent  , QStandardItemModel* lMembersModel,   QStandardItemModel* lMethodsModel );
+    ClassWidget(QWidget *parent  , QStandardItemModel* lMembersModel,   QStandardItemModel* lMethodsModel , QString name);
     bool pressed;
-    ~classwidget()
+    ~ClassWidget()
     {};
 
 protected:
