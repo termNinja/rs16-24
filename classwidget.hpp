@@ -20,15 +20,14 @@ class ClassWidget : public QWidget
 {
     Q_OBJECT
 public:
-    ClassWidget(QWidget *parent  , QStandardItemModel* lMembersModel,   QStandardItemModel* lMethodsModel , QString name);
-    bool pressed;
+    ClassWidget(QWidget *parent);
     ~ClassWidget()
     {};
 
 protected:
     void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
     QPoint mousePoint;
 
 public slots:
@@ -45,7 +44,11 @@ private:
     QPushButton *btnAddMethod;
     QStandardItemModel* lMembersModel;
     QStandardItemModel* lMethodsModel;
-    QLabel *lclassName;
+    QLineEdit *lclassName;
+
+    //used for moving
+    QPoint offset;
+    bool moving;
 };
 
 #endif // CLASSWIDGET_HPP

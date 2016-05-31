@@ -14,9 +14,9 @@ QMAKE_CXXFLAGS+= -std=c++11
 QMAKE_LFLAGS +=  -std=c++11
 
 # Boost libs if needed
- LIBS += \
-	   -lboost_system\
-	   -lboost_filesystem
+# LIBS += \
+#	   -lboost_system\
+#	   -lboost_filesystem
 
 SOURCES += main.cpp\
         mainwindow.cpp \

@@ -1,65 +1,72 @@
 #include "classwidget.hpp"
 #include <iostream>
 
-ClassWidget::ClassWidget(QWidget *parent , QStandardItemModel* lMembersModel,
-                         QStandardItemModel* lMethodsModel , QString name ){
+ClassWidget::ClassWidget(QWidget *parent ){
 
-    pressed = false;
+    moving = false;
     //set color to widget so its easy to see dimensions
     QPalette Pal(palette());
-    //Pal.setColor(QPalette::Background, Qt::red);
-    //parent->setAutoFillBackground(true);
-    parent->setPalette(Pal);
+    Pal.setColor(QPalette::Background, Qt::red);
+    setAutoFillBackground(true);
+    setPalette(Pal);
 
     //if we need to set maximum size to layout we need to put it in a widget
     //TODO: is there better way to do it?
-    wClassWraper = new QWidget(parent);
-    wClassWraper->setMaximumWidth(200);
-    Pal.setColor(QPalette::Background, Qt::black);
-    wClassWraper->setAutoFillBackground(true);
-    wClassWraper->setPalette(Pal);
-    vblClass = new QVBoxLayout(wClassWraper);
-    wClassWraper->setLayout(vblClass);
-
+//    wClassWraper = new QWidget(parent);
+//    wClassWraper->setMaximumWidth(200);
+//    Pal.setColor(QPalette::Background, Qt::black);
+//    wClassWraper->setAutoFillBackground(true);
+//    wClassWraper->setPalette(Pal);
+    vblClass = new QVBoxLayout(this);
+    setLayout(vblClass);
+    setContentsMargins(QMargins(0,20,0,0));
+    vblClass->setContentsMargins(QMargins(0,0,0,0));
     //add class name
-    lclassName = new QLabel(name);
+//    lclassName = new QLineEdit("My Class Name");
+    lclassName = new QLineEdit();
+    lclassName->setPlaceholderText("My Class Name");
     lclassName->setMaximumWidth(200);
     Pal.setColor(QPalette::Background, Qt::white);
-    lclassName->setAutoFillBackground(true);
     lclassName->setPalette(Pal);
+    lclassName->setAutoFillBackground(true);
     lclassName->setAlignment(Qt::AlignCenter);
     vblClass->addWidget(lclassName);
 
     //listview for member variables, lMembersModel is used as data source for lvMembers.
     lvMembers = new QListWidget();
+    lvMembers->setMaximumWidth(200);
     vblClass->addWidget(lvMembers);
     lMembersModel = new QStandardItemModel();
     lvMembers->setMaximumHeight(100);
 
     //creating button for adding members
     btnAddMember = new QPushButton("Add member variable");
+    btnAddMember->setMaximumWidth(200);
     vblClass->addWidget(btnAddMember);
     QObject::connect(btnAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
 
     //creating second half of a classObject(methods listview and button), same as the first half
     lvMethods = new QListWidget();
+    lvMethods->setMaximumWidth(200);
     vblClass->addWidget(lvMethods);
     lMethodsModel = new QStandardItemModel();
     lvMethods->setMaximumHeight(100);
 
     btnAddMethod = new QPushButton("Add method");
+    btnAddMethod->setMaximumWidth(200);
     vblClass->addWidget(btnAddMethod);
     QObject::connect(btnAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
 
     //because widget is visible we need to call show() method to see newly added objects
-    wClassWraper->show();
+    this->setParent(parent);
+    show();
     parent->show();
 }
 
 void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
-
-
+    offset = e->pos();
+    moving = true;
 }
 
 
@@ -82,16 +89,15 @@ void ClassWidget::addMethodClicked()
     lvMethods->addItem(method.append("(").append(")"));
 }
 
-void ClassWidget::mouseReleaseEvent(QMouseEvent *e)
-{
-    pressed = false;
-}
-
 void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    if(pressed == true)
-    {
-       mousePoint =  e->globalPos();
-        move( mousePoint);
-    }
+    if(e->buttons() & moving)
+      {
+          this->move(mapToParent(e->pos() - offset));
+      }
+}
+
+
+void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
+    moving = false;
 }
