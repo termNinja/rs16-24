@@ -15,6 +15,7 @@
 #include <QLabel>
 #include <QInputDialog>
 #include <QListWidget>
+#include <QComboBox>
 
 class ClassWidget : public QWidget
 {
@@ -33,8 +34,10 @@ protected:
 public slots:
     void addMemberClicked();
     void addMethodClicked();
+    void removeMethodClicked();
 
-
+    void removeMemberClicked();
+    void lineEditTextChanged();
 private:
     QWidget *wClassWraper;
     QVBoxLayout *vblClass;
@@ -42,8 +45,6 @@ private:
     QPushButton *btnAddMember;
     QListWidget *lvMethods;
     QPushButton *btnAddMethod;
-    QStandardItemModel* lMembersModel;
-    QStandardItemModel* lMethodsModel;
     QLineEdit *lclassName;
 
     //used for moving
