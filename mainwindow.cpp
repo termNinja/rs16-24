@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    window()->showMaximized();
 }
 
 MainWindow::~MainWindow()
@@ -25,12 +26,12 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_10_clicked()
 {
     bool ok;
-    QString name = QInputDialog::getText(this, tr("Class name"),
-                                               tr("Input class name "), QLineEdit::Normal,
-                                               "class name", &ok);
+//    QString name = QInputDialog::getText(this, tr("Class name"),
+//                                               tr("Input class name "), QLineEdit::Normal,
+//                                               "class name", &ok);
 
     QWidget *parent  = ui->widget_2;
-    ClassWidget *w = new ClassWidget(parent , lMembersModel , lMethodsModel, name);
+    ClassWidget *w = new ClassWidget(parent);
 }
 
 void MainWindow::on_pushButton_clicked()

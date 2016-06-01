@@ -33,9 +33,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    //just for testing
-    QStandardItemModel* lMembersModel;
-    QStandardItemModel* lMethodsModel;
 };
 
 #endif // MAINWINDOW_H
