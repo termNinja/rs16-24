@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QLayout>
 #include <QLayoutItem>
+#include "moduleAppController/resourcemanager.hpp"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -52,6 +53,11 @@ void MainWindow::on_choose_dir_clicked()
                   "/home",
                   QFileDialog::ShowDirsOnly);
 
-    QString pathTONewDir = path + "/SourceCode";
+	QString pathTONewDir = path + "/SourceCode";
+
+	// Setting output path for resource manager
+	app::ResourceManager *rm = &app::ResourceManager::instance();
+	rm->setProjectPath(pathTONewDir);
+
     QDir().mkdir(pathTONewDir);
 }

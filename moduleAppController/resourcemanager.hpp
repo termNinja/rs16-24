@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <QString>
 
 namespace app {
 
@@ -10,8 +11,10 @@ class ResourceManager {
 public:
 
 	static ResourceManager& instance();
-	std::string getProjectOutputPath() const;
-	std::string getProjectName() const;
+	QString getProjectOutputPath() const;
+	QString getProjectName() const;
+
+	void setProjectPath(QString path);
 
 private:
 	ResourceManager();
@@ -24,9 +27,9 @@ private:
 	static void initResourceManager();
 
 protected:
-	static std::string m_projectOutputPath;
-	static std::string m_projectName;
-	static bool m_alive;
+	QString m_projectOutputPath;
+	QString m_projectName;
+	bool m_alive;
 };
 
 } // namespace end: app
