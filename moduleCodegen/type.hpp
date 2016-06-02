@@ -8,6 +8,7 @@ namespace codegen {
 
 class Type {
 public:
+	Type();
 	Type(std::string name, bool isConst = false);
 
 	std::string getName() const;

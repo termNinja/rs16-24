@@ -24,5 +24,6 @@ protected:
 	std::string m_name;
 };
 
-}
+} // namespace end: codegen
+
 #endif // VARIABLE_HPP

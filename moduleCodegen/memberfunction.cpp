@@ -6,16 +6,25 @@ using namespace std;
 
 namespace codegen {
 
-MemberFunction::MemberFunction(codegen::Type returnType, std::string functionName,
-							   const std::vector<codegen::Variable> &parameters, std::string owner, bool isConst)
-	: Function(returnType, functionName, parameters), m_owner(owner)
+MemberFunction::MemberFunction(string functionName, bool isConst)
+	: Function(functionName), m_isConst(isConst)
 {
+}
 
+MemberFunction::MemberFunction(codegen::Type returnType, std::string functionName,
+						   const std::vector<codegen::Variable> &parameters, std::string owner, bool isConst)
+	: Function(returnType, functionName, parameters), m_owner(owner), m_isConst(isConst)
+{
 }
 
 std::string MemberFunction::getOwnerName() const
 {
 	return m_owner;
+}
+
+void MemberFunction::setOwner(std::string className)
+{
+	m_owner = className;
 }
 
 bool MemberFunction::isConst() const

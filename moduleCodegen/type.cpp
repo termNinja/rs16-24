@@ -5,10 +5,13 @@ using namespace std;
 
 namespace codegen {
 
+Type::Type()
+	: m_name("void"), m_isConst(false)
+{}
+
 Type::Type(std::string name, bool isConst)
 	: m_name(name), m_isConst(isConst)
-{
-}
+{}
 
 std::string Type::getName() const
 {

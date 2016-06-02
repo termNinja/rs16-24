@@ -1,8 +1,6 @@
 #include "class.hpp"
 #include <iostream>
 
-using namespace std;
-
 namespace codegen {
 
 Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
