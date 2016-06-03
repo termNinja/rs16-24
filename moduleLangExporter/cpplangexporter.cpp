@@ -19,7 +19,7 @@ string CppLangExporter::genBasicVariable(codegen::Variable var)
 	return s;
 }
 
-string CppLangExporter::genMemberVariable(codegen::MemberVariable var, codegen::MemberVisibility v)
+string CppLangExporter::genMemberVariable(codegen::MemberVariable var)
 {
 	string s;
 	if (var.getType().isConst())
@@ -48,7 +48,7 @@ string CppLangExporter::genBasicFunction(codegen::Function fun)
 	return s;
 }
 
-string CppLangExporter::genMemberFunction(codegen::MemberFunction fun, codegen::MemberVisibility v)
+string CppLangExporter::genMemberFunction(codegen::MemberFunction fun)
 {
 	string s;
 	if (fun.getReturnType().isConst())
@@ -82,11 +82,11 @@ string CppLangExporter::genClass(codegen::Class cls)
 		s.append("public:\n");
 		for (auto a : cls.getPublicMemberFunctions()) {
 			s.append(ind);
-			s.append(genMemberFunction(a, codegen::MemberVisibility::PUBLIC) + "\n");
+			s.append(genMemberFunction(a) + "\n");
 		}
 		for (auto a : cls.getPublicMemberVariables()) {
 			s.append(ind);
-			s.append(genMemberVariable(a, codegen::MemberVisibility::PUBLIC) + ";\n");
+			s.append(genMemberVariable(a) + ";\n");
 		}
 
 	}
@@ -96,11 +96,11 @@ string CppLangExporter::genClass(codegen::Class cls)
 		s.append("\nprotected:\n");
 		for (auto a : cls.getProtectedMemberFunctions()) {
 			s.append(ind);
-			s.append(genMemberFunction(a, codegen::MemberVisibility::PROTECTED) + "\n");
+			s.append(genMemberFunction(a) + "\n");
 		}
 		for (auto a : cls.getProtectedMemberVariables()) {
 			s.append(ind);
-			s.append(genMemberVariable(a, codegen::MemberVisibility::PROTECTED) + ";\n");
+			s.append(genMemberVariable(a) + ";\n");
 		}
 	}
 
@@ -109,11 +109,11 @@ string CppLangExporter::genClass(codegen::Class cls)
 		s.append("\nprivate:\n");
 		for (auto a : cls.getPrivateMemberFunctions()) {
 			s.append(ind);
-			s.append(genMemberFunction(a, codegen::MemberVisibility::PRIVATE) + "\n");
+			s.append(genMemberFunction(a) + "\n");
 		}
 		for (auto a : cls.getPrivateMemberVariables()) {
 			s.append(ind);
-			s.append(genMemberVariable(a, codegen::MemberVisibility::PRIVATE) + ";\n");
+			s.append(genMemberVariable(a) + ";\n");
 		}
 	}
 

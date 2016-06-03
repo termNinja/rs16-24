@@ -19,10 +19,10 @@ public:
 	std::string getOwnerName() const;
 	bool isConst() const;
 	MemberVisibility getVisibility() const;
-
+	
 	void setVisibility(MemberVisibility visibility);
 	void setOwner(std::string className);
-
+	
 
 	friend std::ostream& operator<<(std::ostream& out, const MemberFunction &f);
 
