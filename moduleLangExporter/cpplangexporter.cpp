@@ -22,8 +22,12 @@ string CppLangExporter::genBasicVariable(codegen::Variable var)
 string CppLangExporter::genMemberVariable(codegen::MemberVariable var)
 {
 	string s;
+	if (var.isStatic())
+		s.append("static ");
+
 	if (var.getType().isConst())
 		s.append("const ");
+
 	s.append(var.getType().getName() + " ");
 	s.append(var.getName());
 	return s;
@@ -51,6 +55,10 @@ string CppLangExporter::genBasicFunction(codegen::Function fun)
 string CppLangExporter::genMemberFunction(codegen::MemberFunction fun)
 {
 	string s;
+
+	if (fun.isStatic())
+		s.append("static ");
+
 	if (fun.getReturnType().isConst())
 		s.append("const ");
 
