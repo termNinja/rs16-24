@@ -16,6 +16,7 @@
 #include <QInputDialog>
 #include <QListWidget>
 #include <QComboBox>
+#include <QHoverEvent>
 
 class ClassWidget : public QWidget
 {
@@ -29,15 +30,19 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
+    bool insideRect(QPoint mousePos);
+    void hoverMove(QHoverEvent * event);
+    bool event(QEvent *e);
+    void moveClass(QMouseEvent *e);
     QPoint mousePoint;
 
 public slots:
     void addMemberClicked();
     void addMethodClicked();
     void removeMethodClicked();
-
     void removeMemberClicked();
     void lineEditTextChanged();
+
 private:
     QWidget *wClassWraper;
     QVBoxLayout *vblClass;

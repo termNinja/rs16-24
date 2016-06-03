@@ -74,21 +74,12 @@ ClassWidget::ClassWidget(QWidget *parent ){
     vblClass->addWidget(lvMembers);
     vblClass->addLayout(qhblMethodButtons);
     vblClass->addWidget(lvMethods);
-
+    this->setAttribute(Qt::WA_Hover, true);
     //because widget is visible we need to call show() method to see newly added objects
     this->setParent(parent);
     show();
 //    parent->show();
 }
-
-void ClassWidget::mousePressEvent(QMouseEvent *e)
-{
-    offset = e->pos();
-    moving = true;
-    raise();
-}
-
-
 
 void ClassWidget::addMemberClicked()
 {
@@ -227,7 +218,159 @@ void ClassWidget::lineEditTextChanged(){
   lvMethods->setFixedWidth(width());
 }
 
-void ClassWidget::mouseMoveEvent(QMouseEvent *e)
+bool ClassWidget::insideRect(QPoint mousePos)
+{
+    int magicConst = 10;
+
+    //leftTop coordinate
+    QPoint a(magicConst , magicConst);
+    //leftBottom coordinate
+    QPoint b(this->height() - magicConst , magicConst);
+
+    //rightTop coordinate
+    QPoint c(this->width() - magicConst , magicConst);
+    //rightTop coordinate
+    QPoint d(this->height()- magicConst , this->width() - magicConst);
+
+    //mouse coordinate
+    QPoint m(mousePos.x(), mousePos.y());
+
+    // use orientation of triangles for evaluate
+    // if cursor inside rectangle
+
+    QPoint abVector(b.x() - a.x() , b.y() - a.y());
+    QPoint amVector(m.x() - a.x() , m.y() - a.y());
+    //determinant of vectors
+    int dabm = (abVector.x() * amVector.y()) - (abVector.y() * amVector.x());
+
+    QPoint bcVector(c.x() - b.x() , c.y() - b.y());
+    QPoint bmVector(m.x() - b.x() , m.y() - b.y());
+    int dbcm = (bcVector.x() * bmVector.y()) - (bcVector.y() * bmVector.x());
+
+    QPoint cdVector(d.x() - c.x() , d.y() - c.y());
+    QPoint cmVector(m.x() - c.x() , m.y() - c.y());
+    int dcdm = (cdVector.x() * cmVector.y()) - (cdVector.y() * cmVector.x());
+
+    QPoint daVector(a.x() - d.x() , a.y() - d.y());
+    QPoint dmVector(m.x() - d.x() , m.y() - d.y());
+    int ddam = (daVector.x() * dmVector.y()) - (daVector.y() * dmVector.x());
+
+    // if orientation of all triangles if same then
+    // poss of cursor is in rectangle
+
+    if(dabm > 0 && dbcm > 0 && dcdm > 0 && ddam > 0
+           ||
+      dabm < 0 && dbcm < 0 && dcdm < 0 && ddam < 0)
+        return true;
+    else
+        return false;
+}
+
+void ClassWidget::hoverMove(QHoverEvent * event)
+{
+    int magicConst = 10;
+    QPoint mousePosition(event->pos().x() , event->pos().y());
+    bool inside = insideRect(mousePosition);
+
+    if(!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
+    {
+        this->setCursor(Qt::SizeFDiagCursor);
+        if(moving)
+        {
+            int diffX = event->oldPos().x() - event->pos().x();
+            int diffY = event->oldPos().y() - event->pos().y();
+            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
+            if(diffX > 0 || diffY > 0)
+            {
+                resize( this->width() + translate, this->height() + translate);
+                moveClass((QMouseEvent*)event);
+            }
+            else if(diffX < 0 || diffY < 0) {
+                resize( this->width() - translate, this->height() - translate);
+                moveClass((QMouseEvent*)event);
+            }
+        }
+    }
+    else if( !inside && mousePosition.x() < magicConst &&
+                        mousePosition.y() > this->height() - magicConst )
+    {
+        this->setCursor(Qt::SizeBDiagCursor);
+        if(moving)
+        {
+            int diffX = event->oldPos().x() - event->pos().x();
+            int diffY = event->oldPos().y() - event->pos().y();
+            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
+            if(diffX > 0 || diffY < 0)
+            {
+                resize( this->width() + translate, this->height() + translate);
+                moveClass((QMouseEvent*)event);
+            }
+            else {
+                resize( this->width() - translate, this->height() - translate);
+                moveClass((QMouseEvent*)event);
+            }
+        }
+    }
+
+    else if(!inside && mousePosition.x() > this->width() - magicConst &&
+                       mousePosition.y() < magicConst )
+    {
+        this->setCursor(Qt::SizeBDiagCursor);
+        if(moving)
+        {
+            int diffX = event->oldPos().x() - event->pos().x();
+            int diffY = event->oldPos().y() - event->pos().y();
+            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
+            if(diffX < 0 || diffY > 0)
+            {
+                resize( this->width() + translate, this->height() + translate);
+                moveClass((QMouseEvent*)event);
+            }
+            else {
+                resize( this->width() - translate, this->height() - translate);
+                moveClass((QMouseEvent*)event);
+            }
+        }
+    }
+
+    else if(!inside && mousePosition.x() > this->width() - magicConst &&
+                       mousePosition.y() > this->height() - magicConst )
+    {
+        this->setCursor(Qt::SizeFDiagCursor);
+        if(moving)
+        {
+            int diffX = event->oldPos().x() - event->pos().x();
+            int diffY = event->oldPos().y() - event->pos().y();
+            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
+            if(diffX < 0 || diffY < 0)
+            {
+                resize( this->width() + translate, this->height() + translate);
+            }
+            else {
+                resize( this->width() - translate, this->height() - translate);
+            }
+           }
+    }
+    else
+        this->setCursor(Qt::ArrowCursor);
+}
+
+bool ClassWidget::event(QEvent *e)
+{
+    if(e->type() == QEvent::HoverMove)
+    {
+        hoverMove(static_cast<QHoverEvent*>(e));
+    }
+    return QWidget::event(e);
+}
+
+void ClassWidget::mousePressEvent(QMouseEvent *e)
+{
+    offset = e->pos();
+    moving = true;
+    raise();
+}
+void ClassWidget::moveClass(QMouseEvent *e)
 {
     if(e->buttons() & moving)
       {
@@ -246,6 +389,17 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
     int bottomMargin = parentWidget()->height() - height();
     if(pos().y()> bottomMargin){
         this->move(mapToParent(QPoint(0,bottomMargin - pos().y())));
+    }
+}
+
+void ClassWidget::mouseMoveEvent(QMouseEvent *e)
+{
+    QPoint mousePosition(e->pos().x() , e->pos().x());
+    bool inside = insideRect(mousePosition);
+
+    if(inside)
+    {
+        moveClass(e);
     }
 }
 

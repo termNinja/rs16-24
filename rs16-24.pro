@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     moduleAppController/appcontrollertester.cpp \
     moduleLangExporter/cpplangexporter.cpp \
     moduleLangExporter/langexportertester.cpp \
-    classwidget.cpp
+    classwidget.cpp \
+    relation.cpp \
+    relationline.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -48,6 +50,8 @@ HEADERS  += mainwindow.h \
     moduleCodegen/membervisibility.hpp \
     moduleLangExporter/cpplangexporter.hpp \
     moduleLangExporter/langexportertester.hpp \
-    classwidget.hpp
+    classwidget.hpp \
+    relation.hpp \
+    relationline.hpp
 
 FORMS    += mainwindow.ui
