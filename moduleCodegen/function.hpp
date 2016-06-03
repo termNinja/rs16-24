@@ -10,6 +10,7 @@ namespace codegen {
 
 class Function {
 public:
+	Function(std::string functionName);
 	Function(Type returnType, std::string functionName, const std::vector<Variable> &parameters);
 
 	Type getReturnType() const;
@@ -20,6 +21,8 @@ public:
 	void setReturnType(Type returnType);
 	void setName(std::string name);
 	void setParameters(const std::vector<Variable> &parameters);
+
+	void addParameter(Variable param);
 
 	friend std::ostream& operator<<(std::ostream &out, const Function &function);
 

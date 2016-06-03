@@ -6,14 +6,24 @@ using namespace std;
 
 namespace codegen {
 
-MemberVariable::MemberVariable(Type type, std::string name, std::string owner)
-	: Variable(type, name), m_owner(owner)
+MemberVariable::MemberVariable(Type type, std::string name, std::string owner, MemberVisibility visibility)
+	: Variable(type, name), m_owner(owner), m_visibility(visibility)
 {
 }
 
 std::string MemberVariable::getOwnerName() const
 {
 	return m_owner;
+}
+
+MemberVisibility MemberVariable::getVisibility() const
+{
+	return m_visibility;
+}
+
+void MemberVariable::setVisibility(MemberVisibility visibility)
+{
+	m_visibility = visibility;
 }
 
 std::ostream &operator<<(std::ostream &out, const MemberVariable &mv)

@@ -1,9 +1,27 @@
-#include "class.hpp"
 #include <iostream>
-
-using namespace std;
+#include "class.hpp"
+#include "membervisibility.hpp"
 
 namespace codegen {
+
+Class::Class(std::string className, std::vector<MemberFunction> memberFunctions)
+	: m_name(className)
+{
+	filterMemberFunctions(memberFunctions);
+}
+
+Class::Class(std::string className, std::vector<MemberVariable> memberVariables)
+	: m_name(className)
+{
+	filterMemberVariables(memberVariables);
+}
+
+Class::Class(std::string className, std::vector<MemberFunction> memberFunctions, std::vector<MemberVariable> memberVariables)
+	: m_name(className)
+{
+	filterMemberFunctions(memberFunctions);
+	filterMemberVariables(memberVariables);
+}
 
 Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
 			 std::vector<MemberFunction> privMemFun,
@@ -13,11 +31,6 @@ Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
 			 std::vector<MemberVariable> protMemVar)
 	: m_name(name), m_pubMemFun(pubMemFun), m_privMemFun(privMemFun), m_protMemFun(protMemFun),
 	  m_pubMemVar(pubMemVar), m_privMemVar(privMemVar), m_protMemVar(protMemVar)
-{
-}
-
-Class::Class(std::string name, std::vector<MemberFunction> pubMemFun, std::vector<MemberVariable> privMemVar)
-	: m_name(name), m_pubMemFun(pubMemFun), m_privMemVar(privMemVar)
 {
 }
 
@@ -54,6 +67,30 @@ std::vector<MemberVariable> &Class::getProtectedMemberVariables()
 std::string Class::getName() const
 {
 	return m_name;
+}
+
+void Class::filterMemberFunctions(std::vector<MemberFunction> memberFunctions)
+{
+	for (auto memFun : memberFunctions) {
+		if (memFun.getVisibility() == PUBLIC)
+			m_pubMemFun.push_back(memFun);
+		else if (memFun.getVisibility() == PRIVATE)
+			m_privMemFun.push_back(memFun);
+		else if (memFun.getVisibility() == PROTECTED)
+			m_protMemFun.push_back(memFun);
+	}
+}
+
+void Class::filterMemberVariables(std::vector<MemberVariable> memberVariables)
+{
+	for (auto memVar : memberVariables) {
+		if (memVar.getVisibility() == PUBLIC)
+			m_pubMemVar.push_back((memVar));
+		else if (memVar.getVisibility() == PRIVATE)
+			m_privMemVar.push_back(memVar);
+		else if (memVar.getVisibility() == PROTECTED)
+			m_protMemVar.push_back(memVar);
+	}
 }
 
 std::ostream &operator<<(std::ostream &out, const Class &c)

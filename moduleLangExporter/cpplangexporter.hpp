@@ -18,9 +18,9 @@ public:
 	CppLangExporter();
 
 	std::string genBasicVariable(codegen::Variable var);
-	std::string genMemberVariable(codegen::MemberVariable var, codegen::MemberVisibility v);
+	std::string genMemberVariable(codegen::MemberVariable var);
 	std::string genBasicFunction(codegen::Function fun);
-	std::string genMemberFunction(codegen::MemberFunction fun, codegen::MemberVisibility v);
+	std::string genMemberFunction(codegen::MemberFunction fun);
 	std::string genClass(codegen::Class cls);
 
 	bool startCodeGeneration() const;

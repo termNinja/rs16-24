@@ -6,6 +6,10 @@ using namespace std;
 
 namespace codegen {
 
+Function::Function(std::string functionName)
+	: m_name(functionName)
+{}
+
 Function::Function(Type returnType, std::string functionName, const std::vector<Variable> &parameters)
 	: m_returnType(returnType), m_name(functionName), m_parameters(parameters)
 {
@@ -44,6 +48,11 @@ void Function::setName(std::string name)
 void Function::setParameters(const std::vector<Variable> &parameters)
 {
 	m_parameters = parameters;
+}
+
+void Function::addParameter(Variable param)
+{
+	m_parameters.push_back(param);
 }
 
 std::ostream& operator<<(std::ostream &out, const Function &function)

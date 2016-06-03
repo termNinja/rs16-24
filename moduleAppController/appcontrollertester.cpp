@@ -16,7 +16,7 @@ void AppControllerTester::performTest()
 	}
 
 	// getting user project name
-	std::cout << "Resource Manager: Project name -> " << rm->getProjectName() << std::endl;
+	std::cout << "Resource Manager: Project name -> " << rm->getProjectName().toStdString() << std::endl;
 }
 
 } // namespace end: app
