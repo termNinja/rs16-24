@@ -220,21 +220,20 @@ void ClassWidget::lineEditTextChanged(){
 
 bool ClassWidget::insideRect(QPoint mousePos)
 {
-    int magicConst = 10;
+    int magicConst = 15;
 
     //leftTop coordinate
     QPoint a(magicConst , magicConst);
     //leftBottom coordinate
-    QPoint b(this->height() - magicConst , magicConst);
-
+    QPoint b(magicConst , this->height() - magicConst);
     //rightTop coordinate
-    QPoint c(this->width() - magicConst , magicConst);
-    //rightTop coordinate
-    QPoint d(this->height()- magicConst , this->width() - magicConst);
+    QPoint d(this->width() - magicConst , magicConst);
+    //rightBottom coordinate
+    QPoint c(this->width()- magicConst , this->height() - magicConst);
 
     //mouse coordinate
     QPoint m(mousePos.x(), mousePos.y());
-
+    std::cout<<"mouse: "<<m.x() << "a " << a.x()<<std::endl;
     // use orientation of triangles for evaluate
     // if cursor inside rectangle
 
@@ -257,10 +256,10 @@ bool ClassWidget::insideRect(QPoint mousePos)
 
     // if orientation of all triangles if same then
     // poss of cursor is in rectangle
-
-    if(dabm > 0 && dbcm > 0 && dcdm > 0 && ddam > 0
+    std::cout<<"a "<< dabm <<"b "<<  dcdm<<"c " <<dcdm<< "d " <<ddam <<std::endl;
+    if((dabm >= 0 && dbcm >= 0 && dcdm >= 0 && ddam >= 0)
            ||
-      dabm < 0 && dbcm < 0 && dcdm < 0 && ddam < 0)
+      (dabm <= 0 && dbcm <= 0 && dcdm <= 0 && ddam <= 0))
         return true;
     else
         return false;
@@ -268,91 +267,85 @@ bool ClassWidget::insideRect(QPoint mousePos)
 
 void ClassWidget::hoverMove(QHoverEvent * event)
 {
-    int magicConst = 10;
+    int magicConst = 15;
     QPoint mousePosition(event->pos().x() , event->pos().y());
     bool inside = insideRect(mousePosition);
 
     if(!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
     {
         this->setCursor(Qt::SizeFDiagCursor);
-        if(moving)
+        if(m_resize)
         {
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
-            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
-            if(diffX > 0 || diffY > 0)
-            {
-                resize( this->width() + translate, this->height() + translate);
+            if(diffX > 0 || diffY > 0){
+                resize( this->width() + diffX, this->height() + diffY);
+                moving = true;
                 moveClass((QMouseEvent*)event);
+                moving = false;
             }
             else if(diffX < 0 || diffY < 0) {
-                resize( this->width() - translate, this->height() - translate);
-                moveClass((QMouseEvent*)event);
+                resize( this->width() + diffX, this->height() + diffY);
+                this->move(mapToParent( QPoint( -diffX, -diffY)));
             }
         }
     }
-    else if( !inside && mousePosition.x() < magicConst &&
-                        mousePosition.y() > this->height() - magicConst )
-    {
-        this->setCursor(Qt::SizeBDiagCursor);
-        if(moving)
-        {
-            int diffX = event->oldPos().x() - event->pos().x();
-            int diffY = event->oldPos().y() - event->pos().y();
-            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
-            if(diffX > 0 || diffY < 0)
-            {
-                resize( this->width() + translate, this->height() + translate);
-                moveClass((QMouseEvent*)event);
-            }
-            else {
-                resize( this->width() - translate, this->height() - translate);
-                moveClass((QMouseEvent*)event);
-            }
-        }
-    }
+//    else if( !inside && mousePosition.x() < magicConst &&
+//                        mousePosition.y() > this->height() - magicConst )
+//    {
+//        this->setCursor(Qt::SizeBDiagCursor);
+//        if(moving)
+//        {
+//            int diffX = event->oldPos().x() - event->pos().x();
+//            int diffY = event->oldPos().y() - event->pos().y();
+//            if(diffX < 0 || diffY > 0)
+//            {
+//                resize( this->width() + (-1)*diffX, this->height() + diffY);
+//            }
+//            else if(diffX > 0 || diffY < 0){
+//                resize( this->width() + (-1)* diffX, this->height() + diffY);
+//            }
+//        }
+//    }
 
-    else if(!inside && mousePosition.x() > this->width() - magicConst &&
-                       mousePosition.y() < magicConst )
-    {
-        this->setCursor(Qt::SizeBDiagCursor);
-        if(moving)
-        {
-            int diffX = event->oldPos().x() - event->pos().x();
-            int diffY = event->oldPos().y() - event->pos().y();
-            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
-            if(diffX < 0 || diffY > 0)
-            {
-                resize( this->width() + translate, this->height() + translate);
-                moveClass((QMouseEvent*)event);
-            }
-            else {
-                resize( this->width() - translate, this->height() - translate);
-                moveClass((QMouseEvent*)event);
-            }
-        }
-    }
+//    else if(!inside && mousePosition.x() > this->width() - magicConst &&
+//                       mousePosition.y() < magicConst )
+//    {
+//        this->setCursor(Qt::SizeBDiagCursor);
+//        if(moving)
+//        {
+//            int diffX = event->oldPos().x() - event->pos().x();
+//            int diffY = event->oldPos().y() - event->pos().y();
+//            if(diffX < 0 && diffY > 0)
+//            {
+//                resize( this->width() + diffX, this->height() + diffY);
+//            }
+//            else {
+//                resize( this->width() - diffX, this->height() - diffY);
+//            }
+//        }
+//    }
 
-    else if(!inside && mousePosition.x() > this->width() - magicConst &&
-                       mousePosition.y() > this->height() - magicConst )
+    else if(!inside && mousePosition.x() > (this->width() - magicConst) &&
+                       mousePosition.y() > (this->height() - magicConst) )
     {
         this->setCursor(Qt::SizeFDiagCursor);
-        if(moving)
+        if(m_resize)
         {
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
-            double translate = sqrt(pow(diffX,2) + pow(diffY,2));
-            if(diffX < 0 || diffY < 0)
-            {
-                resize( this->width() + translate, this->height() + translate);
+
+            if(diffX < 0 || diffY < 0){
+                resize( this->width() + -1*diffX, this->height() + -1*diffY);
             }
-            else {
-                resize( this->width() - translate, this->height() - translate);
+            else if(diffX > 0 || diffY > 0){
+                resize( this->width() - diffX, this->height() - diffY);
             }
-           }
+        }
     }
-    else
+    else{
         this->setCursor(Qt::ArrowCursor);
+    }
 }
 
 bool ClassWidget::event(QEvent *e)
@@ -367,12 +360,19 @@ bool ClassWidget::event(QEvent *e)
 void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
     offset = e->pos();
-    moving = true;
+    if(insideRect(QPoint(e->pos())))
+    {
+        moving = true;
+    }
+    m_resize = true;
     raise();
 }
+
+
 void ClassWidget::moveClass(QMouseEvent *e)
 {
-    if(e->buttons() & moving)
+
+    if(e->buttons() && moving)
       {
           this->move(mapToParent(e->pos() - offset));
       }
@@ -395,15 +395,11 @@ void ClassWidget::moveClass(QMouseEvent *e)
 void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 {
     QPoint mousePosition(e->pos().x() , e->pos().x());
-    bool inside = insideRect(mousePosition);
-
-    if(inside)
-    {
-        moveClass(e);
-    }
+    moveClass(e);
 }
 
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
     moving = false;
+    m_resize = false;
 }

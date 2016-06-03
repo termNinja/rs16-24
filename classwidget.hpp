@@ -17,6 +17,7 @@
 #include <QListWidget>
 #include <QComboBox>
 #include <QHoverEvent>
+#include <cmath>
 
 class ClassWidget : public QWidget
 {
@@ -55,6 +56,7 @@ private:
     //used for moving
     QPoint offset;
     bool moving;
+    bool m_resize;
 };
 
 #endif // CLASSWIDGET_HPP
