@@ -1,5 +1,6 @@
 #include <QDir>
 #include <QString>
+#include <QChar>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -49,6 +50,13 @@ ResourceManager::ResourceManager()
 bool ResourceManager::fileExists(std::string path) const
 {
 	return std::ifstream(path).good();
+}
+
+char ResourceManager::getPlatformSeparator() const
+{
+	QChar sep = QDir::separator();
+	QString str(sep);
+	return str.toStdString()[0];
 }
 
 //void ResourceManager::initResourceManager()

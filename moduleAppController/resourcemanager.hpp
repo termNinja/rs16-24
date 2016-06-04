@@ -15,6 +15,7 @@ public:
 	QString getProjectName() const;
 
 	void setProjectPath(QString path);
+	char getPlatformSeparator() const;
 
 private:
 	ResourceManager();
