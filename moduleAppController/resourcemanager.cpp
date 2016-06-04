@@ -2,6 +2,7 @@
 #include <QString>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "resourcemanager.hpp"
 
 namespace app {
@@ -43,6 +44,11 @@ void ResourceManager::setProjectPath(QString path)
 ResourceManager::ResourceManager()
 	: m_projectOutputPath(QDir::homePath()), m_projectName(QString("Untitled"))
 {
+}
+
+bool ResourceManager::fileExists(std::string path) const
+{
+	return std::ifstream(path).good();
 }
 
 //void ResourceManager::initResourceManager()
