@@ -12,7 +12,7 @@ class MemberVariable : public Variable
 {
 public:
 	// TODO: Switch QString owner to a const reference to real class
-	MemberVariable(Type type, std::string name, std::string owner, MemberVisibility visibility = PRIVATE);
+	MemberVariable(Type type, std::string name, std::string owner = "", MemberVisibility visibility = PRIVATE);
 
 	std::string getOwnerName() const;
 

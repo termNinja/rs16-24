@@ -15,6 +15,7 @@ public:
 	QString getProjectName() const;
 
 	void setProjectPath(QString path);
+	char getPlatformSeparator() const;
 
 private:
 	ResourceManager();
@@ -23,6 +24,8 @@ private:
     ResourceManager(const ResourceManager &&) = delete;
 	ResourceManager& operator=(const ResourceManager&) = delete;
     ResourceManager& operator=(const ResourceManager&&) = delete;
+
+	bool fileExists(std::string path) const;
 
 	static void initResourceManager();
 

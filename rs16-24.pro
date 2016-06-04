@@ -18,6 +18,8 @@ QMAKE_LFLAGS +=  -std=c++11
 #	   -lboost_system\
 #	   -lboost_filesystem
 
+LIBS += -lm
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     moduleCodegen/type.cpp \

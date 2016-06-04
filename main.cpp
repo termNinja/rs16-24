@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     appControllerTester.performTest();
     std::cout << "======================================================" << std::endl;
 
+
     w.show();
     return a.exec();
 }
