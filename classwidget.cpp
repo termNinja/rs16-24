@@ -66,6 +66,8 @@ ClassWidget::ClassWidget(QWidget *parent ){
     qvblClass->addLayout(qhblMethodButtons);
     qvblClass->addWidget(qlwMethods);
 
+     this->setAttribute(Qt::WA_Hover, true);
+
     //because widget is visible we need to call show() method to see newly added objects
     this->setParent(parent);
     show();
@@ -350,11 +352,11 @@ bool ClassWidget::event(QEvent *e)
 void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
     offset = e->pos();
-    if(insideRect(QPoint(e->pos())))
-    {
+    //if(insideRect(QPoint(e->pos())))
+    //{
         moving = true;
-    }
-    m_resize = true;
+    //}
+    //m_resize = true;
     raise();
 }
 
