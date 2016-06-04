@@ -16,6 +16,10 @@
 #include <QInputDialog>
 #include <QListWidget>
 #include <QComboBox>
+#include <moduleCodegen/memberfunction.hpp>
+#include <moduleCodegen/membervariable.hpp>
+
+using namespace codegen;
 
 class ClassWidget : public QWidget
 {
@@ -38,18 +42,25 @@ public slots:
 
     void removeMemberClicked();
     void lineEditTextChanged();
+
+    void addMethodParameterClicked();
 private:
     QWidget *wClassWraper;
-    QVBoxLayout *vblClass;
-    QListWidget *lvMembers;
-    QPushButton *btnAddMember;
-    QListWidget *lvMethods;
-    QPushButton *btnAddMethod;
-    QLineEdit *lclassName;
+    QVBoxLayout *qvblClass;
+    QListWidget *qlwMembers;
+    QPushButton *qpbAddMember;
+    QListWidget *qlwMethods;
+    QPushButton *qpbAddMethod;
+    QLineEdit *qleClassName;
+
+    QList<MemberFunction*> memberFuncions;
+    QList<MemberVariable*> memberVariables;
 
     //used for moving
     QPoint offset;
     bool moving;
+    void getMemberFunctions();
+    void getMembers();
 };
 
 #endif // CLASSWIDGET_HPP

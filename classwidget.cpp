@@ -13,72 +13,62 @@ ClassWidget::ClassWidget(QWidget *parent ){
     setAutoFillBackground(true);
     setPalette(Pal);
 
-    vblClass = new QVBoxLayout(this);
-    setLayout(vblClass);
-//    setContentsMargins(QMargins(0,20,0,0));
-    vblClass->setContentsMargins(QMargins(0,20,0,0));
+    qvblClass = new QVBoxLayout(this);
+    setLayout(qvblClass);
+    qvblClass->setContentsMargins(QMargins(0,20,0,0));
 
     //add class name
-//    lclassName = new QLineEdit("My Class Name");
-    lclassName = new QLineEdit();
-    lclassName->setPlaceholderText("My Class Name");
-//    lclassName->setMaximumWidth(200);
-    lclassName->setAlignment(Qt::AlignCenter);
+    qleClassName = new QLineEdit();
+    qleClassName->setPlaceholderText("My Class Name");
+    qleClassName->setAlignment(Qt::AlignCenter);
 
 
     //listview for member variables
-    lvMembers = new QListWidget();
-//    lvMembers->setMaximumWidth(200);
-    lvMembers->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    lvMembers->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    lvMembers->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    lvMembers->setVisible(false);
+    qlwMembers = new QListWidget();
+    qlwMembers->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlwMembers->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlwMembers->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    qlwMembers->setVisible(false);
 
     QHBoxLayout* qhblMemberButtons = new QHBoxLayout(this);
 
     //creating button for adding members
-    btnAddMember = new QPushButton("Add member");
-//    btnAddMember->setMaximumWidth(200);
-    qhblMemberButtons->addWidget(btnAddMember);
-    QObject::connect(btnAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
+    qpbAddMember = new QPushButton("Add member");
+    qhblMemberButtons->addWidget(qpbAddMember);
+    QObject::connect(qpbAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
 
     QPushButton* btnRemoveMember = new QPushButton("Remove \nmember(s)");
-//    btnAddMember->setMaximumWidth(200);
     qhblMemberButtons->addWidget(btnRemoveMember);
-    QObject::connect(btnRemoveMember, SIGNAL(clicked()), this , SLOT(removeMemberClicked()));
+    connect(btnRemoveMember, SIGNAL(clicked()), this , SLOT(removeMemberClicked()));
 
 
     //creating second half of a classObject(methods listview and button), same as the first half
-    lvMethods = new QListWidget();
-//    lvMethods->setMaximumWidth(200);
-    lvMethods->setVisible(false);
-    lvMethods->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    lvMethods->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    lvMethods->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    qlwMethods = new QListWidget();
+    qlwMethods->setVisible(false);
+    qlwMethods->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlwMethods->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlwMethods->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     QHBoxLayout* qhblMethodButtons = new QHBoxLayout(this);
 
-    btnAddMethod = new QPushButton("Add method");
-//    btnAddMethod->setMaximumWidth(200);
-    qhblMethodButtons->addWidget(btnAddMethod);
-    QObject::connect(btnAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
+    qpbAddMethod = new QPushButton("Add method");
+    qhblMethodButtons->addWidget(qpbAddMethod);
+    QObject::connect(qpbAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
 
-    QPushButton* btnRemoveMethod = new QPushButton("Remove \nmethod(s)");
-//    btnAddMethod->setMaximumWidth(200);
-    qhblMethodButtons->addWidget(btnRemoveMethod);
-    QObject::connect(btnRemoveMethod, SIGNAL(clicked()), this , SLOT(removeMethodClicked()));
+    QPushButton* qpbRemoveMethod = new QPushButton("Remove \nmethod(s)");
+    qhblMethodButtons->addWidget(qpbRemoveMethod);
+    connect(qpbRemoveMethod, SIGNAL(clicked()), this , SLOT(removeMethodClicked()));
 
 
-    vblClass->addWidget(lclassName);
-    vblClass->addLayout(qhblMemberButtons);
-    vblClass->addWidget(lvMembers);
-    vblClass->addLayout(qhblMethodButtons);
-    vblClass->addWidget(lvMethods);
+    qvblClass->addWidget(qleClassName);
+    qvblClass->addLayout(qhblMemberButtons);
+    qvblClass->addWidget(qlwMembers);
+    qvblClass->addLayout(qhblMethodButtons);
+    qvblClass->addWidget(qlwMethods);
 
     //because widget is visible we need to call show() method to see newly added objects
     this->setParent(parent);
     show();
-//    parent->show();
 }
 
 void ClassWidget::mousePressEvent(QMouseEvent *e)
@@ -92,11 +82,10 @@ void ClassWidget::mousePressEvent(QMouseEvent *e)
 
 void ClassWidget::addMemberClicked()
 {
-    lvMembers->setVisible(true);
+    qlwMembers->setVisible(true);
 
     QComboBox* qcbAccessModifiers = new QComboBox();
     qcbAccessModifiers->addItems({"private", "public", "protected"});
-//    qcbAccessModifiers->setMaximumWidth(50);
     QLineEdit* qleType = new QLineEdit("type");
     QLineEdit* qleName = new QLineEdit("newMember");
 
@@ -123,40 +112,43 @@ void ClassWidget::addMemberClicked()
     widget->setLayout(widgetLayout);
     itemN->setSizeHint(QSize(0,widget->sizeHint().height()));
 
-    lvMembers->addItem(itemN);
-    lvMembers->setItemWidget(itemN, widget);
+    qlwMembers->addItem(itemN);
+    qlwMembers->setItemWidget(itemN, widget);
 
 
-    lvMembers->setFixedSize(lvMembers->sizeHintForColumn(0) + 2 * lvMembers->frameWidth(), lvMembers->sizeHintForRow(0) * lvMembers->count() + 2 * lvMembers->frameWidth());
+    qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
 
     resize(sizeHint());
-    lvMembers->setFixedWidth(width());
-    lvMethods->setFixedWidth(width());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
 }
 
 void ClassWidget::removeMemberClicked(){
-    qDeleteAll(lvMembers->selectedItems());
-    lvMembers->setFixedSize(lvMembers->sizeHintForColumn(0) + 2 * lvMembers->frameWidth(), lvMembers->sizeHintForRow(0) * lvMembers->count() + 2 * lvMembers->frameWidth());
-    lvMethods->setFixedSize(lvMethods->sizeHintForColumn(0) + 2 * lvMethods->frameWidth(), lvMethods->sizeHintForRow(0) * lvMethods->count() + 2 * lvMethods->frameWidth());
+    qDeleteAll(qlwMembers->selectedItems());
+    qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
+    qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
 
-    if(lvMembers->count()==0)
-        lvMembers->setVisible(false);
+    if(qlwMembers->count()==0)
+        qlwMembers->setVisible(false);
 
     resize(sizeHint());
-    lvMembers->setFixedWidth(width());
-    lvMethods->setFixedWidth(width());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
 }
 
 void ClassWidget::addMethodClicked()
 {
-    lvMethods->setVisible(true);
+    qlwMethods->setVisible(true);
 
     QComboBox* qcbAccessModifiers = new QComboBox();
     qcbAccessModifiers->addItems({"public","private","protected"});
-//    qcbAccessModifiers->setMaximumWidth(50);
     QLineEdit* qleType = new QLineEdit("type");
     QLineEdit* qleName = new QLineEdit("NewMethod");
-    QLineEdit* qleParameters = new QLineEdit("");
+    QHBoxLayout* qhblParametersWrap = new QHBoxLayout();
+    QPushButton* qpbAddParameter = new QPushButton("+");
+    qpbAddParameter->setMaximumWidth(20);
+    qpbAddParameter->setMaximumHeight(20);
+    connect(qpbAddParameter, SIGNAL(clicked()), this , SLOT(addMethodParameterClicked()));
 
     QListWidgetItem* itemN = new QListWidgetItem();
     QWidget* widget = new QWidget();
@@ -167,7 +159,8 @@ void ClassWidget::addMethodClicked()
     widgetLayout->addWidget(qleType);
     widgetLayout->addWidget(qleName);
     widgetLayout->addWidget(new QLabel("("));
-    widgetLayout->addWidget(qleParameters);
+    widgetLayout->addLayout(qhblParametersWrap);
+    widgetLayout->addWidget(qpbAddParameter);
     widgetLayout->addWidget(new QLabel(")"));
 
     QFont font = qleType->font();
@@ -180,35 +173,32 @@ void ClassWidget::addMethodClicked()
     qleName->setFixedWidth(pixelsWide);
     connect(qleName, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
 
-    qleParameters->setFixedWidth(15);
-    connect(qleParameters, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
-
     widgetLayout->setSizeConstraint(QLayout::SetFixedSize);
     widget->setLayout(widgetLayout);
     itemN->setSizeHint(QSize(0,widget->sizeHint().height()));
 
-    lvMethods->addItem(itemN);
-    lvMethods->setItemWidget(itemN, widget);
+    qlwMethods->addItem(itemN);
+    qlwMethods->setItemWidget(itemN, widget);
 
-    lvMethods->setFixedSize(lvMethods->sizeHintForColumn(0) + 2 * lvMethods->frameWidth(), lvMethods->sizeHintForRow(0) * lvMethods->count() + 2 * lvMethods->frameWidth());
+    qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
 
     resize(sizeHint());
-    lvMembers->setFixedWidth(width());
-    lvMethods->setFixedWidth(width());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
 }
 
 void ClassWidget::removeMethodClicked(){
 
-    qDeleteAll(lvMethods->selectedItems());
-    lvMethods->setFixedSize(lvMethods->sizeHintForColumn(0) + 2 * lvMethods->frameWidth(), lvMethods->sizeHintForRow(0) * lvMethods->count() + 2 * lvMethods->frameWidth());
-    lvMembers->setFixedSize(lvMembers->sizeHintForColumn(0) + 2 * lvMembers->frameWidth(), lvMembers->sizeHintForRow(0) * lvMembers->count() + 2 * lvMembers->frameWidth());
+    qDeleteAll(qlwMethods->selectedItems());
+    qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
+    qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
 
-    if(lvMethods->count()==0)
-        lvMethods->setVisible(false);
+    if(qlwMethods->count()==0)
+        qlwMethods->setVisible(false);
 
     resize(sizeHint());
-    lvMembers->setFixedWidth(width());
-    lvMethods->setFixedWidth(width());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
 }
 
 void ClassWidget::lineEditTextChanged(){
@@ -220,11 +210,11 @@ void ClassWidget::lineEditTextChanged(){
 
   lineEdit->setFixedWidth(pixelsWide);
 
-  lvMembers->setFixedSize(lvMembers->sizeHintForColumn(0) + 2 * lvMembers->frameWidth(), lvMembers->sizeHintForRow(0) * lvMembers->count() + 2 * lvMembers->frameWidth());
-  lvMethods->setFixedSize(lvMethods->sizeHintForColumn(0) + 2 * lvMethods->frameWidth(), lvMethods->sizeHintForRow(0) * lvMethods->count() + 2 * lvMethods->frameWidth());
+  qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
+  qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
   resize(sizeHint());
-  lvMembers->setFixedWidth(width());
-  lvMethods->setFixedWidth(width());
+  qlwMembers->setFixedWidth(width());
+  qlwMethods->setFixedWidth(width());
 }
 
 void ClassWidget::mouseMoveEvent(QMouseEvent *e)
@@ -252,4 +242,55 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
     moving = false;
+}
+
+void ClassWidget::addMethodParameterClicked(){
+    QHBoxLayout* qhblParametersWrap = (QHBoxLayout*)((QWidget*)(((QPushButton*)sender())->parent()))->layout()->itemAt(4)->layout();
+    QLineEdit* qleParameter = new QLineEdit();
+
+    qleParameter->setFixedWidth(15);
+    connect(qleParameter, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
+
+    qhblParametersWrap->addWidget(qleParameter);
+//    QMessageBox msgBox;
+//    msgBox.setText(->itemAt(0)->widget()->metaObject()->className());
+//    msgBox.exec();
+
+    qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
+    qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
+    resize(sizeHint());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
+}
+
+void ClassWidget::getMemberFunctions(){
+
+    memberFuncions.clear();
+
+    for(int i=0;i<qlwMethods->count();i++){
+        QLayout* methodLayout = qlwMethods->itemWidget(qlwMethods->item(i))->layout();
+
+        QComboBox* methodAccessModifier = (QComboBox*)methodLayout->itemAt(0)->widget();
+        QLineEdit* methodType= (QLineEdit*)methodLayout->itemAt(1)->widget();
+        QLineEdit* methodName= (QLineEdit*)methodLayout->itemAt(2)->widget();
+
+        //todo: kreirati lepo metodu, sa svim podacima
+        memberFuncions.append(new MemberFunction(methodName->text().toStdString(),false));
+    }
+}
+
+void ClassWidget::getMembers(){
+
+    memberVariables.clear();
+
+    for(int i=0;i<qlwMembers->count();i++){
+        QLayout* memberLayout = qlwMembers->itemWidget(qlwMembers->item(i))->layout();
+
+        QComboBox* memberAccessModifier = (QComboBox*)memberLayout->itemAt(0)->widget();
+        QLineEdit* memberType= (QLineEdit*)memberLayout->itemAt(1)->widget();
+        QLineEdit* memberName= (QLineEdit*)memberLayout->itemAt(2)->widget();
+
+        //todo: dogovoriti se oko toga kako treba da izgleda "interfejs" moduleCodgen-a
+//        memberVariables.append(new MemberVariable());
+    }
 }
