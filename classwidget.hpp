@@ -52,6 +52,7 @@ public slots:
 
     void addMethodParameterClicked();
     void switchViews();
+    void deleteWidget();
 private:
     QWidget *wClassWraper;
     QVBoxLayout *qvblClassFull;

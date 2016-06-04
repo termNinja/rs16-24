@@ -2,8 +2,8 @@
 
 ClassWidget::ClassWidget(QWidget *parent ){
 
-    QString styleSheet = QString("font-size:10px;").arg(font().pointSize());
-    this->setStyleSheet(styleSheet);
+//    QString styleSheet = QString("font-size:10px;").arg(font().pointSize());
+//    this->setStyleSheet(styleSheet);
 
     moving = false;
 
@@ -15,22 +15,35 @@ ClassWidget::ClassWidget(QWidget *parent ){
 
 
 
-    this->setAttribute(Qt::WA_Hover, true);
+    //todo: vratiti resize kada se zavrsi sa compactview-om
+//    this->setAttribute(Qt::WA_Hover, true);
 
     QWidget* firstPageWidget = makeFullSizeWidget();
-    QWidget* secondPageWidget = makeCompactWidget();;
+    QWidget* secondPageWidget = new QWidget();
 
     stackedLayout = new QStackedLayout;
     stackedLayout->addWidget(firstPageWidget);
     stackedLayout->addWidget(secondPageWidget);
 
+    QHBoxLayout* qhblHeader = new QHBoxLayout();
+    qhblHeader->setContentsMargins(QMargins(0,0,0,0));
+    qhblHeader->setAlignment(Qt::AlignLeft);
+
     QPushButton* toggle = new QPushButton("-");
     toggle->setMaximumWidth(20);
     connect(toggle, SIGNAL(clicked()), this , SLOT(switchViews()));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QPushButton* qpbDeleteWidget = new QPushButton("X");
+    qpbDeleteWidget->setMaximumWidth(20);
+    connect(qpbDeleteWidget, SIGNAL(clicked()), this , SLOT(deleteWidget()));
+
+    QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setContentsMargins(QMargins(0,0,0,0));
-    mainLayout->addWidget(toggle);
+
+    qhblHeader->addWidget(qpbDeleteWidget);
+    qhblHeader->addWidget(toggle);
+
+    mainLayout->addLayout(qhblHeader);
     mainLayout->addLayout(stackedLayout);
     setLayout(mainLayout);
 
@@ -102,18 +115,38 @@ QWidget* ClassWidget::makeFullSizeWidget(){
 QWidget* ClassWidget::makeCompactWidget(){
 
     QWidget* qwCompactView = new QWidget();
-    ;
+
     qvblClassFull = new QVBoxLayout();
     qwCompactView->setLayout(qvblClassFull);
     qvblClassFull->setContentsMargins(QMargins(0,0,0,0));
 
-    QLineEdit* qleClassName = new QLineEdit();
-    qleClassName->setText(name);
-    qleClassName->setAlignment(Qt::AlignCenter);
-    qvblClassFull->addWidget(qleClassName);
+    QLabel* qlClassName = new QLabel();
+    qlClassName->setText(name);
+    qlClassName->setAlignment(Qt::AlignCenter);
+    qvblClassFull->addWidget(qlClassName);
+
+    QListView* qlvMembers = new QListView();
+    qlvMembers->setEditTriggers(QListView::NoEditTriggers);
+
+    QStandardItemModel* qaim = new QStandardItemModel();;
+
+
+    foreach( MemberVariable* item, memberVariables )
+    {
+        QStandardItem* Items = new QStandardItem(QString::fromStdString(item->getName()));
+        qaim->appendRow(Items);
+    }
+
+    qlvMembers->setModel(qaim);
+
+    qlvMembers->setFixedSize(qlvMembers->sizeHintForColumn(0) + 2 * qlvMembers->frameWidth(), qlvMembers->sizeHintForRow(0) * memberVariables.count() + 2 * qlvMembers->frameWidth());
+
+    qlvMembers->setMinimumSize(80,0);
+    qvblClassFull->addWidget(qlvMembers);
 
     qwCompactView->setLayout(qvblClassFull);
-    qvblClassFull->setSizeConstraint(QLayout::SetFixedSize);
+
+//    qvblClassFull->setSizeConstraint(QLayout::SetFixedSize);
 
     return qwCompactView;
 }
@@ -123,9 +156,19 @@ void ClassWidget::switchViews(){
     if(stackedLayout->currentIndex()==0){
         getMembers();
         getMemberFunctions();
+        name = qleClassName->text();
+
+        if(name == ""){
+                QMessageBox msgBox;
+                msgBox.setText("Class must have a name");
+                msgBox.exec();
+            return;
+        }
+        stackedLayout->removeItem(stackedLayout->itemAt(1));
+        stackedLayout->addWidget(makeCompactWidget());
         stackedLayout->setCurrentIndex(1);
         stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
-        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,30));
+        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,40));
     }else{
         stackedLayout->setCurrentIndex(0);
         resize(sizeHint());
@@ -138,6 +181,11 @@ void ClassWidget::switchViews(){
 //    QMessageBox msgBox;
 //    msgBox.setText("test");
 //    msgBox.exec();
+}
+
+void ClassWidget::deleteWidget(){
+    layout()->removeWidget(this);
+    delete this;
 }
 
 //void ClassWidget::switchToFull(){
@@ -164,11 +212,11 @@ void ClassWidget::addMemberClicked()
 
     QFont font = qleType->font();
     QFontMetrics fm(font);
-    int pixelsWide = fm.width("type");
+    int pixelsWide = fm.width("type      ");
     qleType->setFixedWidth(pixelsWide);
     connect(qleType, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
 
-    pixelsWide = fm.width("newMember");
+    pixelsWide = fm.width("newMember      ");
     qleName->setFixedWidth(pixelsWide);
     connect(qleName, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
 
@@ -231,11 +279,11 @@ void ClassWidget::addMethodClicked()
 
     QFont font = qleType->font();
     QFontMetrics fm(font);
-    int pixelsWide = fm.width("type");
+    int pixelsWide = fm.width("type      ");
     qleType->setFixedWidth(pixelsWide);
     connect(qleType, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
 
-    pixelsWide = fm.width("NewMethod");
+    pixelsWide = fm.width("NewMethod      ");
     qleName->setFixedWidth(pixelsWide);
     connect(qleName, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
 
@@ -503,11 +551,11 @@ bool ClassWidget::event(QEvent *e)
 void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
     offset = e->pos();
-    if(insideRect(QPoint(e->pos())))
-    {
+    //if(insideRect(QPoint(e->pos())))
+    //{
         moving = true;
-    }
-    m_resize = true;
+    //}
+    //m_resize = true;
     raise();
 }
 
@@ -595,7 +643,6 @@ void ClassWidget::getMembers(){
         QLineEdit* memberType= (QLineEdit*)memberLayout->itemAt(1)->widget();
         QLineEdit* memberName= (QLineEdit*)memberLayout->itemAt(2)->widget();
 
-        //todo: dogovoriti se oko toga kako treba da izgleda "interfejs" moduleCodgen-a
-//        memberVariables.append(new MemberVariable());
+        memberVariables.append(new MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),""));
     }
 }
