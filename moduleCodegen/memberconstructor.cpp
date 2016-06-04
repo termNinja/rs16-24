@@ -1,4 +1,5 @@
 #include "memberconstructor.hpp"
+#include "type.hpp"
 
 namespace codegen {
 
@@ -10,6 +11,12 @@ MemberConstructor::MemberConstructor(MemberVisibility visibility)
 
 MemberConstructor::MemberConstructor(std::string owner, MemberVisibility visibility)
 	: Function(owner), m_owner(owner), m_visibility(visibility)
+{
+}
+
+MemberConstructor::MemberConstructor(std::vector<Variable> &parameters,
+									 std::string owner, MemberVisibility visibility)
+	: Function(Type("void"), owner, parameters), m_visibility(visibility)
 {
 }
 
@@ -33,6 +40,11 @@ MemberVisibility MemberConstructor::getVisibility() const
 void MemberConstructor::setVisibility(MemberVisibility visibility)
 {
 	m_visibility = visibility;
+}
+
+void MemberConstructor::addParameter(Variable var)
+{
+	m_parameters.push_back(var);
 }
 
 memberType MemberConstructor::getMemberType() const

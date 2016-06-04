@@ -2,6 +2,7 @@
 #define MEMBERCONSTRUCTOR_HPP
 
 #include <string>
+#include <vector>
 #include "function.hpp"
 #include "member.hpp"
 #include "membervisibility.hpp"
@@ -13,10 +14,17 @@ public:
 	MemberConstructor(MemberVisibility visibility = MemberVisibility::PUBLIC);
 	MemberConstructor(std::string owner = "", MemberVisibility visibility = MemberVisibility::PUBLIC);
 
+	// Main constructor
+	MemberConstructor(std::vector<Variable> &parameters, std::string owner = "",
+					  MemberVisibility visibility = MemberVisibility::PUBLIC);
+
+
 	std::string getClassName() const;
 	void setOwner(std::string owner);
 	MemberVisibility getVisibility() const;
 	void setVisibility(MemberVisibility visibility);
+
+	void addParameter(Variable var);
 
 	memberType getMemberType() const;
 private:
