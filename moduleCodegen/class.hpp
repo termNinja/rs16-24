@@ -29,6 +29,11 @@ public:
 		  std::vector<MemberFunction> memberFunctions,
 		  std::vector<MemberVariable> memberVariables);
 
+	// polymorphic constructor
+	// -> Classifies members and saves them in appropriate vectors
+	// -> Very useful when parsing class files
+	Class(std::string className, std::vector<Member *> &members);
+
 	// NOTE: Going to get removed in newer versions
 	Class(
 			std::string name,

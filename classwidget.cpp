@@ -628,7 +628,8 @@ void ClassWidget::getMemberFunctions(){
         QLineEdit* methodName= (QLineEdit*)methodLayout->itemAt(2)->widget();
 
         //todo: kreirati lepo metodu, sa svim podacima
-        memberFuncions.append(new MemberFunction(methodName->text().toStdString(),false));
+		// -> Promenjen interfejs (nabolje)
+		// memberFuncions.append(new MemberFunction(methodName->text().toStdString(),false));
     }
 }
 

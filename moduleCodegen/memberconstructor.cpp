@@ -9,7 +9,7 @@ MemberConstructor::MemberConstructor(MemberVisibility visibility)
 }
 
 MemberConstructor::MemberConstructor(std::string owner, MemberVisibility visibility)
-	: m_owner(owner), m_visibility(visibility)
+	: Function(owner), m_owner(owner), m_visibility(visibility)
 {
 }
 
@@ -22,6 +22,7 @@ std::string MemberConstructor::getClassName() const
 void MemberConstructor::setOwner(std::string owner)
 {
 	m_owner = owner;
+	m_name = owner;
 }
 
 MemberVisibility MemberConstructor::getVisibility() const

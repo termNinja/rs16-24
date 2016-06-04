@@ -6,8 +6,8 @@ using namespace std;
 
 namespace codegen {
 
-MemberFunction::MemberFunction(string functionName, bool isConst, MemberVisibility visibility, bool isStatic)
-	: Function(functionName), m_isConst(isConst), m_isStatic(isStatic), m_visibility(visibility)
+MemberFunction::MemberFunction(Type returnType, string functionName, bool isConst, MemberVisibility visibility, bool isStatic)
+	: Function(functionName, returnType), m_isConst(isConst), m_isStatic(isStatic), m_visibility(visibility)
 {
 }
 

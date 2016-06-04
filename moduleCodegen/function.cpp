@@ -13,6 +13,11 @@ Function::Function(std::string functionName)
 	: m_name(functionName)
 {}
 
+Function::Function(string functionName, Type returnType)
+	: m_returnType(returnType), m_name(functionName)
+{
+}
+
 Function::Function(Type returnType, std::string functionName, const std::vector<Variable> &parameters)
 	: m_returnType(returnType), m_name(functionName), m_parameters(parameters)
 {

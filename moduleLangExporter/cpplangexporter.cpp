@@ -12,7 +12,7 @@ CppLangExporter::CppLangExporter()
 {
 }
 
-string CppLangExporter::genBasicVariable(codegen::Variable var) const
+string CppLangExporter::genBasicVariable(codegen::Variable &var) const
 {
 	string s;
 	if (var.isStatic())
@@ -25,7 +25,7 @@ string CppLangExporter::genBasicVariable(codegen::Variable var) const
 	return s;
 }
 
-string CppLangExporter::genMemberVariable(codegen::MemberVariable var) const
+string CppLangExporter::genMemberVariable(codegen::MemberVariable &var) const
 {
 	string s;
 	if (var.isStatic())
@@ -39,7 +39,7 @@ string CppLangExporter::genMemberVariable(codegen::MemberVariable var) const
 	return s;
 }
 
-string CppLangExporter::genBasicFunction(codegen::Function fun) const
+string CppLangExporter::genBasicFunction(codegen::Function &fun) const
 {
 	string s;
 	if (fun.getReturnType().isConst())
@@ -58,7 +58,7 @@ string CppLangExporter::genBasicFunction(codegen::Function fun) const
 	return s;
 }
 
-string CppLangExporter::genMemberFunction(codegen::MemberFunction fun) const
+string CppLangExporter::genMemberFunction(codegen::MemberFunction &fun) const
 {
 	string s;
 
@@ -73,9 +73,11 @@ string CppLangExporter::genMemberFunction(codegen::MemberFunction fun) const
 	s.append("(");
 
 	auto funParams = fun.getParameters();
-	for (unsigned i = 0; i < fun.getNumberOfParameters()-1; ++i)
-		s.append(genBasicVariable(funParams[i]) + ", ");
-	s.append(genBasicVariable(funParams.back()));
+	if (! funParams.empty()) {
+		for (unsigned i = 0; i < fun.getNumberOfParameters()-1; ++i)
+			s.append(genBasicVariable(funParams[i]) + ", ");
+		s.append(genBasicVariable(funParams.back()));
+	}
 	s.append(")");
 	if (fun.isConst())
 		s.append(" const");
@@ -83,21 +85,26 @@ string CppLangExporter::genMemberFunction(codegen::MemberFunction fun) const
 	return s;
 }
 
-string CppLangExporter::genMemberConstructor(codegen::MemberConstructor constructor) const
+
+string CppLangExporter::genMemberConstructor(codegen::MemberConstructor &constructor) const
 {
 	string s;
+
 
 	s.append(constructor.getClassName());
 	s.append("(");
 	auto funParams = constructor.getParameters();
-	for (unsigned i = 0; i < constructor.getNumberOfParameters()-1; ++i)
-		s.append(genBasicVariable(funParams[i]) + ", ");
-	s.append(genBasicVariable(funParams.back()));
+	if (! funParams.empty()) {
+		for (unsigned i = 0; i < constructor.getNumberOfParameters()-1; ++i)
+			s.append(genBasicVariable(funParams[i]) + ", ");
+		s.append(genBasicVariable(funParams.back()));
+	}
 	s.append(");");
 	return s;
 }
 
-string CppLangExporter::genClass(codegen::Class cls) const
+
+string CppLangExporter::genClass(codegen::Class &cls) const
 {
 	string s;
 	string ind = LangExporter::ind;

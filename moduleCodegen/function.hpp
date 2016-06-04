@@ -12,6 +12,7 @@ class Function {
 public:
 	Function();
 	Function(std::string functionName);
+	Function(std::string functionName, Type returnType);
 	Function(Type returnType, std::string functionName, const std::vector<Variable> &parameters);
 
 	Type getReturnType() const;

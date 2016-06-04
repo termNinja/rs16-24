@@ -38,6 +38,34 @@ Class::Class(std::string className,
 	filterMemberVariables(memberVariables);
 }
 
+Class::Class(std::string className, std::vector<Member *> &members)
+	: m_name(className)
+{
+	std::vector<MemberConstructor> conz;
+	std::vector<MemberFunction> funz;
+	std::vector<MemberVariable> varz;
+
+	std::cerr << "Started classifing" << std::endl;
+	for (auto member : members) {
+		switch (member->getMemberType()) {
+		case MEMBER_CONSTRUCTOR:
+			conz.push_back(*(static_cast<MemberConstructor*>(member))); break;
+		case MEMBER_FUNCTION:
+			funz.push_back(*(static_cast<MemberFunction*>(member))); break;
+		case MEMBER_VARIABLE:
+			varz.push_back(*(static_cast<MemberVariable*>(member))); break;
+		}
+	}
+	std::cerr << "Finished classifing. Begin filtering." << std::endl;
+
+	filterMemberConstructors(conz);
+	std::cerr << "Filtered construcors." << std::endl;
+	filterMemberFunctions(funz);
+	std::cerr << "Filtered functions." << std::endl;
+	filterMemberVariables(varz);
+	std::cerr << "Filtered variables. Class constructed." << std::endl;
+}
+
 Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
 			 std::vector<MemberFunction> privMemFun,
 			 std::vector<MemberFunction> protMemFun,

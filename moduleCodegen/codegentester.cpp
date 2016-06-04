@@ -1,6 +1,7 @@
 #include "codegentester.hpp"
 #include "moduleAppController/resourcemanager.hpp"
 #include "moduleLangExporter/cpplangexporter.hpp"
+#include "moduleCodegen/member.hpp"
 
 namespace codegen {
 
@@ -78,12 +79,25 @@ void codegenTester::peformTest() {
 	);
 	std::cout << c << std::endl;
 
+	// polymorphism test
+	std::vector<Member*> members;
+	MemberVariable *polyMemVar = new MemberVariable(Type("double"), "x");
+	members.push_back(polyMemVar);
+
+	MemberConstructor *polyCon = new MemberConstructor("PolyClass");
+	members.push_back(polyCon);
+	members.push_back(new MemberFunction(Type("double"), "PolyTest")); // private by default
+	Class polyClass("PolyClass", members);
+
 	// ------------------------------------------------------------------------
 	// Class generation test
 	// ------------------------------------------------------------------------
 	lexp::CppLangExporter cppExporter;
 	std::cout << cppExporter.genClass(c) << std::endl;
-	cppExporter.startCodeGeneration(c);
+	// cppExporter.startCodeGeneration(c);
+
+	std::cerr << "Beginning class PolyClass generation..." << std::endl;
+	std::cout << cppExporter.genClass(polyClass) << std::endl;
 }
 
 } // namespace end: codegen
