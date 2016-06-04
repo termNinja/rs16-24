@@ -6,10 +6,11 @@
 #include "variable.hpp"
 #include "function.hpp"
 #include "membervisibility.hpp"
+#include "member.hpp"
 
 namespace codegen {
 
-class MemberFunction : public Function {
+class MemberFunction : public Function, public Member {
 public:
 	MemberFunction(std::string functionName, bool isConst = false, MemberVisibility visibililty = PRIVATE, bool isStatic = false);
 	MemberFunction(Type returnType, std::string functionName, const std::vector<Variable> &parameters,
@@ -24,6 +25,8 @@ public:
 	void setVisibility(MemberVisibility visibility);
 	void setOwner(std::string className);
 	void setStatic(bool isStatic);
+
+	memberType getMemberType() const;
 
 	friend std::ostream& operator<<(std::ostream& out, const MemberFunction &f);
 

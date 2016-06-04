@@ -10,6 +10,7 @@ namespace codegen {
 
 class Function {
 public:
+	Function();
 	Function(std::string functionName);
 	Function(Type returnType, std::string functionName, const std::vector<Variable> &parameters);
 

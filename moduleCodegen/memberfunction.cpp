@@ -33,6 +33,11 @@ void MemberFunction::setStatic(bool isStatic)
 	m_isStatic = isStatic;
 }
 
+memberType MemberFunction::getMemberType() const
+{
+	return memberType::MEMBER_FUNCTION;
+}
+
 bool MemberFunction::isConst() const
 {
 	return m_isConst;

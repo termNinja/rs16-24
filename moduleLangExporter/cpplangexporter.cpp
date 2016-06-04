@@ -83,6 +83,20 @@ string CppLangExporter::genMemberFunction(codegen::MemberFunction fun) const
 	return s;
 }
 
+string CppLangExporter::genMemberConstructor(codegen::MemberConstructor constructor) const
+{
+	string s;
+
+	s.append(constructor.getClassName());
+	s.append("(");
+	auto funParams = constructor.getParameters();
+	for (unsigned i = 0; i < constructor.getNumberOfParameters()-1; ++i)
+		s.append(genBasicVariable(funParams[i]) + ", ");
+	s.append(genBasicVariable(funParams.back()));
+	s.append(");");
+	return s;
+}
+
 string CppLangExporter::genClass(codegen::Class cls) const
 {
 	string s;
@@ -91,9 +105,14 @@ string CppLangExporter::genClass(codegen::Class cls) const
 	// TODO: Extends?
 	s.append(" {\n");
 
-	if (!cls.getPublicMemberFunctions().empty() || !cls.getPublicMemberVariables().empty()) {
+	if (!cls.getPublicMemberFunctions().empty()
+		|| !cls.getPublicMemberVariables().empty() || !cls.getPublicConstructors().empty()) {
 		// write public content
 		s.append("public:\n");
+		for (auto a : cls.getPublicConstructors()) {
+			s.append(ind);
+			s.append(genMemberConstructor(a) + "\n");
+		}
 		for (auto a : cls.getPublicMemberFunctions()) {
 			s.append(ind);
 			s.append(genMemberFunction(a) + "\n");
@@ -108,6 +127,10 @@ string CppLangExporter::genClass(codegen::Class cls) const
 	if (!cls.getProtectedMemberFunctions().empty() || !cls.getProtectedMemberVariables().empty()) {
 		// write protected content
 		s.append("\nprotected:\n");
+		for (auto a : cls.getProtectedConstructors()) {
+			s.append(ind);
+			s.append(genMemberConstructor(a) + "\n");
+		}
 		for (auto a : cls.getProtectedMemberFunctions()) {
 			s.append(ind);
 			s.append(genMemberFunction(a) + "\n");
@@ -121,6 +144,10 @@ string CppLangExporter::genClass(codegen::Class cls) const
 	if (!cls.getPrivateMemberFunctions().empty() || !cls.getPrivateMemberVariables().empty()) {
 		// write private content
 		s.append("\nprivate:\n");
+		for (auto a : cls.getPrivateConstructors()) {
+			s.append(ind);
+			s.append(genMemberConstructor(a) + "\n");
+		}
 		for (auto a : cls.getPrivateMemberFunctions()) {
 			s.append(ind);
 			s.append(genMemberFunction(a) + "\n");

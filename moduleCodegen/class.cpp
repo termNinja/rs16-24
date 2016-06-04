@@ -27,6 +27,17 @@ Class::Class(std::string className, std::vector<MemberFunction> memberFunctions,
 	filterMemberVariables(memberVariables);
 }
 
+Class::Class(std::string className,
+			 std::vector<MemberConstructor> memberConstructors,
+			 std::vector<MemberFunction> memberFunctions,
+			 std::vector<MemberVariable> memberVariables)
+	: m_name(className)
+{
+	filterMemberConstructors(memberConstructors);
+	filterMemberFunctions(memberFunctions);
+	filterMemberVariables(memberVariables);
+}
+
 Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
 			 std::vector<MemberFunction> privMemFun,
 			 std::vector<MemberFunction> protMemFun,
@@ -68,6 +79,31 @@ std::vector<MemberVariable> &Class::getProtectedMemberVariables()
 	return m_protMemVar;
 }
 
+std::vector<MemberConstructor>& Class::getPublicConstructors()
+{
+	return m_pubConst;
+}
+
+std::vector<MemberConstructor> &Class::getPrivateConstructors()
+{
+	return m_privConst;
+}
+
+std::vector<MemberConstructor> &Class::getProtectedConstructors()
+{
+	return m_protConst;
+}
+
+void Class::addConstructor(MemberConstructor &c)
+{
+	if (c.getVisibility() == MemberVisibility::PRIVATE)
+		m_privConst.push_back(c);
+	else if (c.getVisibility() == MemberVisibility::PROTECTED)
+		m_protConst.push_back(c);
+	else if (c.getVisibility() == MemberVisibility::PUBLIC)
+		m_pubConst.push_back(c);
+}
+
 std::string Class::getName() const
 {
 	return m_name;
@@ -99,6 +135,18 @@ void Class::filterMemberVariables(std::vector<MemberVariable> memberVariables)
 			m_privMemVar.push_back(memVar);
 		else if (memVar.getVisibility() == PROTECTED)
 			m_protMemVar.push_back(memVar);
+	}
+}
+
+void Class::filterMemberConstructors(std::vector<MemberConstructor> memberConstuctors)
+{
+	for (auto memCon : memberConstuctors) {
+		if (memCon.getVisibility() == MemberVisibility::PRIVATE)
+			m_privConst.push_back(memCon);
+		else if (memCon.getVisibility() == MemberVisibility::PROTECTED)
+			m_protConst.push_back(memCon);
+		else if (memCon.getVisibility() == MemberVisibility::PUBLIC)
+			m_pubConst.push_back(memCon);
 	}
 }
 

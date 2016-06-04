@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     moduleLangExporter/langexportertester.cpp \
     classwidget.cpp \
     relation.cpp \
-    relationline.cpp
+    relationline.cpp \
+    moduleCodegen/memberconstructor.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -54,6 +55,8 @@ HEADERS  += mainwindow.h \
     moduleLangExporter/langexportertester.hpp \
     classwidget.hpp \
     relation.hpp \
-    relationline.hpp
+    relationline.hpp \
+    moduleCodegen/member.hpp \
+    moduleCodegen/memberconstructor.hpp
 
 FORMS    += mainwindow.ui

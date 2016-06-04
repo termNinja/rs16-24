@@ -6,6 +6,9 @@ using namespace std;
 
 namespace codegen {
 
+Function::Function()
+{}
+
 Function::Function(std::string functionName)
 	: m_name(functionName)
 {}

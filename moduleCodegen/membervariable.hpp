@@ -5,11 +5,11 @@
 #include "type.hpp"
 #include "variable.hpp"
 #include "membervisibility.hpp"
+#include "member.hpp"
 
 namespace codegen {
 
-class MemberVariable : public Variable
-{
+class MemberVariable : public Variable, public Member {
 public:
 	// TODO: Switch QString owner to a const reference to real class
 	MemberVariable(Type type, std::string name, std::string owner = "", MemberVisibility visibility = PRIVATE);
@@ -18,6 +18,8 @@ public:
 
 	MemberVisibility getVisibility() const;
 	void setVisibility(MemberVisibility visibility);
+
+	memberType getMemberType() const;
 
 	friend std::ostream& operator<<(std::ostream& out, const MemberVariable &mv);
 private:

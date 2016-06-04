@@ -56,8 +56,23 @@ void codegenTester::peformTest() {
 	std::vector<MemberVariable> numLibMemberVars;
 	numLibMemberVars.push_back(mv1);
 	numLibMemberVars.push_back(mv2);
+
+	// construct constructors (using constructors lol)
+	MemberConstructor con1("NumericLib");
+	con1.addParameter(v1);
+
+	MemberConstructor con2("NumericLib");
+	con2.addParameter(v1);
+	con2.addParameter(v2);
+
+	std::vector<MemberConstructor> numLibConstructors;
+	numLibConstructors.push_back(con1);
+	numLibConstructors.push_back(con2);
+
+
 	Class c(
 		"NumericLib",
+		numLibConstructors,
 		numLibFunctions,
 		numLibMemberVars
 	);
@@ -68,7 +83,7 @@ void codegenTester::peformTest() {
 	// ------------------------------------------------------------------------
 	lexp::CppLangExporter cppExporter;
 	std::cout << cppExporter.genClass(c) << std::endl;
-	// cppExporter.startCodeGeneration(c);
+	cppExporter.startCodeGeneration(c);
 }
 
 } // namespace end: codegen

@@ -8,6 +8,7 @@
 #include "function.hpp"
 #include "membervariable.hpp"
 #include "memberfunction.hpp"
+#include "memberconstructor.hpp"
 #include "class.hpp"
 
 namespace codegen {
