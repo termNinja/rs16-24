@@ -68,6 +68,7 @@ void codegenTester::peformTest() {
 	// ------------------------------------------------------------------------
 	lexp::CppLangExporter cppExporter;
 	std::cout << cppExporter.genClass(c) << std::endl;
+	// cppExporter.startCodeGeneration(c);
 }
 
 } // namespace end: codegen

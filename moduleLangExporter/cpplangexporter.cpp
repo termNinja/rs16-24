@@ -2,6 +2,7 @@
 #include "moduleAppController/resourcemanager.hpp"
 #include <fstream>
 #include <iostream>
+#include <QDir>
 
 using std::string;
 
@@ -139,8 +140,13 @@ bool CppLangExporter::startCodeGeneration(codegen::Class cls) const
 {
 	app::ResourceManager *rm = &app::ResourceManager::instance();
 	string outputPath = rm->getProjectOutputPath().toStdString();
+	string outputFilePath = outputPath + rm->getPlatformSeparator() + cls.getName() + ".hpp";
+	std::ofstream outputFile(outputFilePath);
 
-	std::ofstream outputFile(outputPath);
+	// For testing purposes
+	// outputPath = "";
+	// outputFilePath = cls.getName() + ".hpp";
+
 	string generatedClass = genClass(cls);
 	if (outputFile << generatedClass) {
 		std::cout << "Successfully generated code for class " << cls.getName() << std::endl;
