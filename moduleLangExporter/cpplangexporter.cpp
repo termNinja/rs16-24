@@ -1,4 +1,7 @@
 #include "cpplangexporter.hpp"
+#include "moduleAppController/resourcemanager.hpp"
+#include <fstream>
+#include <iostream>
 
 using std::string;
 
@@ -8,18 +11,20 @@ CppLangExporter::CppLangExporter()
 {
 }
 
-string CppLangExporter::genBasicVariable(codegen::Variable var)
+string CppLangExporter::genBasicVariable(codegen::Variable var) const
 {
 	string s;
+	if (var.isStatic())
+		s.append("static ");
+
 	if (var.getType().isConst())
 		s.append("const ");
-	// TODO: is static?
 	s.append(var.getType().getName() + " ");
 	s.append(var.getName());
 	return s;
 }
 
-string CppLangExporter::genMemberVariable(codegen::MemberVariable var)
+string CppLangExporter::genMemberVariable(codegen::MemberVariable var) const
 {
 	string s;
 	if (var.isStatic())
@@ -33,7 +38,7 @@ string CppLangExporter::genMemberVariable(codegen::MemberVariable var)
 	return s;
 }
 
-string CppLangExporter::genBasicFunction(codegen::Function fun)
+string CppLangExporter::genBasicFunction(codegen::Function fun) const
 {
 	string s;
 	if (fun.getReturnType().isConst())
@@ -52,7 +57,7 @@ string CppLangExporter::genBasicFunction(codegen::Function fun)
 	return s;
 }
 
-string CppLangExporter::genMemberFunction(codegen::MemberFunction fun)
+string CppLangExporter::genMemberFunction(codegen::MemberFunction fun) const
 {
 	string s;
 
@@ -77,7 +82,7 @@ string CppLangExporter::genMemberFunction(codegen::MemberFunction fun)
 	return s;
 }
 
-string CppLangExporter::genClass(codegen::Class cls)
+string CppLangExporter::genClass(codegen::Class cls) const
 {
 	string s;
 	string ind = LangExporter::ind;
@@ -128,6 +133,24 @@ string CppLangExporter::genClass(codegen::Class cls)
 
 	s.append("};");
 	return s;
+}
+
+bool CppLangExporter::startCodeGeneration(codegen::Class cls) const
+{
+	app::ResourceManager *rm = &app::ResourceManager::instance();
+	string outputPath = rm->getProjectOutputPath().toStdString();
+
+	std::ofstream outputFile(outputPath);
+	string generatedClass = genClass(cls);
+	if (outputFile << generatedClass) {
+		std::cout << "Successfully generated code for class " << cls.getName() << std::endl;
+		std::cout << "Code saved at: " << outputPath << std::endl;
+		return true;
+	} else {
+		std::cerr << "Failed generating code for class " << cls.getName() << std::endl;
+		std::cerr << "Attempted writing to: " << outputPath << std::endl;
+		return false;
+	}
 }
 
 

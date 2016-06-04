@@ -17,11 +17,11 @@ public:
 	LangExporter();
 	virtual ~LangExporter();
 
-	virtual std::string genBasicVariable(codegen::Variable var) = 0;
-	virtual std::string genMemberVariable(codegen::MemberVariable var) = 0;
-	virtual std::string genBasicFunction(codegen::Function fun) = 0;
-	virtual std::string genMemberFunction(codegen::MemberFunction fun) = 0;
-	virtual std::string genClass(codegen::Class cls) = 0;
+	virtual std::string genBasicVariable(codegen::Variable var) const = 0;
+	virtual std::string genMemberVariable(codegen::MemberVariable var) const = 0;
+	virtual std::string genBasicFunction(codegen::Function fun) const = 0;
+	virtual std::string genMemberFunction(codegen::MemberFunction fun) const = 0;
+	virtual std::string genClass(codegen::Class cls) const = 0;
 
 	static std::string ind;
 };
