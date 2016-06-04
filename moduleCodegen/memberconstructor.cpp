@@ -16,7 +16,7 @@ MemberConstructor::MemberConstructor(std::string owner, MemberVisibility visibil
 
 MemberConstructor::MemberConstructor(std::vector<Variable> &parameters,
 									 std::string owner, MemberVisibility visibility)
-	: Function(Type("void"), owner, parameters), m_visibility(visibility)
+	: Function(Type("void"), owner, parameters), m_owner(owner), m_visibility(visibility)
 {
 }
 
