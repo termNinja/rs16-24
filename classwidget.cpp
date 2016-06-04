@@ -13,9 +13,39 @@ ClassWidget::ClassWidget(QWidget *parent ){
     setAutoFillBackground(true);
     setPalette(Pal);
 
-    qvblClass = new QVBoxLayout(this);
-    setLayout(qvblClass);
-    qvblClass->setContentsMargins(QMargins(0,20,0,0));
+
+
+    this->setAttribute(Qt::WA_Hover, true);
+
+    QWidget* firstPageWidget = makeFullSizeWidget();
+    QWidget* secondPageWidget = makeCompactWidget();;
+
+    stackedLayout = new QStackedLayout;
+    stackedLayout->addWidget(firstPageWidget);
+    stackedLayout->addWidget(secondPageWidget);
+
+    QPushButton* toggle = new QPushButton("-");
+    toggle->setMaximumWidth(20);
+    connect(toggle, SIGNAL(clicked()), this , SLOT(switchViews()));
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setContentsMargins(QMargins(0,0,0,0));
+    mainLayout->addWidget(toggle);
+    mainLayout->addLayout(stackedLayout);
+    setLayout(mainLayout);
+
+    //because widget is visible we need to call show() method to see newly added objects
+    this->setParent(parent);
+    show();
+}
+
+QWidget* ClassWidget::makeFullSizeWidget(){
+
+    QWidget* qwFullView = new QWidget();
+    qvblClassFull = new QVBoxLayout(qwFullView);
+//    setLayout(qw);
+    qwFullView->setLayout(qvblClassFull);
+    qvblClassFull->setContentsMargins(QMargins(0,0,0,0));
 
     //add class name
     qleClassName = new QLineEdit();
@@ -30,12 +60,12 @@ ClassWidget::ClassWidget(QWidget *parent ){
     qlwMembers->setSelectionMode(QAbstractItemView::ExtendedSelection);
     qlwMembers->setVisible(false);
 
-    QHBoxLayout* qhblMemberButtons = new QHBoxLayout(this);
+    QHBoxLayout* qhblMemberButtons = new QHBoxLayout();
 
     //creating button for adding members
     qpbAddMember = new QPushButton("Add member");
     qhblMemberButtons->addWidget(qpbAddMember);
-    QObject::connect(qpbAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
+    connect(qpbAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
 
     QPushButton* btnRemoveMember = new QPushButton("Remove \nmember(s)");
     qhblMemberButtons->addWidget(btnRemoveMember);
@@ -49,29 +79,70 @@ ClassWidget::ClassWidget(QWidget *parent ){
     qlwMethods->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     qlwMethods->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    QHBoxLayout* qhblMethodButtons = new QHBoxLayout(this);
+    QHBoxLayout* qhblMethodButtons = new QHBoxLayout();
 
     qpbAddMethod = new QPushButton("Add method");
     qhblMethodButtons->addWidget(qpbAddMethod);
-    QObject::connect(qpbAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
+    connect(qpbAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
 
     QPushButton* qpbRemoveMethod = new QPushButton("Remove \nmethod(s)");
     qhblMethodButtons->addWidget(qpbRemoveMethod);
     connect(qpbRemoveMethod, SIGNAL(clicked()), this , SLOT(removeMethodClicked()));
 
 
-    qvblClass->addWidget(qleClassName);
-    qvblClass->addLayout(qhblMemberButtons);
-    qvblClass->addWidget(qlwMembers);
-    qvblClass->addLayout(qhblMethodButtons);
-    qvblClass->addWidget(qlwMethods);
+    qvblClassFull->addWidget(qleClassName);
+    qvblClassFull->addLayout(qhblMemberButtons);
+    qvblClassFull->addWidget(qlwMembers);
+    qvblClassFull->addLayout(qhblMethodButtons);
+    qvblClassFull->addWidget(qlwMethods);
 
-     this->setAttribute(Qt::WA_Hover, true);
-
-    //because widget is visible we need to call show() method to see newly added objects
-    this->setParent(parent);
-    show();
+    return qwFullView;
 }
+
+QWidget* ClassWidget::makeCompactWidget(){
+
+    QWidget* qwCompactView = new QWidget();
+    ;
+    qvblClassFull = new QVBoxLayout();
+    qwCompactView->setLayout(qvblClassFull);
+    qvblClassFull->setContentsMargins(QMargins(0,0,0,0));
+
+    QLineEdit* qleClassName = new QLineEdit();
+    qleClassName->setText(name);
+    qleClassName->setAlignment(Qt::AlignCenter);
+    qvblClassFull->addWidget(qleClassName);
+
+    qwCompactView->setLayout(qvblClassFull);
+    qvblClassFull->setSizeConstraint(QLayout::SetFixedSize);
+
+    return qwCompactView;
+}
+
+void ClassWidget::switchViews(){
+
+    if(stackedLayout->currentIndex()==0){
+        getMembers();
+        getMemberFunctions();
+        stackedLayout->setCurrentIndex(1);
+        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,30));
+    }else{
+        stackedLayout->setCurrentIndex(0);
+        resize(sizeHint());
+    }
+
+
+//    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+//    resize(stackedLayout->currentWidget()->size());
+
+//    QMessageBox msgBox;
+//    msgBox.setText("test");
+//    msgBox.exec();
+}
+
+//void ClassWidget::switchToFull(){
+//    stackedLayout->setCurrentIndex();
+//}
 
 void ClassWidget::addMemberClicked()
 {
@@ -111,6 +182,7 @@ void ClassWidget::addMemberClicked()
 
     qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
 
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
@@ -124,6 +196,7 @@ void ClassWidget::removeMemberClicked(){
     if(qlwMembers->count()==0)
         qlwMembers->setVisible(false);
 
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
@@ -175,6 +248,7 @@ void ClassWidget::addMethodClicked()
 
     qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
 
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
@@ -189,6 +263,7 @@ void ClassWidget::removeMethodClicked(){
     if(qlwMethods->count()==0)
         qlwMethods->setVisible(false);
 
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
@@ -205,6 +280,8 @@ void ClassWidget::lineEditTextChanged(){
 
   qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
   qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
+
+  stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
   resize(sizeHint());
   qlwMembers->setFixedWidth(width());
   qlwMethods->setFixedWidth(width());
@@ -410,6 +487,8 @@ void ClassWidget::addMethodParameterClicked(){
 
     qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
     qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
+
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());

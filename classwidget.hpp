@@ -17,6 +17,7 @@
 #include <QListWidget>
 #include <QComboBox>
 #include <QHoverEvent>
+#include <QStackedLayout>
 #include <cmath>
 #include <moduleCodegen/memberfunction.hpp>
 #include <moduleCodegen/membervariable.hpp>
@@ -50,15 +51,18 @@ public slots:
     void lineEditTextChanged();
 
     void addMethodParameterClicked();
+    void switchViews();
 private:
     QWidget *wClassWraper;
-    QVBoxLayout *qvblClass;
+    QVBoxLayout *qvblClassFull;
     QListWidget *qlwMembers;
     QPushButton *qpbAddMember;
     QListWidget *qlwMethods;
     QPushButton *qpbAddMethod;
     QLineEdit *qleClassName;
 
+
+    QString name;
     QList<MemberFunction*> memberFuncions;
     QList<MemberVariable*> memberVariables;
 
@@ -68,6 +72,13 @@ private:
     bool m_resize;
     void getMemberFunctions();
     void getMembers();
+
+    QWidget *makeCompactWidget();
+    QWidget *makeFullSizeWidget();
+
+
+QStackedLayout* stackedLayout;
+
 };
 
 #endif // CLASSWIDGET_HPP
