@@ -4,6 +4,10 @@
 
 namespace codegen {
 
+Class::Class(std::string className)
+	: m_name(className)
+{}
+
 Class::Class(std::string className, std::vector<MemberFunction> memberFunctions)
 	: m_name(className)
 {
@@ -67,6 +71,11 @@ std::vector<MemberVariable> &Class::getProtectedMemberVariables()
 std::string Class::getName() const
 {
 	return m_name;
+}
+
+void Class::setName(std::string name)
+{
+	m_name = name;
 }
 
 void Class::filterMemberFunctions(std::vector<MemberFunction> memberFunctions)

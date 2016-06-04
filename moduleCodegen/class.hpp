@@ -34,6 +34,7 @@ public:
 	std::vector<MemberVariable>& getProtectedMemberVariables();
 
 	std::string getName() const;
+	void setName(std::string name);
 
 	friend std::ostream& operator<<(std::ostream& out, const Class &c);
 
