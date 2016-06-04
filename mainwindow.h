@@ -13,6 +13,8 @@
 #include <QDir>
 #include "classwidget.hpp"
 #include <QInputDialog>
+#include <QPainter>
+#include <QWidget>
 
 namespace Ui {
 class MainWindow;

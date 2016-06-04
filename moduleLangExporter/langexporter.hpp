@@ -18,9 +18,9 @@ public:
 	virtual ~LangExporter();
 
 	virtual std::string genBasicVariable(codegen::Variable var) = 0;
-	virtual std::string genMemberVariable(codegen::MemberVariable var, codegen::MemberVisibility v) = 0;
+	virtual std::string genMemberVariable(codegen::MemberVariable var) = 0;
 	virtual std::string genBasicFunction(codegen::Function fun) = 0;
-	virtual std::string genMemberFunction(codegen::MemberFunction fun, codegen::MemberVisibility v) = 0;
+	virtual std::string genMemberFunction(codegen::MemberFunction fun) = 0;
 	virtual std::string genClass(codegen::Class cls) = 0;
 
 	static std::string ind;

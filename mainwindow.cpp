@@ -35,12 +35,29 @@ void MainWindow::on_pushButton_10_clicked()
     ClassWidget *w = new ClassWidget(parent);
 }
 
+void QWidget::paintEvent(QPaintEvent *)
+{
+
+    QPainter painter(this);
+
+    if(this->objectName().toStdString() == "widget_2")
+    {
+        QRectF rectangle(10.0, 20.0, 80.0, 60.0);
+        int startAngle = 30 * 16;
+        int spanAngle = 120 * 16;
+        painter.drawArc(rectangle, startAngle, spanAngle);
+    }
+
+}
+
+
 void MainWindow::on_pushButton_clicked()
 {
-    QWidget *parent  = ui->widget;
-
-    QPushButton *button1 = new QPushButton(parent);
-    button1->setText("test");
+//    bool ok;
+//    QString name = QInputDialog::getText(this, tr("Class name"),
+//                                               tr("Input class name "), QLineEdit::Normal,
+    QWidget *parent  = ui->widget_2;
+    update();
 }
 
 

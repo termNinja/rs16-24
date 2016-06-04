@@ -16,6 +16,8 @@
 #include <QInputDialog>
 #include <QListWidget>
 #include <QComboBox>
+#include <QHoverEvent>
+#include <cmath>
 #include <moduleCodegen/memberfunction.hpp>
 #include <moduleCodegen/membervariable.hpp>
 
@@ -33,6 +35,10 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
+    bool insideRect(QPoint mousePos);
+    void hoverMove(QHoverEvent * event);
+    bool event(QEvent *e);
+    void moveClass(QMouseEvent *e);
     QPoint mousePoint;
 
 public slots:
@@ -59,6 +65,7 @@ private:
     //used for moving
     QPoint offset;
     bool moving;
+    bool m_resize;
     void getMemberFunctions();
     void getMembers();
 };

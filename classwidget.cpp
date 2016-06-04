@@ -71,15 +71,6 @@ ClassWidget::ClassWidget(QWidget *parent ){
     show();
 }
 
-void ClassWidget::mousePressEvent(QMouseEvent *e)
-{
-    offset = e->pos();
-    moving = true;
-    raise();
-}
-
-
-
 void ClassWidget::addMemberClicked()
 {
     qlwMembers->setVisible(true);
@@ -217,9 +208,161 @@ void ClassWidget::lineEditTextChanged(){
   qlwMethods->setFixedWidth(width());
 }
 
-void ClassWidget::mouseMoveEvent(QMouseEvent *e)
+bool ClassWidget::insideRect(QPoint mousePos)
 {
-    if(e->buttons() & moving)
+    int magicConst = 15;
+
+    //leftTop coordinate
+    QPoint a(magicConst , magicConst);
+    //leftBottom coordinate
+    QPoint b(magicConst , this->height() - magicConst);
+    //rightTop coordinate
+    QPoint d(this->width() - magicConst , magicConst);
+    //rightBottom coordinate
+    QPoint c(this->width()- magicConst , this->height() - magicConst);
+
+    //mouse coordinate
+    QPoint m(mousePos.x(), mousePos.y());
+    std::cout<<"mouse: "<<m.x() << "a " << a.x()<<std::endl;
+    // use orientation of triangles for evaluate
+    // if cursor inside rectangle
+
+    QPoint abVector(b.x() - a.x() , b.y() - a.y());
+    QPoint amVector(m.x() - a.x() , m.y() - a.y());
+    //determinant of vectors
+    int dabm = (abVector.x() * amVector.y()) - (abVector.y() * amVector.x());
+
+    QPoint bcVector(c.x() - b.x() , c.y() - b.y());
+    QPoint bmVector(m.x() - b.x() , m.y() - b.y());
+    int dbcm = (bcVector.x() * bmVector.y()) - (bcVector.y() * bmVector.x());
+
+    QPoint cdVector(d.x() - c.x() , d.y() - c.y());
+    QPoint cmVector(m.x() - c.x() , m.y() - c.y());
+    int dcdm = (cdVector.x() * cmVector.y()) - (cdVector.y() * cmVector.x());
+
+    QPoint daVector(a.x() - d.x() , a.y() - d.y());
+    QPoint dmVector(m.x() - d.x() , m.y() - d.y());
+    int ddam = (daVector.x() * dmVector.y()) - (daVector.y() * dmVector.x());
+
+    // if orientation of all triangles if same then
+    // poss of cursor is in rectangle
+    std::cout<<"a "<< dabm <<"b "<<  dcdm<<"c " <<dcdm<< "d " <<ddam <<std::endl;
+    if((dabm >= 0 && dbcm >= 0 && dcdm >= 0 && ddam >= 0)
+           ||
+      (dabm <= 0 && dbcm <= 0 && dcdm <= 0 && ddam <= 0))
+        return true;
+    else
+        return false;
+}
+
+void ClassWidget::hoverMove(QHoverEvent * event)
+{
+    int magicConst = 15;
+    QPoint mousePosition(event->pos().x() , event->pos().y());
+    bool inside = insideRect(mousePosition);
+
+    if(!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
+    {
+        this->setCursor(Qt::SizeFDiagCursor);
+        if(m_resize)
+        {
+            int diffX = event->oldPos().x() - event->pos().x();
+            int diffY = event->oldPos().y() - event->pos().y();
+            if(diffX > 0 || diffY > 0){
+                resize( this->width() + diffX, this->height() + diffY);
+                moving = true;
+                moveClass((QMouseEvent*)event);
+                moving = false;
+            }
+            else if(diffX < 0 || diffY < 0) {
+                resize( this->width() + diffX, this->height() + diffY);
+                this->move(mapToParent( QPoint( -diffX, -diffY)));
+            }
+        }
+    }
+//    else if( !inside && mousePosition.x() < magicConst &&
+//                        mousePosition.y() > this->height() - magicConst )
+//    {
+//        this->setCursor(Qt::SizeBDiagCursor);
+//        if(moving)
+//        {
+//            int diffX = event->oldPos().x() - event->pos().x();
+//            int diffY = event->oldPos().y() - event->pos().y();
+//            if(diffX < 0 || diffY > 0)
+//            {
+//                resize( this->width() + (-1)*diffX, this->height() + diffY);
+//            }
+//            else if(diffX > 0 || diffY < 0){
+//                resize( this->width() + (-1)* diffX, this->height() + diffY);
+//            }
+//        }
+//    }
+
+//    else if(!inside && mousePosition.x() > this->width() - magicConst &&
+//                       mousePosition.y() < magicConst )
+//    {
+//        this->setCursor(Qt::SizeBDiagCursor);
+//        if(moving)
+//        {
+//            int diffX = event->oldPos().x() - event->pos().x();
+//            int diffY = event->oldPos().y() - event->pos().y();
+//            if(diffX < 0 && diffY > 0)
+//            {
+//                resize( this->width() + diffX, this->height() + diffY);
+//            }
+//            else {
+//                resize( this->width() - diffX, this->height() - diffY);
+//            }
+//        }
+//    }
+
+    else if(!inside && mousePosition.x() > (this->width() - magicConst) &&
+                       mousePosition.y() > (this->height() - magicConst) )
+    {
+        this->setCursor(Qt::SizeFDiagCursor);
+        if(m_resize)
+        {
+            int diffX = event->oldPos().x() - event->pos().x();
+            int diffY = event->oldPos().y() - event->pos().y();
+
+            if(diffX < 0 || diffY < 0){
+                resize( this->width() + -1*diffX, this->height() + -1*diffY);
+            }
+            else if(diffX > 0 || diffY > 0){
+                resize( this->width() - diffX, this->height() - diffY);
+            }
+        }
+    }
+    else{
+        this->setCursor(Qt::ArrowCursor);
+    }
+}
+
+bool ClassWidget::event(QEvent *e)
+{
+    if(e->type() == QEvent::HoverMove)
+    {
+        hoverMove(static_cast<QHoverEvent*>(e));
+    }
+    return QWidget::event(e);
+}
+
+void ClassWidget::mousePressEvent(QMouseEvent *e)
+{
+    offset = e->pos();
+    if(insideRect(QPoint(e->pos())))
+    {
+        moving = true;
+    }
+    m_resize = true;
+    raise();
+}
+
+
+void ClassWidget::moveClass(QMouseEvent *e)
+{
+
+    if(e->buttons() && moving)
       {
           this->move(mapToParent(e->pos() - offset));
       }
@@ -239,9 +382,16 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
     }
 }
 
+void ClassWidget::mouseMoveEvent(QMouseEvent *e)
+{
+    QPoint mousePosition(e->pos().x() , e->pos().x());
+    moveClass(e);
+}
+
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
     moving = false;
+    m_resize = false;
 }
 
 void ClassWidget::addMethodParameterClicked(){

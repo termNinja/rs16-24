@@ -6,14 +6,15 @@ using namespace std;
 
 namespace codegen {
 
-MemberFunction::MemberFunction(string functionName, bool isConst)
-	: Function(functionName), m_isConst(isConst)
+MemberFunction::MemberFunction(string functionName, bool isConst, MemberVisibility visibility, bool isStatic)
+	: Function(functionName), m_isConst(isConst), m_isStatic(isStatic), m_visibility(visibility)
 {
 }
 
 MemberFunction::MemberFunction(codegen::Type returnType, std::string functionName,
-						   const std::vector<codegen::Variable> &parameters, std::string owner, bool isConst)
-	: Function(returnType, functionName, parameters), m_owner(owner), m_isConst(isConst)
+	const std::vector<codegen::Variable> &parameters, std::string owner,
+	bool isConst, MemberVisibility visibility, bool isStatic)
+	: Function(returnType, functionName, parameters), m_owner(owner), m_isConst(isConst), m_isStatic(isStatic), m_visibility(visibility)
 {
 }
 
@@ -27,9 +28,29 @@ void MemberFunction::setOwner(std::string className)
 	m_owner = className;
 }
 
+void MemberFunction::setStatic(bool isStatic)
+{
+	m_isStatic = isStatic;
+}
+
 bool MemberFunction::isConst() const
 {
 	return m_isConst;
+}
+
+bool MemberFunction::isStatic() const
+{
+	return m_isStatic;
+}
+
+MemberVisibility MemberFunction::getVisibility() const
+{
+	return m_visibility;
+}
+
+void MemberFunction::setVisibility(MemberVisibility visibility)
+{
+	m_visibility = visibility;
 }
 
 std::ostream &operator<<(std::ostream &out, const MemberFunction &function)
