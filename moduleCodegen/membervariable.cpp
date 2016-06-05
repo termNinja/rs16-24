@@ -6,14 +6,19 @@ using namespace std;
 
 namespace codegen {
 
-MemberVariable::MemberVariable(Type type, std::string name, std::string owner, MemberVisibility visibility)
-	: Variable(type, name), m_owner(owner), m_visibility(visibility)
+MemberVariable::MemberVariable(Type type, std::string name, std::string owner, MemberVisibility visibility, bool isStatic)
+	: Variable(type, name), m_owner(owner), m_visibility(visibility), m_isStatic(isStatic)
 {
 }
 
 std::string MemberVariable::getOwnerName() const
 {
 	return m_owner;
+}
+
+bool MemberVariable::isStatic() const
+{
+	return m_isStatic;
 }
 
 MemberVisibility MemberVariable::getVisibility() const
@@ -24,6 +29,11 @@ MemberVisibility MemberVariable::getVisibility() const
 void MemberVariable::setVisibility(MemberVisibility visibility)
 {
 	m_visibility = visibility;
+}
+
+void MemberVariable::setStatic(bool isStatic)
+{
+	m_isStatic = isStatic;
 }
 
 memberType MemberVariable::getMemberType() const

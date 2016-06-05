@@ -1,0 +1,243 @@
+%{
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <memory>
+#include "moduleCodegen/class.hpp"
+#include "moduleCodegen/memberfunction.hpp"
+#include "moduleCodegen/membervariable.hpp"
+#include "moduleCodegen/variable.hpp"
+#include "moduleParser/cppparser/cppparser.hpp"
+#include "moduleParser/cppparser/bisonmessage.hpp"
+#define YYDEBUG 1
+
+#define DBG std::cerr
+
+extern int yylex();
+
+void yyerror(const char *errmsg) {
+	std::cerr << errmsg << std::endl;
+	exit(1);
+}
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// Variables used to communicate with the CppParser class
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// std::unique_ptr< std::vector<codegen::Class *>* > parsingResult;
+// extern int bisonMessage;
+extern parser::BisonMessage bisonMessage;
+std::vector<codegen::Class *> *parsingResult;
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+// Class that's currently being parsed
+std::string currentClassName;
+
+// This vector contains the result
+std::vector< codegen::Class* > *parsedClasses;
+ 
+// Default class visibility in C++ is PRIVATE
+codegen::MemberVisibility currentVisibility = codegen::MemberVisibility::PRIVATE; 
+
+// Parsed members for class
+std::vector< codegen::Member* > parsedMembers;
+
+extern codegen::Class *parsedClass;
+%}
+
+%union {
+	int intVal;
+	double doubleVal;
+	std::string *id;
+	codegen::MemberVisibility *visibility;
+	codegen::Member *member;
+	codegen::Class *cls;
+	codegen::Variable *var;
+	codegen::MemberFunction *memFun;
+	codegen::MemberConstructor *memCon;
+	codegen::MemberVariable *memVar;
+	codegen::Type *type;
+	std::vector< codegen::Variable > *vars;
+	std::vector< codegen::Class* > *classes;
+	std::vector< codegen::Member* > *members;
+}
+
+/* TODO: Fix precedence */
+%nonassoc ')'
+%nonassoc '('
+%nonassoc ID_t
+%nonassoc CONST_t
+
+%token <intVal> INTEGER_t
+%token <doubleVal> DOUBLE_t
+%token <id> ID_t
+%token CLASS_t PRIVATE_t PROTECTED_t PUBLIC_t CONST_t STATIC_t
+
+%type <classes> class_list
+%type <cls> class
+%type <members> class_body class_body_part class_declarations
+%type <member> class_declaration
+%type <vars> parameter_list
+%type <var> parameter
+%type <memFun> member_function_declaration
+%type <memVar> member_variable_declaration
+%type <memCon> constructor_declaration
+%type <type> cpp_type
+
+%%
+Program: class_list {
+	// what's been parsed
+	parsedClasses = $1;	
+
+	// set it in an unique ptr for result
+//	std::unique_ptr< std::vector<codegen::Class *> > tmpPtr(parsedClasses);
+//	parsingResult = std::make_unique< std::vector<codegen::Class *> >(parsedClasses);
+	parsingResult = parsedClasses;
+
+	// Setting status report
+//	bisonMessage = parser::ALL_FINE;
+	bisonMessage.setAllFine();
+}
+;
+
+class_list: class_list class {
+	$$->push_back($2);
+}
+| class {
+	$$ = new std::vector< codegen::Class* >();
+	$$->push_back($1);
+}
+;
+
+class: CLASS_t ID_t '{' class_body '}' ';' {
+//	parsedClass->setName(*$2);
+	currentClassName = *$2;
+	$$ = new codegen::Class(*$2, parsedMembers);
+	delete $2;
+	for (auto mem : parsedMembers)
+		delete mem;
+	parsedMembers.clear();
+}
+;
+
+class_body: class_body class_body_part {
+	$$ = $1;
+}
+| class_body_part {
+	$$ = $1;
+}
+;
+
+class_body_part: visibility_specif ':' class_declarations {
+	$$ = $3;
+}
+| class_declarations {
+	$$ = $1;
+}
+;
+
+/* Setting visibility for class members */
+visibility_specif: PRIVATE_t {
+	currentVisibility = codegen::MemberVisibility::PRIVATE; 
+}
+| PUBLIC_t  {
+	currentVisibility = codegen::MemberVisibility::PUBLIC; 
+}
+| PROTECTED_t {
+	currentVisibility = codegen::MemberVisibility::PROTECTED; 
+}
+;
+
+/* Parsing class members */
+class_declarations: class_declarations class_declaration {
+	parsedMembers.push_back($2);
+//	$$ = $1;
+}
+| class_declaration {
+//	if ($$ == nullptr)
+//		$$ = new std::vector<codegen::Member *>();
+	parsedMembers.push_back($1);
+}
+;
+
+class_declaration: member_function_declaration ';' {
+//	$$ = new codegen::MemberFunction
+	$$ = $1;
+//	$$->push_back($1);
+}
+| member_variable_declaration ';' {
+	$$ = $1;
+//	$$->push_back($1);
+}
+| constructor_declaration ';' {
+	$$ = $1;
+	// $$->push_back($1);
+}
+;
+
+member_variable_declaration: cpp_type ID_t {
+	$$ = new codegen::MemberVariable(*$1, *$2, currentClassName);
+	delete $1;
+	delete $2;
+}
+| STATIC_t member_variable_declaration {
+	$$ = $2;
+	$$->setStatic(true);
+}
+
+
+member_function_declaration: cpp_type ID_t '(' parameter_list ')' {
+	$$ = new codegen::MemberFunction(*$1, *$2,  *$4, currentClassName, false, currentVisibility, false);
+}
+| cpp_type ID_t '(' parameter_list ')' CONST_t {
+	$$ = new codegen::MemberFunction(*$1, *$2,  *$4, currentClassName, true, currentVisibility, false);
+}
+| STATIC_t member_function_declaration {
+	$$ = $2;
+	$$->setStatic(true);
+}
+
+;
+
+constructor_declaration: ID_t '(' parameter_list ')' {
+	$$ = new codegen::MemberConstructor(*$3, *$1, currentVisibility);
+}
+;
+
+parameter_list: parameter_list ',' parameter {
+	$$->push_back(*$3);
+}
+| parameter {
+	$$ = new std::vector<codegen::Variable>();
+	$$->push_back(*$1);
+}
+| {
+	$$ = new std::vector<codegen::Variable>();
+}
+;
+
+parameter: cpp_type ID_t {
+	$$ = new codegen::Variable(*$1, *$2);
+}
+;
+
+cpp_type: CONST_t ID_t {
+	$$ = new codegen::Type(*$2, true);
+}
+| ID_t {
+	$$ = new codegen::Type(*$1, false);
+}
+| cpp_type '*' {
+	std::string currName = $1->getName();
+	currName.append("*");
+	$1->setName(currName);
+}
+| cpp_type '&' {
+	std::string currName = $1->getName();
+	currName.append("&");
+	$1->setName(currName);
+}
+;
+
+
+%%

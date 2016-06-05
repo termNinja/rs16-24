@@ -12,12 +12,15 @@ namespace codegen {
 class MemberVariable : public Variable, public Member {
 public:
 	// TODO: Switch QString owner to a const reference to real class
-	MemberVariable(Type type, std::string name, std::string owner = "", MemberVisibility visibility = PRIVATE);
+	MemberVariable(Type type, std::string name, std::string owner = "", MemberVisibility visibility = PRIVATE, bool isStatic = false);
 
 	std::string getOwnerName() const;
+	bool isStatic() const;
 
 	MemberVisibility getVisibility() const;
 	void setVisibility(MemberVisibility visibility);
+	void setStatic(bool isStatic);
+
 
 	memberType getMemberType() const;
 
@@ -25,6 +28,7 @@ public:
 private:
 	std::string m_owner;
 	MemberVisibility m_visibility;
+	bool m_isStatic;
 };
 
 } // namespace end: codegen

@@ -8,6 +8,7 @@
 #include "moduleCodegen/function.hpp"
 #include "moduleCodegen/codegentester.hpp"
 #include "moduleAppController/appcontrollertester.hpp"
+#include "moduleParser/parsertester.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +17,15 @@ int main(int argc, char *argv[])
 
     codegen::codegenTester codegenTester;
     app::AppControllerTester appControllerTester;
+	parser::ParserTester parserTester;
 
     std::cout << "======================================================" << std::endl;
     codegenTester.peformTest();
     std::cout << "======================================================" << std::endl;
     appControllerTester.performTest();
     std::cout << "======================================================" << std::endl;
+	parserTester.performTest();
+	std::cout << "======================================================" << std::endl;
 
 
     w.show();

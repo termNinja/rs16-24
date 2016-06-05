@@ -13,11 +13,24 @@ TEMPLATE = app
 QMAKE_CXXFLAGS+= -std=c++11 -g
 QMAKE_LFLAGS +=  -std=c++11
 
+# =============================================================================
 # Boost libs if needed
+# =============================================================================
 # LIBS += \
 #	   -lboost_system\
 #	   -lboost_filesystem
 
+# =============================================================================
+# Required for flex and bison tools
+# =============================================================================
+include(moduleParser/flex.pri)
+include(moduleParser/bison.pri)
+FLEXSOURCES = moduleParser/cppparser/lexer.lex
+BISONSOURCES = moduleParser/cppparser/parser.ypp
+
+# =============================================================================
+# Math lib <- not really required...but let's be nice
+# =============================================================================
 LIBS += -lm
 
 SOURCES += main.cpp\
@@ -37,7 +50,10 @@ SOURCES += main.cpp\
     classwidget.cpp \
     relation.cpp \
     relationline.cpp \
-    moduleCodegen/memberconstructor.cpp
+	moduleCodegen/memberconstructor.cpp \
+    moduleParser/parsertester.cpp \
+    moduleParser/cppparser/cppparser.cpp \
+    moduleParser/cppparser/bisonmessage.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -57,6 +73,13 @@ HEADERS  += mainwindow.h \
     relation.hpp \
     relationline.hpp \
     moduleCodegen/member.hpp \
-    moduleCodegen/memberconstructor.hpp
+	moduleCodegen/memberconstructor.hpp \
+    moduleParser/parsertester.hpp \
+    moduleParser/cppparser/bisonmessage.hpp \
+    moduleParser/cppparser/cppparser.hpp
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    moduleParser/bison.pri \
+    moduleParser/flex.pri

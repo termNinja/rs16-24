@@ -98,6 +98,7 @@ void codegenTester::peformTest() {
 
 	std::cerr << "Beginning class PolyClass generation..." << std::endl;
 	std::cout << cppExporter.genClass(polyClass) << std::endl;
+
 }
 
 } // namespace end: codegen
