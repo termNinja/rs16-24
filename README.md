@@ -10,26 +10,30 @@ you to create class UML diagrams interactively and then create a full project
 of required classes that you only need to implement later on.
 
 ### How it works
+* Pick a name for your project
+* Select project directory
 * Construct required class diagrams using our GUI wizard
-* Click EXPORT AS
-* Begin coding
+* Click EXPORT AS and select target language (currently only c++ is supported)
+* Open generated files in your favorite editor and begin coding!
 
 ### Supported languages:
 List of currently supported languages is:
 * C++ (done)
-* Java
-* PHP
-* C#
+* Java (planned)
+* PHP (planned)
+* C# (planned)
 
 Supporting wide variety of languages is not the main focus at the moment,
 and later on, it should be easy to extend the app to support more.
 
 ### How it's made
-Project is created using c++11 and Qt libraries.
-Target platforms are:
-* GNU Linux OS
-* Windows
-* OS X
+Project is created using c++11, Qt libraries and flex/bison parsing package. 
+
+##### Requried libs
+* Qt5
+* GNU Bison
+* GNU Flex
+* qmake
 
 ### Future plans
 Once our core functionality (exporting UML class diagrams) is complete,
