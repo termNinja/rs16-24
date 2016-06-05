@@ -7,6 +7,12 @@
 
 namespace app {
 
+/** \class ResourceManager
+ *  \brief Performs the management of project resources.
+ *  \details This class is used to perform basic management of project resources.
+ * 			It's always available to the user and enables simple acquisition
+ * 			of required resources.
+ */
 class ResourceManager {
 public:
 
