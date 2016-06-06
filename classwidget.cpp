@@ -1,5 +1,6 @@
 #include "classwidget.hpp"
 
+//todo: CompactView size problem
 ClassWidget::ClassWidget(QWidget *parent ){
 
 //    QString styleSheet = QString("font-size:10px;").arg(font().pointSize());
@@ -55,6 +56,9 @@ ClassWidget::ClassWidget(QWidget *parent ){
 QWidget* ClassWidget::makeFullSizeWidget(){
 
     QWidget* qwFullView = new QWidget();
+
+    QVBoxLayout *qvblClassFull;
+
     qvblClassFull = new QVBoxLayout(qwFullView);
 //    setLayout(qw);
     qwFullView->setLayout(qvblClassFull);
@@ -114,39 +118,98 @@ QWidget* ClassWidget::makeFullSizeWidget(){
 
 QWidget* ClassWidget::makeCompactWidget(){
 
+    QVBoxLayout *qvblClassCompact;
+
     QWidget* qwCompactView = new QWidget();
 
-    qvblClassFull = new QVBoxLayout();
-    qwCompactView->setLayout(qvblClassFull);
-    qvblClassFull->setContentsMargins(QMargins(0,0,0,0));
+    qvblClassCompact = new QVBoxLayout();
+    qwCompactView->setLayout(qvblClassCompact);
+    qvblClassCompact->setContentsMargins(QMargins(0,0,0,0));
 
     QLabel* qlClassName = new QLabel();
     qlClassName->setText(name);
     qlClassName->setAlignment(Qt::AlignCenter);
-    qvblClassFull->addWidget(qlClassName);
+    qvblClassCompact->addWidget(qlClassName);
+
+    QLabel* qlMembers = new QLabel("Members:");
+    //qvblClassCompact->addWidget(qlMembers);
 
     QListView* qlvMembers = new QListView();
     qlvMembers->setEditTriggers(QListView::NoEditTriggers);
+    qlvMembers->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlvMembers->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    QStandardItemModel* qaim = new QStandardItemModel();;
+    QStandardItemModel* qaimMembers = new QStandardItemModel();;
 
 
     foreach( MemberVariable* item, memberVariables )
     {
-        QStandardItem* Items = new QStandardItem(QString::fromStdString(item->getName()));
-        qaim->appendRow(Items);
+        std::string visibility;
+        if(item->getVisibility() == PUBLIC){
+            visibility = "+";
+        }else if(item->getVisibility() == PRIVATE){
+            visibility = "-";
+        }else{
+            visibility = "#";
+        }
+
+        QStandardItem* Items = new QStandardItem(QString::fromStdString(visibility + " " + item->getType().getName()+" "+item->getName()));
+        qaimMembers->appendRow(Items);
     }
 
-    qlvMembers->setModel(qaim);
+    qlvMembers->setModel(qaimMembers);
 
     qlvMembers->setFixedSize(qlvMembers->sizeHintForColumn(0) + 2 * qlvMembers->frameWidth(), qlvMembers->sizeHintForRow(0) * memberVariables.count() + 2 * qlvMembers->frameWidth());
 
     qlvMembers->setMinimumSize(80,0);
-    qvblClassFull->addWidget(qlvMembers);
+    qvblClassCompact->addWidget(qlvMembers);
 
-    qwCompactView->setLayout(qvblClassFull);
+    QLabel* qlMethods = new QLabel("Methods:");
+    //qvblClassCompact->addWidget(qlMethods);
 
-//    qvblClassFull->setSizeConstraint(QLayout::SetFixedSize);
+    QListView* qlvMethods = new QListView();
+    qlvMethods->setEditTriggers(QListView::NoEditTriggers);
+    qlvMethods->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlvMethods->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    QStandardItemModel* qaimMethods = new QStandardItemModel();;
+
+
+    foreach( MemberFunction* item, memberFuncions)
+    {
+        std::string method;
+
+        std::string visibility;
+        if(item->getVisibility() == PUBLIC){
+            method = "+ ";
+        }else if(item->getVisibility() == PRIVATE){
+            method = "- ";
+        }else{
+            method = "# ";
+        }
+
+        method+=item->getReturnType().getName()+" "+ item->getName()+"(";
+
+        int n = item->getParameters().size();
+        for(int i=0;i<n;i++){
+            Variable parameter = item->getParameters()[i];
+            method+=parameter.getType().getName() + " " + parameter.getName() + (i!=n-1 ? ", ":"");
+
+        }
+        method+=")";
+        QStandardItem* Items = new QStandardItem(QString::fromStdString(method));
+        qaimMethods->appendRow(Items);
+    }
+
+    qlvMethods->setModel(qaimMethods);
+
+    qlvMethods->setFixedSize(qlvMethods->sizeHintForColumn(0) + 2 * qlvMethods->frameWidth(), qlvMethods->sizeHintForRow(0) * memberFuncions.count() + 2 * qlvMethods->frameWidth());
+
+    qlvMethods->setMinimumSize(80,0);
+    qvblClassCompact->addWidget(qlvMethods);
+
+    qwCompactView->setLayout(qvblClassCompact);
+//    qvblClassCompact->setSizeConstraint(QLayout::SetFixedSize);
 
     return qwCompactView;
 }
@@ -197,7 +260,10 @@ void ClassWidget::addMemberClicked()
     qlwMembers->setVisible(true);
 
     QComboBox* qcbAccessModifiers = new QComboBox();
-    qcbAccessModifiers->addItems({"private", "public", "protected"});
+    qcbAccessModifiers->addItem("private", qVariantFromValue(PRIVATE));
+    qcbAccessModifiers->addItem("public", qVariantFromValue(PUBLIC));
+    qcbAccessModifiers->addItem("protected", qVariantFromValue(PROTECTED));
+
     QLineEdit* qleType = new QLineEdit("type");
     QLineEdit* qleName = new QLineEdit("newMember");
 
@@ -255,7 +321,9 @@ void ClassWidget::addMethodClicked()
     qlwMethods->setVisible(true);
 
     QComboBox* qcbAccessModifiers = new QComboBox();
-    qcbAccessModifiers->addItems({"public","private","protected"});
+    qcbAccessModifiers->addItem("private", qVariantFromValue(PRIVATE));
+    qcbAccessModifiers->addItem("public", qVariantFromValue(PUBLIC));
+    qcbAccessModifiers->addItem("protected", qVariantFromValue(PROTECTED));
     QLineEdit* qleType = new QLineEdit("type");
     QLineEdit* qleName = new QLineEdit("NewMethod");
     QHBoxLayout* qhblParametersWrap = new QHBoxLayout();
@@ -601,8 +669,10 @@ void ClassWidget::addMethodParameterClicked(){
 
     qleParameter->setFixedWidth(15);
     connect(qleParameter, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
+    connect(qleParameter,SIGNAL(editingFinished()),this,SLOT(memberFunctionParameterChanged()));
 
     qhblParametersWrap->addWidget(qleParameter);
+
 //    QMessageBox msgBox;
 //    msgBox.setText(->itemAt(0)->widget()->metaObject()->className());
 //    msgBox.exec();
@@ -627,9 +697,33 @@ void ClassWidget::getMemberFunctions(){
         QLineEdit* methodType= (QLineEdit*)methodLayout->itemAt(1)->widget();
         QLineEdit* methodName= (QLineEdit*)methodLayout->itemAt(2)->widget();
 
-        //todo: kreirati lepo metodu, sa svim podacima
-		// -> Promenjen interfejs (nabolje)
-		// memberFuncions.append(new MemberFunction(methodName->text().toStdString(),false));
+        QHBoxLayout* qhblParametersWrap = (QHBoxLayout*)methodLayout->itemAt(4)->layout();
+//        QMessageBox msgBox;
+//            msgBox.setText("test "+ qhblParametersWrap->count());
+//            msgBox.exec();
+
+
+        MemberFunction* memberFunction = new MemberFunction(Type(methodType->text().toStdString(),false), methodName->text().toStdString(),false,
+                                                          methodAccessModifier->itemData(methodAccessModifier->currentIndex()).value<MemberVisibility>());
+
+        for(int i=0;i<qhblParametersWrap->count();i++){
+
+
+            QString qsParameter = ((QLineEdit*)qhblParametersWrap->itemAt(i)->widget())->text();
+            QStringList qslParameters = qsParameter.split(" ");
+
+            if(qslParameters.length()!=2){
+                QMessageBox msgBox;
+                msgBox.setText("Parametar "+ qsParameter + " u metodi " + QString::fromStdString(memberFunction->getName()) +" nije unesen u dobrom obliku!");
+                msgBox.exec();
+            }else{
+                Variable* parameter= new Variable(Type(QString(qslParameters.at(0)).toStdString(),false),QString(qslParameters.at(1)).toStdString());
+
+                memberFunction->addParameter(*parameter);
+            }
+        }
+
+        memberFuncions.append(memberFunction);
     }
 }
 
@@ -644,6 +738,25 @@ void ClassWidget::getMembers(){
         QLineEdit* memberType= (QLineEdit*)memberLayout->itemAt(1)->widget();
         QLineEdit* memberName= (QLineEdit*)memberLayout->itemAt(2)->widget();
 
-        memberVariables.append(new MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),""));
+//        if(memberAccessModifier->currentIndex())
+        memberVariables.append(
+                    new MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
+                                                  memberAccessModifier->itemData(memberAccessModifier->currentIndex()).value<MemberVisibility>()));
     }
+}
+
+void ClassWidget::memberFunctionParameterChanged(){
+
+    QLineEdit* parameter = (QLineEdit*)sender();
+    if(parameter->text().isEmpty()){
+        parameter->deleteLater();
+    }
+
+    qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
+    qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
+
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+    resize(sizeHint());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
 }

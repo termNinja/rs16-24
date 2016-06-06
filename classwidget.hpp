@@ -24,6 +24,8 @@
 
 using namespace codegen;
 
+Q_DECLARE_METATYPE(MemberVisibility)
+
 class ClassWidget : public QWidget
 {
     Q_OBJECT
@@ -53,9 +55,10 @@ public slots:
     void addMethodParameterClicked();
     void switchViews();
     void deleteWidget();
+private slots:
+    void memberFunctionParameterChanged();
 private:
     QWidget *wClassWraper;
-    QVBoxLayout *qvblClassFull;
     QListWidget *qlwMembers;
     QPushButton *qpbAddMember;
     QListWidget *qlwMethods;
