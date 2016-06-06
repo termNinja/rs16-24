@@ -15,6 +15,11 @@
 #include <QInputDialog>
 #include <QPainter>
 #include <QWidget>
+#include <QLabel>
+#include "relationline.hpp"
+#include <vector>
+#include <iostream>
+#include "relation.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -31,10 +36,14 @@ private slots:
     void on_pushButton_10_clicked();
     void on_pushButton_clicked();
     void on_choose_dir_clicked();
+    void on_pushButton_11_clicked();
 
+protected:
+    ClassWidget* getClass();
 
 private:
     Ui::MainWindow *ui;
+    std::vector<ClassWidget*> m_listOfClass;
 };
 
 #endif // MAINWINDOW_H

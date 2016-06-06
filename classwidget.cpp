@@ -5,17 +5,12 @@ ClassWidget::ClassWidget(QWidget *parent ){
 
 //    QString styleSheet = QString("font-size:10px;").arg(font().pointSize());
 //    this->setStyleSheet(styleSheet);
-
     moving = false;
-
     //set color to widget so its easy to see dimensions
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::gray);
     setAutoFillBackground(true);
     setPalette(Pal);
-
-
-
     //todo: vratiti resize kada se zavrsi sa compactview-om
 //    this->setAttribute(Qt::WA_Hover, true);
 
@@ -115,6 +110,11 @@ QWidget* ClassWidget::makeFullSizeWidget(){
 
     return qwFullView;
 }
+
+QString ClassWidget::getName(){
+    return name;
+}
+
 
 QWidget* ClassWidget::makeCompactWidget(){
 

@@ -33,6 +33,7 @@ public:
     ClassWidget(QWidget *parent);
     ~ClassWidget()
     {};
+    QString getName();
 
 protected:
     void mousePressEvent(QMouseEvent *e);

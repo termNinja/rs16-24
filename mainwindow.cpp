@@ -8,7 +8,6 @@
 #include <QLayoutItem>
 #include "moduleAppController/resourcemanager.hpp"
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -23,6 +22,9 @@ MainWindow::~MainWindow()
 }
 
 
+ClassWidget* MainWindow::getClass(){
+   return m_listOfClass.at(0);
+}
 
 void MainWindow::on_pushButton_10_clicked()
 {
@@ -32,7 +34,8 @@ void MainWindow::on_pushButton_10_clicked()
 //                                               "class name", &ok);
 
     QWidget *parent  = ui->widget_2;
-    ClassWidget *w = new ClassWidget(parent);
+    ClassWidget *newClass = new ClassWidget(parent);
+    m_listOfClass.push_back(newClass);
 }
 
 void QWidget::paintEvent(QPaintEvent *)
@@ -60,8 +63,6 @@ void MainWindow::on_pushButton_clicked()
     update();
 }
 
-
-
 void MainWindow::on_choose_dir_clicked()
 {
     QString path = QFileDialog::getExistingDirectory(
@@ -77,4 +78,13 @@ void MainWindow::on_choose_dir_clicked()
 	rm->setProjectPath(pathTONewDir);
 
     QDir().mkdir(pathTONewDir);
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    ClassWidget *clasa1 = m_listOfClass.at(0);
+    ClassWidget *clasa2 = m_listOfClass.at(1);
+
+    relation r(ui->widget_2 , clasa1, clasa2);
+
 }
