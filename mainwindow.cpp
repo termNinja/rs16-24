@@ -118,6 +118,7 @@ void MainWindow::addRelationClicked(){
     ql->addWidget(qcbSecondClass);
     ql->addWidget(qpbOk);
 
+    relationType = ql->indexOf((QPushButton*)sender());
 //    QMessageBox msgBox;
 //    msgBox.setText("Test");
 //    msgBox.exec();
@@ -127,7 +128,7 @@ void MainWindow::makeRelation(){
     ClassWidget *clasa1 = allClassWidgets.at(qcbFirstClass->currentIndex());
     ClassWidget *clasa2 = allClassWidgets.at(qcbSecondClass->currentIndex());
 
-    relation r(ui->widget_2 , clasa1, clasa2);
+    relationWidget r(ui->widget_2 , clasa1, clasa2,relationType);
 
     ((QWidget*)qcbFirstClass->parent())->layout()->removeWidget(qcbFirstClass);
     delete qcbFirstClass;

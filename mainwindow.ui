@@ -191,7 +191,7 @@
               </size>
              </property>
              <property name="text">
-              <string>relation</string>
+              <string>Association</string>
              </property>
              <property name="icon">
               <iconset>
@@ -208,7 +208,7 @@
               </size>
              </property>
              <property name="text">
-              <string>Composition</string>
+              <string>Inheritance</string>
              </property>
             </widget>
            </item>
@@ -221,7 +221,7 @@
               </size>
              </property>
              <property name="text">
-              <string>Agreggation</string>
+              <string>Aggregation</string>
              </property>
             </widget>
            </item>
@@ -234,7 +234,7 @@
               </size>
              </property>
              <property name="text">
-              <string>Association</string>
+              <string>Composition</string>
              </property>
             </widget>
            </item>
@@ -382,12 +382,60 @@
    <slot>addRelationClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>37</x>
-     <y>341</y>
+     <x>47</x>
+     <y>439</y>
     </hint>
     <hint type="destinationlabel">
      <x>332</x>
      <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>addRelationClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>488</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>306</x>
+     <y>481</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>addRelationClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>517</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>546</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_13</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>addRelationClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>456</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>410</y>
     </hint>
    </hints>
   </connection>

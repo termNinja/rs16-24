@@ -52,6 +52,7 @@ private:
     QComboBox* qcbFirstClass;
     QComboBox* qcbSecondClass;
     QPushButton* qpbOk;
+    int relationType;
 };
 
 #endif // MAINWINDOW_H
