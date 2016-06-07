@@ -10,6 +10,7 @@ namespace codegen {
 class Variable {
 public:
 	Variable(Type type, std::string name, bool isStatic = false);
+    Variable();
 
 	const Type& getType() const;
 	std::string getName() const;

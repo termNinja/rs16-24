@@ -12,8 +12,9 @@ namespace codegen {
 
 class MemberFunction : public Function, public Member {
 public:
+    MemberFunction();
 	MemberFunction(Type returnType, std::string functionName, bool isConst = false, MemberVisibility visibililty = PRIVATE, bool isStatic = false);
-	MemberFunction(Type returnType, std::string functionName, const std::vector<Variable> &parameters,
+    MemberFunction(Type returnType, std::string functionName, const std::vector<Variable> &parameters,
 				   std::string owner, bool isConst = false, MemberVisibility visibility = PRIVATE, bool isStatic = false);
 
 	// TODO: Switch this to a reference to the owner class (later once I construct class)

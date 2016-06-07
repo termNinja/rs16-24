@@ -6,6 +6,10 @@ using namespace std;
 
 namespace codegen {
 
+MemberFunction::MemberFunction()
+{
+}
+
 MemberFunction::MemberFunction(Type returnType, string functionName, bool isConst, MemberVisibility visibility, bool isStatic)
 	: Function(functionName, returnType), m_isConst(isConst), m_isStatic(isStatic), m_visibility(visibility)
 {

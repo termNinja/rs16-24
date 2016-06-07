@@ -63,6 +63,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     qleClassName = new QLineEdit();
     qleClassName->setPlaceholderText("My Class Name");
     qleClassName->setAlignment(Qt::AlignCenter);
+    connect(qleClassName, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditRenameClass()));
 
 
     //listWidget for member variables
@@ -75,7 +76,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     QHBoxLayout* qhblMemberButtons = new QHBoxLayout();
 
     //creating button for adding members
-    qpbAddMember = new QPushButton("Add member");
+    QPushButton* qpbAddMember = new QPushButton("Add member");
     qhblMemberButtons->addWidget(qpbAddMember);
     connect(qpbAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
 
@@ -93,7 +94,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
 
     QHBoxLayout* qhblMethodButtons = new QHBoxLayout();
 
-    qpbAddMethod = new QPushButton("Add method");
+    QPushButton* qpbAddMethod = new QPushButton("Add method");
     qhblMethodButtons->addWidget(qpbAddMethod);
     connect(qpbAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
 
@@ -140,18 +141,18 @@ QWidget* ClassWidget::makeCompactWidget(){
     QStandardItemModel* qaimMembers = new QStandardItemModel();;
 
 
-    foreach( MemberVariable* item, memberVariables )
+    foreach( MemberVariable item, memberVariables )
     {
         std::string visibility;
-        if(item->getVisibility() == PUBLIC){
+        if(item.getVisibility() == PUBLIC){
             visibility = "+";
-        }else if(item->getVisibility() == PRIVATE){
+        }else if(item.getVisibility() == PRIVATE){
             visibility = "-";
         }else{
             visibility = "#";
         }
 
-        QStandardItem* Items = new QStandardItem(QString::fromStdString(visibility + " " + item->getType().getName()+" "+item->getName()));
+        QStandardItem* Items = new QStandardItem(QString::fromStdString(visibility + " " + item.getType().getName()+" "+item.getName()));
         qaimMembers->appendRow(Items);
     }
 
@@ -159,7 +160,6 @@ QWidget* ClassWidget::makeCompactWidget(){
 
     qlvMembers->setFixedSize(qlvMembers->sizeHintForColumn(0) + 2 * qlvMembers->frameWidth(), qlvMembers->sizeHintForRow(0) * memberVariables.count() + 2 * qlvMembers->frameWidth());
 
-    qlvMembers->setMinimumSize(80,0);
     qvblClassCompact->addWidget(qlvMembers);
 
 //    QLabel* qlMethods = new QLabel("Methods:");
@@ -172,24 +172,24 @@ QWidget* ClassWidget::makeCompactWidget(){
 
     QStandardItemModel* qaimMethods = new QStandardItemModel();;
 
-    foreach( MemberFunction* item, memberFuncions)
+    foreach( MemberFunction item, memberFuncions)
     {
         std::string method;
 
         std::string visibility;
-        if(item->getVisibility() == PUBLIC){
+        if(item.getVisibility() == PUBLIC){
             method = "+ ";
-        }else if(item->getVisibility() == PRIVATE){
+        }else if(item.getVisibility() == PRIVATE){
             method = "- ";
         }else{
             method = "# ";
         }
 
-        method+=item->getReturnType().getName()+" "+ item->getName()+"(";
+        method+=item.getReturnType().getName()+" "+ item.getName()+"(";
 
-        int n = item->getParameters().size();
+        int n = item.getParameters().size();
         for(int i=0;i<n;i++){
-            Variable parameter = item->getParameters()[i];
+            Variable parameter = item.getParameters()[i];
             method+=parameter.getType().getName() + " " + parameter.getName() + (i!=n-1 ? ", ":"");
 
         }
@@ -202,17 +202,20 @@ QWidget* ClassWidget::makeCompactWidget(){
 
     qlvMethods->setFixedSize(qlvMethods->sizeHintForColumn(0) + 2 * qlvMethods->frameWidth(), qlvMethods->sizeHintForRow(0) * memberFuncions.count() + 2 * qlvMethods->frameWidth());
 
-    qlvMethods->setMinimumSize(80,0);
     qvblClassCompact->addWidget(qlvMethods);
 
     qwCompactView->setLayout(qvblClassCompact);
-    qvblClassCompact->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    qvblClassCompact->setSizeConstraint(QLayout::SetMaximumSize);
+
 
     if(qlvMethods->width()>qlvMembers->width()){
-      qlvMembers->setFixedSize(qlvMethods->width(),qlvMembers->height());
+        qlvMembers->setFixedWidth(qlvMethods->width());
     }else{
-        qlvMethods->setFixedSize(qlvMembers->width(),qlvMethods->height());
+        qlvMethods->setFixedWidth(qlvMembers->width());
     }
+
+    qlvMembers->setMinimumSize(80,0);
+    qlvMethods->setMinimumSize(80,0);
 
     return qwCompactView;
 }
@@ -222,7 +225,6 @@ void ClassWidget::switchViews(){
     if(stackedLayout->currentIndex()==0){
         getMembers();
         getMemberFunctions();
-        name = qleClassName->text();
         setContentsMargins(QMargins(5,5,5,5));
 
         if(name == ""){
@@ -727,7 +729,7 @@ void ClassWidget::getMemberFunctions(){
 //            msgBox.exec();
 
 
-        MemberFunction* memberFunction = new MemberFunction(Type(methodType->text().toStdString(),false), methodName->text().toStdString(),false,
+        MemberFunction memberFunction(Type(methodType->text().toStdString(),false), methodName->text().toStdString(),false,
                                                           methodAccessModifier->itemData(methodAccessModifier->currentIndex()).value<MemberVisibility>());
 
         for(int i=0;i<qhblParametersWrap->count();i++){
@@ -738,12 +740,12 @@ void ClassWidget::getMemberFunctions(){
 
             if(qslParameters.length()!=2){
                 QMessageBox msgBox;
-                msgBox.setText("Parametar "+ qsParameter + " u metodi " + QString::fromStdString(memberFunction->getName()) +" nije unesen u dobrom obliku!");
+                msgBox.setText("Parametar "+ qsParameter + " u metodi " + QString::fromStdString(memberFunction.getName()) +" nije unesen u dobrom obliku!");
                 msgBox.exec();
             }else{
                 Variable* parameter= new Variable(Type(QString(qslParameters.at(0)).toStdString(),false),QString(qslParameters.at(1)).toStdString());
 
-                memberFunction->addParameter(*parameter);
+                memberFunction.addParameter(*parameter);
             }
         }
 
@@ -764,7 +766,7 @@ void ClassWidget::getMembers(){
 
 //        if(memberAccessModifier->currentIndex())
         memberVariables.append(
-                    new MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
+                    MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
                                                   memberAccessModifier->itemData(memberAccessModifier->currentIndex()).value<MemberVisibility>()));
     }
 }
@@ -783,4 +785,12 @@ void ClassWidget::memberFunctionParameterChanged(){
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+}
+
+void ClassWidget::lineEditRenameClass(){
+    name= ((QLineEdit*)sender())->text();
+}
+
+Class ClassWidget::getClass(){
+    return Class(name.toStdString(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
 }

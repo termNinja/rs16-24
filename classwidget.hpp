@@ -21,6 +21,7 @@
 #include <cmath>
 #include <moduleCodegen/memberfunction.hpp>
 #include <moduleCodegen/membervariable.hpp>
+#include <moduleCodegen/class.hpp>
 
 using namespace codegen;
 
@@ -35,6 +36,7 @@ public:
     {};
     QString getName();
 
+    Class getClass();
 protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -45,7 +47,7 @@ protected:
     void moveClass(QMouseEvent *e);
     QPoint mousePoint;
 
-public slots:
+private slots:
     void addMemberClicked();
     void addMethodClicked();
     void removeMethodClicked();
@@ -56,20 +58,20 @@ public slots:
     void addMethodParameterClicked();
     void switchViews();
     void deleteWidget();
-private slots:
-    void memberFunctionParameterChanged();
-private:
-    QWidget *wClassWraper;
-    QListWidget *qlwMembers;
-    QPushButton *qpbAddMember;
-    QListWidget *qlwMethods;
-    QPushButton *qpbAddMethod;
-    QLineEdit *qleClassName;
 
+    void memberFunctionParameterChanged();
+    void lineEditRenameClass();
+
+private:
+
+    QLineEdit* qleClassName;
+    QListWidget* qlwMembers;
+    QListWidget* qlwMethods;
 
     QString name;
-    QList<MemberFunction*> memberFuncions;
-    QList<MemberVariable*> memberVariables;
+    QList<MemberVariable> memberVariables;
+    QList<MemberFunction> memberFuncions;
+
 
     //used for moving
     QPoint offset;

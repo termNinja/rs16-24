@@ -11,6 +11,10 @@ MemberVariable::MemberVariable(Type type, std::string name, std::string owner, M
 {
 }
 
+MemberVariable::MemberVariable()
+{
+}
+
 std::string MemberVariable::getOwnerName() const
 {
 	return m_owner;

@@ -38,12 +38,15 @@ private slots:
     void on_choose_dir_clicked();
     void on_pushButton_11_clicked();
 
+    void GenerateCodeC();
+    void on_MainWindow_iconSizeChanged(const QSize &iconSize);
+
 protected:
     ClassWidget* getClass();
 
 private:
     Ui::MainWindow *ui;
-    std::vector<ClassWidget*> m_listOfClass;
+    QList<ClassWidget*> allClassWidgets;
 };
 
 #endif // MAINWINDOW_H
