@@ -118,20 +118,18 @@ QString ClassWidget::getName(){
 
 QWidget* ClassWidget::makeCompactWidget(){
 
-    QVBoxLayout *qvblClassCompact;
-
     QWidget* qwCompactView = new QWidget();
 
-    qvblClassCompact = new QVBoxLayout();
+    QVBoxLayout* qvblClassCompact = new QVBoxLayout();
     qwCompactView->setLayout(qvblClassCompact);
     qvblClassCompact->setContentsMargins(QMargins(0,0,0,0));
 
     QLabel* qlClassName = new QLabel();
     qlClassName->setText(name);
-    qlClassName->setAlignment(Qt::AlignCenter);
+    qlClassName->setAlignment(Qt::AlignHCenter);
     qvblClassCompact->addWidget(qlClassName);
 
-    QLabel* qlMembers = new QLabel("Members:");
+//    QLabel* qlMembers = new QLabel("Members:");
     //qvblClassCompact->addWidget(qlMembers);
 
     QListView* qlvMembers = new QListView();
@@ -164,7 +162,7 @@ QWidget* ClassWidget::makeCompactWidget(){
     qlvMembers->setMinimumSize(80,0);
     qvblClassCompact->addWidget(qlvMembers);
 
-    QLabel* qlMethods = new QLabel("Methods:");
+//    QLabel* qlMethods = new QLabel("Methods:");
     //qvblClassCompact->addWidget(qlMethods);
 
     QListView* qlvMethods = new QListView();
@@ -173,7 +171,6 @@ QWidget* ClassWidget::makeCompactWidget(){
     qlvMethods->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     QStandardItemModel* qaimMethods = new QStandardItemModel();;
-
 
     foreach( MemberFunction* item, memberFuncions)
     {
@@ -209,7 +206,13 @@ QWidget* ClassWidget::makeCompactWidget(){
     qvblClassCompact->addWidget(qlvMethods);
 
     qwCompactView->setLayout(qvblClassCompact);
-//    qvblClassCompact->setSizeConstraint(QLayout::SetFixedSize);
+    qvblClassCompact->setSizeConstraint(QLayout::SetMinAndMaxSize);
+
+    if(qlvMethods->width()>qlvMembers->width()){
+      qlvMembers->setFixedSize(qlvMethods->width(),qlvMembers->height());
+    }else{
+        qlvMethods->setFixedSize(qlvMembers->width(),qlvMethods->height());
+    }
 
     return qwCompactView;
 }
@@ -230,8 +233,12 @@ void ClassWidget::switchViews(){
         stackedLayout->removeItem(stackedLayout->itemAt(1));
         stackedLayout->addWidget(makeCompactWidget());
         stackedLayout->setCurrentIndex(1);
-        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
-        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,40));
+//        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+//        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,40));
+
+        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->width(), stackedLayout->currentWidget()->sizeHint().height());
+
+        resize(stackedLayout->currentWidget()->size()+QSize(0,40));
     }else{
         stackedLayout->setCurrentIndex(0);
         resize(sizeHint());
