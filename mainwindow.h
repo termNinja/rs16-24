@@ -48,11 +48,14 @@ protected:
 private:
     Ui::MainWindow *ui;
     QList<ClassWidget*> allClassWidgets;
+    QList<ClassWidget*> allRelationWidgets;
 
     QComboBox* qcbFirstClass;
     QComboBox* qcbSecondClass;
     QPushButton* qpbOk;
+
     int relationType;
+
 };
 
 #endif // MAINWINDOW_H

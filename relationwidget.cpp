@@ -63,29 +63,36 @@ void relationWidget::makeRelation(QWidget *parent , std::vector<QPoint> minDistT
                 break;
     }
 
-    if ( class1->pos().x() < class2->pos().x() &&
-         class1->pos().y() > class2->pos().y())
+    m_lines.push_back(bonusLineClass1);
+    m_lines.push_back(bonusLineClass2);
+
+    if ( class1->pos().x() <= class2->pos().x() &&
+         class1->pos().y() >= class2->pos().y())
     {
      relationLine *firstLine = new relationLine(parent ,tmpPointClass1 ,
                                                 QPoint( tmpPointClass2.x() , startPoint.y()), type);
 
-     relationLine *secondLine = new relationLine(parent ,QPoint( tmpPointClass2.x() , startPoint.y()) ,
+     relationLine *secondLine = new relationLine(parent ,QPoint( tmpPointClass2.x() , tmpPointClass1.y()) ,
                                                  tmpPointClass2 , type);
+     m_lines.push_back(firstLine);
+     m_lines.push_back(secondLine);
     }
 
-    if ( class1->pos().x() < class2->pos().x() &&
-         class1->pos().y() < class2->pos().y())
+    if ( class1->pos().x() <= class2->pos().x() &&
+         class1->pos().y() <= class2->pos().y())
     {
 
      relationLine *firstLine = new relationLine(parent ,tmpPointClass1 ,
-                                                QPoint( tmpPointClass2.x() , startPoint.y()), type);
+                                                QPoint( tmpPointClass2.x() , tmpPointClass1.y()), type);
 
      relationLine *secondLine = new relationLine(parent , tmpPointClass2 ,
-                                                 QPoint( tmpPointClass2.x() , startPoint.y()) , type);
+                                                 QPoint( tmpPointClass2.x() , tmpPointClass1.y()) , type);
+     m_lines.push_back(firstLine);
+     m_lines.push_back(secondLine);
     }
 
-    if ( class1->pos().x() > class2->pos().x() &&
-         class1->pos().y() < class2->pos().y())
+    if ( class1->pos().x() >= class2->pos().x() &&
+         class1->pos().y() <= class2->pos().y())
     {
 
      relationLine *firstLine = new relationLine(parent ,
@@ -94,22 +101,32 @@ void relationWidget::makeRelation(QWidget *parent , std::vector<QPoint> minDistT
 
      relationLine *secondLine = new relationLine(parent , tmpPointClass2 ,
                                                  QPoint( tmpPointClass2.x() , startPoint.y()) , type );
+     m_lines.push_back(firstLine);
+     m_lines.push_back(secondLine);
     }
 
-    if ( class1->pos().x() > class2->pos().x() &&
-         class1->pos().y() > class2->pos().y())
+    if ( class1->pos().x() >= class2->pos().x() &&
+         class1->pos().y() >= class2->pos().y())
     {
 
      relationLine *firstLine = new relationLine(parent ,
-                                                QPoint( tmpPointClass2.x() , startPoint.y()) ,tmpPointClass1
+                                                QPoint( tmpPointClass2.x() , tmpPointClass1.y() ) ,tmpPointClass1
                                                 , type);
 
      relationLine *secondLine = new relationLine(parent ,
-                                                 QPoint( tmpPointClass2.x() , startPoint.y())  , tmpPointClass2
+                                                 QPoint( tmpPointClass2.x() , tmpPointClass1.y())  , tmpPointClass2
                                                  , type);
+     m_lines.push_back(firstLine);
+     m_lines.push_back(secondLine);
     }
 
 }
+
+void relationWidget::mousePressEvent(QMouseEvent *e){
+
+    std::cout<<"dasdasdasdasdaasdsadsadasdsadadsadasdasdsasdasdasdsadasd"<<std::endl;
+}
+
 
 int relationWidget::numberOfLines(QPoint p1, QPoint p2 ){
     return 2;

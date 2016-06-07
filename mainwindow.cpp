@@ -130,6 +130,7 @@ void MainWindow::makeRelation(){
 
     relationWidget r(ui->widget_2 , clasa1, clasa2,relationType);
 
+
     ((QWidget*)qcbFirstClass->parent())->layout()->removeWidget(qcbFirstClass);
     delete qcbFirstClass;
     delete qcbSecondClass;
