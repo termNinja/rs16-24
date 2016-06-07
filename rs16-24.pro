@@ -48,12 +48,12 @@ SOURCES += main.cpp\
     moduleLangExporter/cpplangexporter.cpp \
     moduleLangExporter/langexportertester.cpp \
     classwidget.cpp \
-    relation.cpp \
     relationline.cpp \
 	moduleCodegen/memberconstructor.cpp \
     moduleParser/parsertester.cpp \
     moduleParser/cppparser/cppparser.cpp \
-    moduleParser/cppparser/bisonmessage.cpp
+    moduleParser/cppparser/bisonmessage.cpp \
+    relationwidget.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -70,13 +70,13 @@ HEADERS  += mainwindow.h \
     moduleLangExporter/cpplangexporter.hpp \
     moduleLangExporter/langexportertester.hpp \
     classwidget.hpp \
-    relation.hpp \
     relationline.hpp \
     moduleCodegen/member.hpp \
 	moduleCodegen/memberconstructor.hpp \
     moduleParser/parsertester.hpp \
     moduleParser/cppparser/bisonmessage.hpp \
-    moduleParser/cppparser/cppparser.hpp
+    moduleParser/cppparser/cppparser.hpp \
+    relationwidget.hpp
 
 FORMS    += mainwindow.ui
 

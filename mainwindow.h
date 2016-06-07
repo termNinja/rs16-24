@@ -19,7 +19,7 @@
 #include "relationline.hpp"
 #include <vector>
 #include <iostream>
-#include "relation.hpp"
+#include "relationwidget.hpp"
 
 namespace Ui {
 class MainWindow;

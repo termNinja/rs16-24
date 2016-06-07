@@ -10,23 +10,29 @@
 #include "relationline.hpp"
 #include "classwidget.hpp"
 
-class relation
+
+//TODO ADD TYPES enum
+//typedef enum TYPES { association = 0 , inheritance = 1 };
+
+class relationWidget
 {
+
 public:
-    relation(QWidget *parent , ClassWidget *class1,  ClassWidget *class2);
+    relationWidget(QWidget *parent , ClassWidget *class1,  ClassWidget *class2 , int type);
 
 protected:
     int numberOfLines(QPoint p1, QPoint p2 );
     std::vector<QPoint> getFourPoints(QPoint pos , int width , int height);
     std::vector<QPoint> minDist(std::vector<QPoint> &class1 , std::vector<QPoint> &class2);
-    void makeRelation(std::vector<QPoint> &points);
+    void makeRelation(QWidget *parent , std::vector<QPoint> minDistTwoPoints , int type
+                      ,ClassWidget *class1, ClassWidget *class2);
 
 
 private:
     std::vector<relationLine> m_lines;
     int m_firstClassPointPosition;
     int m_secondClassPointPosition;
-
+    int m_type;
 };
 
 #endif // RELATION_HPP
