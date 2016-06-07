@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>759</width>
-    <height>492</height>
+    <width>1012</width>
+    <height>661</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,13 +80,16 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <widget class="QWidget" name="toolBoxPage1">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>131</height>
+           <height>215</height>
           </rect>
          </property>
          <attribute name="label">
@@ -154,8 +157,14 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>131</height>
+           <height>215</height>
           </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <attribute name="label">
           <string>Relations</string>
@@ -166,10 +175,13 @@
             <x>0</x>
             <y>0</y>
             <width>121</width>
-            <height>126</height>
+            <height>159</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
+           </property>
            <item>
             <widget class="QPushButton" name="pushButton">
              <property name="maximumSize">
@@ -188,19 +200,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Agreggation</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="pushButton_13">
              <property name="maximumSize">
               <size>
@@ -210,6 +209,19 @@
              </property>
              <property name="text">
               <string>Composition</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Agreggation</string>
              </property>
             </widget>
            </item>
@@ -253,7 +265,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>759</width>
+     <width>1012</width>
      <height>25</height>
     </rect>
    </property>
@@ -363,8 +375,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>addRelationClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>37</x>
+     <y>341</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>332</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>GenerateCodeC()</slot>
+  <slot>addRelationClicked()</slot>
  </slots>
 </ui>

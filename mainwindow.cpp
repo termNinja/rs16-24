@@ -94,9 +94,43 @@ void MainWindow::GenerateCodeC(){
     foreach(ClassWidget* currentClass, allClassWidgets)
     {
         Class test = currentClass->getClass();
-        QMessageBox msgBox;
         lexp::CppLangExporter cppExporter;
+        QMessageBox msgBox;
         msgBox.setText(QString::fromStdString(cppExporter.genClass(test)));
         msgBox.exec();
     }
+}
+
+void MainWindow::addRelationClicked(){
+
+    qcbFirstClass = new QComboBox();
+    qcbSecondClass = new QComboBox();
+    foreach(ClassWidget* currentClassWidget, allClassWidgets){
+        qcbFirstClass->addItem(currentClassWidget->getName());
+        qcbSecondClass->addItem(currentClassWidget->getName());
+    }
+
+    qpbOk = new QPushButton("Make relation");
+    connect(qpbOk, SIGNAL(clicked()), this , SLOT(makeRelation()));
+
+    QLayout* ql = ((QWidget*)((QPushButton*)sender())->parent())->layout();
+    ql->addWidget(qcbFirstClass);
+    ql->addWidget(qcbSecondClass);
+    ql->addWidget(qpbOk);
+
+//    QMessageBox msgBox;
+//    msgBox.setText("Test");
+//    msgBox.exec();
+}
+
+void MainWindow::makeRelation(){
+    ClassWidget *clasa1 = allClassWidgets.at(qcbFirstClass->currentIndex());
+    ClassWidget *clasa2 = allClassWidgets.at(qcbSecondClass->currentIndex());
+
+    relation r(ui->widget_2 , clasa1, clasa2);
+
+    ((QWidget*)qcbFirstClass->parent())->layout()->removeWidget(qcbFirstClass);
+    delete qcbFirstClass;
+    delete qcbSecondClass;
+    delete qpbOk;
 }

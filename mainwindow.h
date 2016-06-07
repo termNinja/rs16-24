@@ -40,12 +40,18 @@ private slots:
 
     void GenerateCodeC();
 
+    void addRelationClicked();
+    void makeRelation();
 protected:
     ClassWidget* getClass();
 
 private:
     Ui::MainWindow *ui;
     QList<ClassWidget*> allClassWidgets;
+
+    QComboBox* qcbFirstClass;
+    QComboBox* qcbSecondClass;
+    QPushButton* qpbOk;
 };
 
 #endif // MAINWINDOW_H
