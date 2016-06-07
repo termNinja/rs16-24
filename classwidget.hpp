@@ -59,17 +59,22 @@ private slots:
     void switchViews();
     void deleteWidget();
 
-    void memberFunctionParameterChanged();
+    void ParameterChanged();
     void lineEditRenameClass();
 
+    void removeConstructorClicked();
+    void addConstructorClicked();
+    void addConstructorParameterClicked();
 private:
 
     QLineEdit* qleClassName;
     QListWidget* qlwMembers;
     QListWidget* qlwMethods;
+    QListWidget* qlwConstructors;
 
     QString name;
     QList<MemberVariable> memberVariables;
+    QList<MemberConstructor> memberConstructors;
     QList<MemberFunction> memberFuncions;
 
 
@@ -79,13 +84,13 @@ private:
     bool resizing;
     int resizePosition;
     void getMemberFunctions();
-    void getMembers();
+    void getMemberVariables();
+    void getMemberConstructors();
 
     QWidget *makeCompactWidget();
     QWidget *makeFullSizeWidget();
 
-
-QStackedLayout* stackedLayout;
+    QStackedLayout* stackedLayout;
 
 };
 

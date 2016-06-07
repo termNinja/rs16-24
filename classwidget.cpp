@@ -65,8 +65,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     qleClassName->setAlignment(Qt::AlignCenter);
     connect(qleClassName, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditRenameClass()));
 
-
-    //listWidget for member variables
+    //variables
     qlwMembers = new QListWidget();
     qlwMembers->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     qlwMembers->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -84,8 +83,25 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     qhblMemberButtons->addWidget(btnRemoveMember);
     connect(btnRemoveMember, SIGNAL(clicked()), this , SLOT(removeMemberClicked()));
 
+    //constructors
+    qlwConstructors = new QListWidget();
+    qlwConstructors->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlwConstructors->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlwConstructors->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    qlwConstructors->setVisible(false);
 
-    //creating second half of a classObject(methods listview and button), same as the first half
+    QHBoxLayout* qhblConstructorButtons = new QHBoxLayout();
+
+    //creating button for adding members
+    QPushButton* qpbAddConstructor = new QPushButton("Add constructor");
+    qhblConstructorButtons->addWidget(qpbAddConstructor);
+    connect(qpbAddConstructor, SIGNAL(clicked()), this , SLOT(addConstructorClicked()));
+
+    QPushButton* btnRemoveConstructor = new QPushButton("Remove \nconstructor(s)");
+    qhblConstructorButtons->addWidget(btnRemoveConstructor);
+    connect(btnRemoveConstructor, SIGNAL(clicked()), this , SLOT(removeConstructorClicked()));
+
+    //methods
     qlwMethods = new QListWidget();
     qlwMethods->setVisible(false);
     qlwMethods->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -106,6 +122,8 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     qvblClassFull->addWidget(qleClassName);
     qvblClassFull->addLayout(qhblMemberButtons);
     qvblClassFull->addWidget(qlwMembers);
+    qvblClassFull->addLayout(qhblConstructorButtons);
+    qvblClassFull->addWidget(qlwConstructors);
     qvblClassFull->addLayout(qhblMethodButtons);
     qvblClassFull->addWidget(qlwMethods);
 
@@ -115,7 +133,6 @@ QWidget* ClassWidget::makeFullSizeWidget(){
 QString ClassWidget::getName(){
     return name;
 }
-
 
 QWidget* ClassWidget::makeCompactWidget(){
 
@@ -161,6 +178,37 @@ QWidget* ClassWidget::makeCompactWidget(){
     qlvMembers->setFixedSize(qlvMembers->sizeHintForColumn(0) + 2 * qlvMembers->frameWidth(), qlvMembers->sizeHintForRow(0) * memberVariables.count() + 2 * qlvMembers->frameWidth());
 
     qvblClassCompact->addWidget(qlvMembers);
+
+    //constructors
+    QListView* qlvConstructors = new QListView();
+    qlvConstructors->setEditTriggers(QListView::NoEditTriggers);
+    qlvConstructors->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    qlvConstructors->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    QStandardItemModel* qaimConstructor = new QStandardItemModel();;
+
+    foreach( MemberConstructor item, memberConstructors)
+    {
+        std::string constructor;
+
+        constructor+="public " + item.getName()+ "(";
+
+        int n = item.getParameters().size();
+        for(int i=0;i<n;i++){
+            Variable parameter = item.getParameters()[i];
+            constructor+=parameter.getType().getName() + " " + parameter.getName() + (i!=n-1 ? ", ":"");
+
+        }
+        constructor+=")";
+        QStandardItem* Items = new QStandardItem(QString::fromStdString(constructor));
+        qaimConstructor->appendRow(Items);
+    }
+
+    qlvConstructors->setModel(qaimConstructor);
+
+    qlvConstructors->setFixedSize(qlvConstructors->sizeHintForColumn(0) + 2 * qlvConstructors->frameWidth(), qlvConstructors->sizeHintForRow(0) * memberConstructors.count() + 2 * qlvConstructors->frameWidth());
+
+    qvblClassCompact->addWidget(qlvConstructors);
 
 //    QLabel* qlMethods = new QLabel("Methods:");
     //qvblClassCompact->addWidget(qlMethods);
@@ -208,14 +256,19 @@ QWidget* ClassWidget::makeCompactWidget(){
     qvblClassCompact->setSizeConstraint(QLayout::SetMaximumSize);
 
 
-    if(qlvMethods->width()>qlvMembers->width()){
-        qlvMembers->setFixedWidth(qlvMethods->width());
-    }else{
-        qlvMethods->setFixedWidth(qlvMembers->width());
-    }
+    int maxWidth = std::max(qlvConstructors->width(),std::max(qlvMethods->width(),qlvMembers->width()));
+    qlvMembers->setFixedWidth(maxWidth);
+    qlvMethods->setFixedWidth(maxWidth);
+    qlvConstructors->setFixedWidth(maxWidth);
+//    if(qlvMethods->width()>qlvMembers->width()){
+//        qlvMembers->setFixedWidth(qlvMethods->widthh());
+//    }else{
+//        qlvMethods->setFixedWidth(qlvMembers->width());
+//    }
 
     qlvMembers->setMinimumSize(80,0);
     qlvMethods->setMinimumSize(80,0);
+    qlvConstructors->setMinimumSize(80,0);
 
     return qwCompactView;
 }
@@ -223,7 +276,8 @@ QWidget* ClassWidget::makeCompactWidget(){
 void ClassWidget::switchViews(){
 
     if(stackedLayout->currentIndex()==0){
-        getMembers();
+        getMemberVariables();
+        getMemberConstructors();
         getMemberFunctions();
         setContentsMargins(QMargins(5,5,5,5));
 
@@ -265,10 +319,6 @@ void ClassWidget::deleteWidget(){
     layout()->removeWidget(this);
     delete this;
 }
-
-//void ClassWidget::switchToFull(){
-//    stackedLayout->setCurrentIndex();
-//}
 
 void ClassWidget::addMemberClicked()
 {
@@ -315,6 +365,7 @@ void ClassWidget::addMemberClicked()
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
 }
 
 void ClassWidget::removeMemberClicked(){
@@ -329,6 +380,70 @@ void ClassWidget::removeMemberClicked(){
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
+}
+
+void ClassWidget::addConstructorClicked()
+{
+    qlwConstructors->setVisible(true);
+
+    QLabel* qlName = new QLabel(name);
+
+    QHBoxLayout* qhblParametersWrap = new QHBoxLayout();
+    QPushButton* qpbAddParameter = new QPushButton("+");
+    qpbAddParameter->setMaximumWidth(20);
+    qpbAddParameter->setMaximumHeight(20);
+    connect(qpbAddParameter, SIGNAL(clicked()), this , SLOT(addConstructorParameterClicked()));
+
+
+    QListWidgetItem* itemN = new QListWidgetItem();
+    QWidget* widget = new QWidget();
+
+    QHBoxLayout* widgetLayout = new QHBoxLayout();
+    widgetLayout->setContentsMargins(10,0,0,0);
+    widgetLayout->addWidget(qlName);
+    widgetLayout->addWidget(new QLabel("("));
+    widgetLayout->addLayout(qhblParametersWrap);
+    widgetLayout->addWidget(qpbAddParameter);
+    widgetLayout->addWidget(new QLabel(")"));
+    //lol, ovaj lineEdit sam dodao da bi se pravilno izracunala visina xD
+    QLineEdit* qle= new QLineEdit("a");
+    widgetLayout->addWidget(qle);
+
+
+    widgetLayout->setSizeConstraint(QLayout::SetFixedSize);
+    widget->setLayout(widgetLayout);
+    itemN->setSizeHint(QSize(0,widget->sizeHint().height()));
+
+    qlwConstructors->addItem(itemN);
+    qlwConstructors->setItemWidget(itemN, widget);
+
+
+    qlwConstructors->setFixedSize(qlwConstructors->sizeHintForColumn(0) + 2 * qlwConstructors->frameWidth(), qlwConstructors->sizeHintForRow(0) * qlwConstructors->count() + 2 * qlwConstructors->frameWidth());
+
+    widgetLayout->removeWidget(qle);
+    delete qle;
+
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+    resize(sizeHint());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
+}
+
+void ClassWidget::removeConstructorClicked(){
+    qDeleteAll(qlwConstructors->selectedItems());
+    qlwConstructors->setFixedSize(qlwConstructors->sizeHintForColumn(0) + 2 * qlwConstructors->frameWidth(), qlwConstructors->sizeHintForRow(0) * qlwConstructors->count() + 2 * qlwConstructors->frameWidth());
+    qlwConstructors->setFixedSize(qlwConstructors->sizeHintForColumn(0) + 2 * qlwConstructors->frameWidth()+25, qlwConstructors->sizeHintForRow(0) * qlwConstructors->count() + 2 * qlwConstructors->frameWidth());
+
+    if(qlwConstructors->count()==0)
+        qlwConstructors->setVisible(false);
+
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+    resize(sizeHint());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
 }
 
 void ClassWidget::addMethodClicked()
@@ -383,6 +498,7 @@ void ClassWidget::addMethodClicked()
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
 }
 
 void ClassWidget::removeMethodClicked(){
@@ -398,6 +514,7 @@ void ClassWidget::removeMethodClicked(){
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
 }
 
 void ClassWidget::lineEditTextChanged(){
@@ -416,6 +533,7 @@ void ClassWidget::lineEditTextChanged(){
   resize(sizeHint());
   qlwMembers->setFixedWidth(width());
   qlwMethods->setFixedWidth(width());
+  qlwConstructors->setFixedWidth(width());
 }
 
 bool ClassWidget::insideRect(QPoint mousePos)
@@ -652,7 +770,6 @@ void ClassWidget::mousePressEvent(QMouseEvent *e)
     raise();
 }
 
-
 void ClassWidget::moveClass(QMouseEvent *e)
 {
 
@@ -682,7 +799,6 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
     moveClass(e);
 }
 
-
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
     moving = false;
     resizing = false;
@@ -695,7 +811,7 @@ void ClassWidget::addMethodParameterClicked(){
 
     qleParameter->setFixedWidth(15);
     connect(qleParameter, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
-    connect(qleParameter,SIGNAL(editingFinished()),this,SLOT(memberFunctionParameterChanged()));
+    connect(qleParameter,SIGNAL(editingFinished()),this,SLOT(ParameterChanged()));
 
     qhblParametersWrap->addWidget(qleParameter);
 
@@ -710,6 +826,49 @@ void ClassWidget::addMethodParameterClicked(){
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
+}
+
+void ClassWidget::addConstructorParameterClicked(){
+    QHBoxLayout* qhblParametersWrap = (QHBoxLayout*)((QWidget*)(((QPushButton*)sender())->parent()))->layout()->itemAt(2)->layout();
+    QLineEdit* qleParameter = new QLineEdit();
+
+    qleParameter->setFixedWidth(15);
+    connect(qleParameter, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditTextChanged()));
+    connect(qleParameter,SIGNAL(editingFinished()),this,SLOT(ParameterChanged()));
+
+    qhblParametersWrap->addWidget(qleParameter);
+
+//    QMessageBox msgBox;
+//    msgBox.setText(->itemAt(0)->widget()->metaObject()->className());
+//    msgBox.exec();
+
+    qlwConstructors->setFixedSize(qlwConstructors->sizeHintForColumn(0) + 2 * qlwConstructors->frameWidth(), qlwConstructors->sizeHintForRow(0) * qlwConstructors->count() + 2 * qlwConstructors->frameWidth());
+    qlwConstructors->setFixedSize(qlwConstructors->sizeHintForColumn(0) + 2 * qlwConstructors->frameWidth()+25, qlwConstructors->sizeHintForRow(0) * qlwConstructors->count() + 2 * qlwConstructors->frameWidth());
+
+    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+    resize(sizeHint());
+    qlwMembers->setFixedWidth(width());
+    qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
+}
+
+void ClassWidget::getMemberVariables(){
+
+    memberVariables.clear();
+
+    for(int i=0;i<qlwMembers->count();i++){
+        QLayout* memberLayout = qlwMembers->itemWidget(qlwMembers->item(i))->layout();
+
+        QComboBox* memberAccessModifier = (QComboBox*)memberLayout->itemAt(0)->widget();
+        QLineEdit* memberType= (QLineEdit*)memberLayout->itemAt(1)->widget();
+        QLineEdit* memberName= (QLineEdit*)memberLayout->itemAt(2)->widget();
+
+//        if(memberAccessModifier->currentIndex())
+        memberVariables.append(
+                    MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
+                                                  memberAccessModifier->itemData(memberAccessModifier->currentIndex()).value<MemberVisibility>()));
+    }
 }
 
 void ClassWidget::getMemberFunctions(){
@@ -753,25 +912,45 @@ void ClassWidget::getMemberFunctions(){
     }
 }
 
-void ClassWidget::getMembers(){
+void ClassWidget::getMemberConstructors(){
 
-    memberVariables.clear();
+    memberConstructors.clear();
 
-    for(int i=0;i<qlwMembers->count();i++){
-        QLayout* memberLayout = qlwMembers->itemWidget(qlwMembers->item(i))->layout();
+    for(int i=0;i<qlwConstructors->count();i++){
+        QLayout* methodLayout = qlwConstructors->itemWidget(qlwConstructors->item(i))->layout();
 
-        QComboBox* memberAccessModifier = (QComboBox*)memberLayout->itemAt(0)->widget();
-        QLineEdit* memberType= (QLineEdit*)memberLayout->itemAt(1)->widget();
-        QLineEdit* memberName= (QLineEdit*)memberLayout->itemAt(2)->widget();
 
-//        if(memberAccessModifier->currentIndex())
-        memberVariables.append(
-                    MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
-                                                  memberAccessModifier->itemData(memberAccessModifier->currentIndex()).value<MemberVisibility>()));
+        QHBoxLayout* qhblParametersWrap = (QHBoxLayout*)methodLayout->itemAt(2)->layout();
+//        QMessageBox msgBox;
+//            msgBox.setText("test "+ qhblParametersWrap->count());
+//            msgBox.exec();
+
+
+        MemberConstructor* memberConstructor= new MemberConstructor();
+
+        for(int i=0;i<qhblParametersWrap->count();i++){
+
+
+            QString qsParameter = ((QLineEdit*)qhblParametersWrap->itemAt(i)->widget())->text();
+            QStringList qslParameters = qsParameter.split(" ");
+
+            if(qslParameters.length()!=2){
+                QMessageBox msgBox;
+                msgBox.setText("Parametar "+ qsParameter + " u kostruktoru nije unesen u dobrom obliku!");
+                msgBox.exec();
+            }else{
+                Variable* parameter= new Variable(Type(QString(qslParameters.at(0)).toStdString(),false),QString(qslParameters.at(1)).toStdString());
+
+                memberConstructor->addParameter(*parameter);
+            }
+        }
+
+        memberConstructor->setName(name.toStdString());
+        memberConstructors.append(*memberConstructor);
     }
 }
 
-void ClassWidget::memberFunctionParameterChanged(){
+void ClassWidget::ParameterChanged(){
 
     QLineEdit* parameter = (QLineEdit*)sender();
     if(parameter->text().isEmpty()){
@@ -785,12 +964,36 @@ void ClassWidget::memberFunctionParameterChanged(){
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+    qlwConstructors->setFixedWidth(width());
+
 }
 
 void ClassWidget::lineEditRenameClass(){
     name= ((QLineEdit*)sender())->text();
+
+        for(int i=0;i<qlwConstructors->count();i++){
+            QLayout* methodLayout = qlwConstructors->itemWidget(qlwConstructors->item(i))->layout();
+
+            QLabel* className = (QLabel*)methodLayout->itemAt(0)->widget();
+    //        QMessageBox msgBox;
+    //            msgBox.setText("test "+ qhblParametersWrap->count());
+    //            msgBox.exec();
+
+
+           className->setText(name);
+
+    }
+        qlwMembers->setFixedSize(qlwMembers->sizeHintForColumn(0) + 2 * qlwMembers->frameWidth(), qlwMembers->sizeHintForRow(0) * qlwMembers->count() + 2 * qlwMembers->frameWidth());
+        qlwMethods->setFixedSize(qlwMethods->sizeHintForColumn(0) + 2 * qlwMethods->frameWidth()+25, qlwMethods->sizeHintForRow(0) * qlwMethods->count() + 2 * qlwMethods->frameWidth());
+        qlwConstructors->setFixedSize(qlwConstructors->sizeHintForColumn(0) + 2 * qlwConstructors->frameWidth()+25, qlwConstructors->sizeHintForRow(0) * qlwConstructors->count() + 2 * qlwConstructors->frameWidth());
+
+        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+        resize(sizeHint());
+        qlwMembers->setFixedWidth(width());
+        qlwMethods->setFixedWidth(width());
+        qlwConstructors->setFixedWidth(width());
 }
 
 Class ClassWidget::getClass(){
-    return Class(name.toStdString(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
+    return Class(name.toStdString(),memberConstructors.toVector().toStdVector(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
 }

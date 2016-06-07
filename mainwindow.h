@@ -39,7 +39,6 @@ private slots:
     void on_pushButton_11_clicked();
 
     void GenerateCodeC();
-    void on_MainWindow_iconSizeChanged(const QSize &iconSize);
 
 protected:
     ClassWidget* getClass();

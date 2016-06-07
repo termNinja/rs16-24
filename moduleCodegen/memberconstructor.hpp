@@ -12,7 +12,7 @@ namespace codegen {
 class MemberConstructor : public Function, public Member {
 public:
 	MemberConstructor(MemberVisibility visibility = MemberVisibility::PUBLIC);
-	MemberConstructor(std::string owner = "", MemberVisibility visibility = MemberVisibility::PUBLIC);
+    MemberConstructor(std::string owner, MemberVisibility visibility = MemberVisibility::PUBLIC);
 
 	// Main constructor
 	MemberConstructor(std::vector<Variable> &parameters, std::string owner = "",
