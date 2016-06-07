@@ -122,6 +122,7 @@ void MainWindow::addRelationClicked(){
     qpbOk = new QPushButton("Make relation");
     connect(qpbOk, SIGNAL(clicked()), this , SLOT(makeRelation()));
 
+
     ql->addWidget(qcbFirstClass);
     ql->addWidget(qcbSecondClass);
     ql->addWidget(qpbOk);
