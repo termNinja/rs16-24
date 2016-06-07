@@ -53,11 +53,19 @@ public:
 	std::string genMemberFunction(codegen::MemberFunction &fun) const;
 
 	/**
-	 * @brief Generates c++ code for a constructor object.
+	 * @brief Generates c++ code for a constructor object. Names it from internal constructor object name.
 	 * @param constructor Constructor object that's getting generated.
 	 * @return Returns c++ code that represents constructor's signature.
 	 */
 	std::string genMemberConstructor(codegen::MemberConstructor &constructor) const;
+
+	/**
+	 * @brief Generates c++ code for a constructor object and names it according to given className.
+	 * @param constructor Constructor object that's getting generated.
+	 * @param className String representation of class to which constructor belongs to.
+	 * @return Returns c++ code that represents constructor's signature.
+	 */
+	std::string genMemberConstructor(codegen::MemberConstructor &constructor, std::string className) const;
 
 	/**
 	 * @brief Generates c++ code for a class object.
@@ -67,13 +75,17 @@ public:
 	std::string genClass(codegen::Class &cls) const;
 
 
+	std::string genClassInclude(codegen::Class &cls) const;
+
 	/**
 	 * @brief Stars code generation and saves output to path given by resource manager.
 	 * @param cls Class that's getting generated.
 	 * @return Returns true if code generation was successful.
 	 */
-	bool startCodeGeneration(codegen::Class cls) const;
+	bool startCodeGeneration(codegen::Class &cls) const;
+
 private:
+	std::string genConstructorBody(codegen::MemberConstructor &constructor) const;
 };
 
 } // namespace end: lexp

@@ -91,15 +91,34 @@ void MainWindow::on_pushButton_11_clicked()
 
 }
 
-void MainWindow::GenerateCodeC(){
+void MainWindow::GenerateCodeC()
+{
+	lexp::CppLangExporter cppExporter;
+	app::ResourceManager* rm = &app::ResourceManager::instance();
+	bool codegenProcessSucceded= true;
+
     foreach(ClassWidget* currentClass, allClassWidgets)
     {
         Class test = currentClass->getClass();
-        lexp::CppLangExporter cppExporter;
-        QMessageBox msgBox;
-        msgBox.setText(QString::fromStdString(cppExporter.genClass(test)));
-        msgBox.exec();
+		bool codegenStatus = cppExporter.startCodeGeneration(test);
+		if (codegenStatus == false) {
+			codegenProcessSucceded = false;
+
+			// Report failed codegen proc
+			QMessageBox msgBox;
+			std::string errMsg = "Class generation for " + test.getName() + " has failed.";
+			errMsg.append("Generation of code was tried at " + rm->getProjectOutputPath().toStdString());
+			msgBox.setText(QString::fromStdString(errMsg));
+			msgBox.exec();
+		}
     }
+
+	if (codegenProcessSucceded) {
+		QMessageBox msgBox;
+		std::string msg = "All classes were successfully generated";
+		msgBox.setText(QString::fromStdString(msg));
+		msgBox.exec();
+	}
 }
 
 void MainWindow::addRelationClicked(){

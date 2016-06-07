@@ -1,6 +1,7 @@
 #include <iostream>
 #include "class.hpp"
 #include "membervisibility.hpp"
+#include "relationmanager.hpp"
 
 namespace codegen {
 
@@ -77,6 +78,12 @@ Class::Class(std::string name, std::vector<MemberFunction> pubMemFun,
 {
 }
 
+Class::~Class()
+{
+	RelationManager *rm = RelationManager::instance();
+	rm->deleteNonExistingRelations();
+}
+
 std::vector<MemberFunction> &Class::getPublicMemberFunctions()
 {
 	return m_pubMemFun;
@@ -142,14 +149,26 @@ void Class::setName(std::string name)
 	m_name = name;
 }
 
+const std::vector<const Class *> Class::getClassesThatInherit() const
+{
+	RelationManager *rm = RelationManager::instance();
+	return rm->getClassesThatInheritArgument(this);
+}
+
+const std::vector<const Class *> Class::getClassesThatClassInherits() const
+{
+	RelationManager *rm = RelationManager::instance();
+	return rm->getClassesThatArgumentInherits(this);
+}
+
 void Class::filterMemberFunctions(std::vector<MemberFunction> memberFunctions)
 {
 	for (auto memFun : memberFunctions) {
-		if (memFun.getVisibility() == PUBLIC)
+		if (memFun.getVisibility() == MemberVisibility::PUBLIC)
 			m_pubMemFun.push_back(memFun);
-		else if (memFun.getVisibility() == PRIVATE)
+		else if (memFun.getVisibility() == MemberVisibility::PRIVATE)
 			m_privMemFun.push_back(memFun);
-		else if (memFun.getVisibility() == PROTECTED)
+		else if (memFun.getVisibility() == MemberVisibility::PROTECTED)
 			m_protMemFun.push_back(memFun);
 	}
 }
@@ -157,11 +176,11 @@ void Class::filterMemberFunctions(std::vector<MemberFunction> memberFunctions)
 void Class::filterMemberVariables(std::vector<MemberVariable> memberVariables)
 {
 	for (auto memVar : memberVariables) {
-		if (memVar.getVisibility() == PUBLIC)
+		if (memVar.getVisibility() == MemberVisibility::PUBLIC)
 			m_pubMemVar.push_back((memVar));
-		else if (memVar.getVisibility() == PRIVATE)
+		else if (memVar.getVisibility() == MemberVisibility::PRIVATE)
 			m_privMemVar.push_back(memVar);
-		else if (memVar.getVisibility() == PROTECTED)
+		else if (memVar.getVisibility() == MemberVisibility::PROTECTED)
 			m_protMemVar.push_back(memVar);
 	}
 }

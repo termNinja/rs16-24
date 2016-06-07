@@ -60,6 +60,8 @@ public:
 			std::vector<MemberVariable> protMemVar
 	);
 
+	~Class();
+
 	// These getters allow you to add new members into class
 	// because they return vectors by reference
 	std::vector<MemberFunction>& getPublicMemberFunctions();
@@ -94,6 +96,10 @@ public:
 	 *  \param name New name for class.
 	 */
 	void setName(std::string name);
+
+	const std::vector<const Class *> getClassesThatInherit() const;
+	const std::vector<const Class *> getClassesThatClassInherits() const;
+
 
 	friend std::ostream& operator<<(std::ostream& out, const Class &c);
 

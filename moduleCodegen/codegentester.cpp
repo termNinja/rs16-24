@@ -2,6 +2,7 @@
 #include "moduleAppController/resourcemanager.hpp"
 #include "moduleLangExporter/cpplangexporter.hpp"
 #include "moduleCodegen/member.hpp"
+#include "relationmanager.hpp"
 
 namespace codegen {
 
@@ -99,6 +100,24 @@ void codegenTester::peformTest() {
 	std::cerr << "Beginning class PolyClass generation..." << std::endl;
 	std::cout << cppExporter.genClass(polyClass) << std::endl;
 
+	// ------------------------------------------------------------------------
+	// Relation manager test
+	// ------------------------------------------------------------------------
+	std::cout << "Relation manager test: " << std::endl;
+	RelationManager *rm = RelationManager::instance();
+	rm->addInheritanceRelation(&polyClass, &c);
+	rm->addInheritanceRelation(&c, &polyClass);
+	rm->addAssociationRelation(&polyClass, &c);
+	Class includeTester1 = Class("includeTester1");
+	Class includeTester2 = Class("includeTester2");
+	Class includeTester3 = Class("includeTester3");
+	Class includeTester4 = Class("includeTester4");
+	rm->addInheritanceRelation(&includeTester1, &polyClass);
+	rm->addAssociationRelation(&polyClass, &includeTester1);
+	rm->addAggregationRelation(&polyClass, &includeTester2);
+	rm->addCompositionRelation(&polyClass, &includeTester3);
+	std::cout << *rm << std::endl;
+	std::cout << cppExporter.genClass(polyClass) << std::endl;
 }
 
 } // namespace end: codegen

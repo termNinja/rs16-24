@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     moduleParser/parsertester.cpp \
     moduleParser/cppparser/cppparser.cpp \
     moduleParser/cppparser/bisonmessage.cpp \
-    relationwidget.cpp
+    relationwidget.cpp \
+    moduleCodegen/relationmanager.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -76,7 +77,8 @@ HEADERS  += mainwindow.h \
     moduleParser/parsertester.hpp \
     moduleParser/cppparser/bisonmessage.hpp \
     moduleParser/cppparser/cppparser.hpp \
-    relationwidget.hpp
+    relationwidget.hpp \
+    moduleCodegen/relationmanager.hpp
 
 FORMS    += mainwindow.ui
 

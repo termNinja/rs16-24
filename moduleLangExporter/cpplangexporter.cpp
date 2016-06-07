@@ -1,8 +1,9 @@
-#include "cpplangexporter.hpp"
-#include "moduleAppController/resourcemanager.hpp"
 #include <fstream>
 #include <iostream>
 #include <QDir>
+#include "cpplangexporter.hpp"
+#include "moduleAppController/resourcemanager.hpp"
+#include "moduleCodegen/relationmanager.hpp"
 
 using std::string;
 
@@ -90,8 +91,22 @@ string CppLangExporter::genMemberConstructor(codegen::MemberConstructor &constru
 {
 	string s;
 
-
 	s.append(constructor.getClassName());
+	s.append(genConstructorBody(constructor));
+	return s;
+}
+
+string CppLangExporter::genMemberConstructor(codegen::MemberConstructor &constructor, string className) const
+{
+	string s;
+	s.append(className);
+	s.append(genConstructorBody(constructor));
+	return s;
+}
+
+string CppLangExporter::genConstructorBody(codegen::MemberConstructor &constructor) const
+{
+	string s;
 	s.append("(");
 	auto funParams = constructor.getParameters();
 	if (! funParams.empty()) {
@@ -108,23 +123,46 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 {
 	string s;
 	string ind = LangExporter::ind;
+	unsigned magicConstLineBreak = 4;
+
+	s.append(genClassInclude(cls));
+
 	s.append("class " + cls.getName());
-	// TODO: Extends?
+
+	// Handling inheritance
+	std::vector<const codegen::Class*> inherits = cls.getClassesThatClassInherits();
+	if (! inherits.empty()) {
+		unsigned i;
+		s.append(" : ");
+		for (i = 0; i < inherits.size()-1; ++i) {
+			if (i % magicConstLineBreak == 0) {
+				s.append("\n" + ind);
+			}
+			// for now, public only
+			s.append("public " + inherits[i]->getName() + ", ");
+		}
+		s.append("public " + inherits[i]->getName());
+
+	}
+
+
 	s.append(" {\n");
+
+	// Class body
 
 	if (!cls.getPublicMemberFunctions().empty()
 		|| !cls.getPublicMemberVariables().empty() || !cls.getPublicConstructors().empty()) {
 		// write public content
 		s.append("public:\n");
-		for (auto a : cls.getPublicConstructors()) {
+		for (auto &a : cls.getPublicConstructors()) {
 			s.append(ind);
-			s.append(genMemberConstructor(a) + "\n");
+			s.append(genMemberConstructor(a, cls.getName()) + "\n");
 		}
-		for (auto a : cls.getPublicMemberFunctions()) {
+		for (auto &a : cls.getPublicMemberFunctions()) {
 			s.append(ind);
 			s.append(genMemberFunction(a) + "\n");
 		}
-		for (auto a : cls.getPublicMemberVariables()) {
+		for (auto &a : cls.getPublicMemberVariables()) {
 			s.append(ind);
 			s.append(genMemberVariable(a) + ";\n");
 		}
@@ -134,15 +172,15 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 	if (!cls.getProtectedMemberFunctions().empty() || !cls.getProtectedMemberVariables().empty()) {
 		// write protected content
 		s.append("\nprotected:\n");
-		for (auto a : cls.getProtectedConstructors()) {
+		for (auto &a : cls.getProtectedConstructors()) {
 			s.append(ind);
-			s.append(genMemberConstructor(a) + "\n");
+			s.append(genMemberConstructor(a, cls.getName()) + "\n");
 		}
-		for (auto a : cls.getProtectedMemberFunctions()) {
+		for (auto &a : cls.getProtectedMemberFunctions()) {
 			s.append(ind);
 			s.append(genMemberFunction(a) + "\n");
 		}
-		for (auto a : cls.getProtectedMemberVariables()) {
+		for (auto &a : cls.getProtectedMemberVariables()) {
 			s.append(ind);
 			s.append(genMemberVariable(a) + ";\n");
 		}
@@ -151,15 +189,15 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 	if (!cls.getPrivateMemberFunctions().empty() || !cls.getPrivateMemberVariables().empty()) {
 		// write private content
 		s.append("\nprivate:\n");
-		for (auto a : cls.getPrivateConstructors()) {
+		for (auto &a : cls.getPrivateConstructors()) {
 			s.append(ind);
-			s.append(genMemberConstructor(a) + "\n");
+			s.append(genMemberConstructor(a, cls.getName()) + "\n");
 		}
-		for (auto a : cls.getPrivateMemberFunctions()) {
+		for (auto &a : cls.getPrivateMemberFunctions()) {
 			s.append(ind);
 			s.append(genMemberFunction(a) + "\n");
 		}
-		for (auto a : cls.getPrivateMemberVariables()) {
+		for (auto &a : cls.getPrivateMemberVariables()) {
 			s.append(ind);
 			s.append(genMemberVariable(a) + ";\n");
 		}
@@ -170,7 +208,22 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 	return s;
 }
 
-bool CppLangExporter::startCodeGeneration(codegen::Class cls) const
+string CppLangExporter::genClassInclude(codegen::Class &cls) const
+{
+	string res;
+
+	codegen::RelationManager *rm = codegen::RelationManager::instance();
+	std::set<const codegen::Class*> relatedClasses = rm->getAllClassesThatUseGivenClass(&cls);
+
+	for (auto c : relatedClasses) {
+		res.append("#include \"");
+		res.append(c->getName() + ".hpp\"\n");
+	}
+
+	return res.append("\n");
+}
+
+bool CppLangExporter::startCodeGeneration(codegen::Class &cls) const
 {
 	app::ResourceManager *rm = &app::ResourceManager::instance();
 	string outputPath = rm->getProjectOutputPath().toStdString();

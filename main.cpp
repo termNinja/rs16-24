@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
 //  ==== not compile ====
 //	parser::ParserTester parserTester;
 
-//    std::cout << "======================================================" << std::endl;
-//    codegenTester.peformTest();
+	std::cout << "======================================================" << std::endl;
+	codegenTester.peformTest();
 //    std::cout << "======================================================" << std::endl;
 //    appControllerTester.performTest();
 //    std::cout << "======================================================" << std::endl;
