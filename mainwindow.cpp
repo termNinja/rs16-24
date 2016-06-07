@@ -7,6 +7,7 @@
 #include <QLayout>
 #include <QLayoutItem>
 #include "moduleAppController/resourcemanager.hpp"
+#include "moduleLangExporter/cpplangexporter.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,7 +24,7 @@ MainWindow::~MainWindow()
 
 
 ClassWidget* MainWindow::getClass(){
-   return m_listOfClass.at(0);
+   return allClassWidgets.at(0);
 }
 
 void MainWindow::on_pushButton_10_clicked()
@@ -34,8 +35,8 @@ void MainWindow::on_pushButton_10_clicked()
 //                                               "class name", &ok);
 
     QWidget *parent  = ui->widget_2;
-    ClassWidget *newClass = new ClassWidget(parent);
-    m_listOfClass.push_back(newClass);
+    ClassWidget* newClass = new ClassWidget(parent);
+    allClassWidgets.push_back(newClass);
 }
 
 void QWidget::paintEvent(QPaintEvent *)
@@ -82,11 +83,20 @@ void MainWindow::on_choose_dir_clicked()
 
 void MainWindow::on_pushButton_11_clicked()
 {
-    if(m_listOfClass.size() >= 2 )
-    {
-        ClassWidget *clasa1 = m_listOfClass.at(0);
-        ClassWidget *clasa2 = m_listOfClass.at(1);
+    ClassWidget *clasa1 = allClassWidgets.at(0);
+    ClassWidget *clasa2 = allClassWidgets.at(1);
 
-        relation r(ui->widget_2 , clasa1, clasa2);
+    relation r(ui->widget_2 , clasa1, clasa2);
+
+}
+
+void MainWindow::GenerateCodeC(){
+    foreach(ClassWidget* currentClass, allClassWidgets)
+    {
+        Class test = currentClass->getClass();
+        QMessageBox msgBox;
+        lexp::CppLangExporter cppExporter;
+        msgBox.setText(QString::fromStdString(cppExporter.genClass(test)));
+        msgBox.exec();
     }
 }

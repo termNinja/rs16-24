@@ -10,6 +10,10 @@ Variable::Variable(Type type, std::string name, bool isStatic)
 {
 }
 
+Variable::Variable()
+{
+}
+
 const Type &Variable::getType() const
 {
 	return m_type;

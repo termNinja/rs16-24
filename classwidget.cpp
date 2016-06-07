@@ -12,7 +12,7 @@ ClassWidget::ClassWidget(QWidget *parent ){
     setAutoFillBackground(true);
     setPalette(Pal);
     //todo: vratiti resize kada se zavrsi sa compactview-om
-//    this->setAttribute(Qt::WA_Hover, true);
+    this->setAttribute(Qt::WA_Hover, true);
 
     QWidget* firstPageWidget = makeFullSizeWidget();
     QWidget* secondPageWidget = new QWidget();
@@ -63,9 +63,10 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     qleClassName = new QLineEdit();
     qleClassName->setPlaceholderText("My Class Name");
     qleClassName->setAlignment(Qt::AlignCenter);
+    connect(qleClassName, SIGNAL(textChanged(const QString &)), this, SLOT(lineEditRenameClass()));
 
 
-    //listview for member variables
+    //listWidget for member variables
     qlwMembers = new QListWidget();
     qlwMembers->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     qlwMembers->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -75,7 +76,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     QHBoxLayout* qhblMemberButtons = new QHBoxLayout();
 
     //creating button for adding members
-    qpbAddMember = new QPushButton("Add member");
+    QPushButton* qpbAddMember = new QPushButton("Add member");
     qhblMemberButtons->addWidget(qpbAddMember);
     connect(qpbAddMember, SIGNAL(clicked()), this , SLOT(addMemberClicked()));
 
@@ -93,7 +94,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
 
     QHBoxLayout* qhblMethodButtons = new QHBoxLayout();
 
-    qpbAddMethod = new QPushButton("Add method");
+    QPushButton* qpbAddMethod = new QPushButton("Add method");
     qhblMethodButtons->addWidget(qpbAddMethod);
     connect(qpbAddMethod, SIGNAL(clicked()) , this , SLOT(addMethodClicked()));
 
@@ -118,20 +119,18 @@ QString ClassWidget::getName(){
 
 QWidget* ClassWidget::makeCompactWidget(){
 
-    QVBoxLayout *qvblClassCompact;
-
     QWidget* qwCompactView = new QWidget();
 
-    qvblClassCompact = new QVBoxLayout();
+    QVBoxLayout* qvblClassCompact = new QVBoxLayout();
     qwCompactView->setLayout(qvblClassCompact);
     qvblClassCompact->setContentsMargins(QMargins(0,0,0,0));
 
     QLabel* qlClassName = new QLabel();
     qlClassName->setText(name);
-    qlClassName->setAlignment(Qt::AlignCenter);
+    qlClassName->setAlignment(Qt::AlignHCenter);
     qvblClassCompact->addWidget(qlClassName);
 
-    QLabel* qlMembers = new QLabel("Members:");
+//    QLabel* qlMembers = new QLabel("Members:");
     //qvblClassCompact->addWidget(qlMembers);
 
     QListView* qlvMembers = new QListView();
@@ -142,18 +141,18 @@ QWidget* ClassWidget::makeCompactWidget(){
     QStandardItemModel* qaimMembers = new QStandardItemModel();;
 
 
-    foreach( MemberVariable* item, memberVariables )
+    foreach( MemberVariable item, memberVariables )
     {
         std::string visibility;
-        if(item->getVisibility() == PUBLIC){
+        if(item.getVisibility() == PUBLIC){
             visibility = "+";
-        }else if(item->getVisibility() == PRIVATE){
+        }else if(item.getVisibility() == PRIVATE){
             visibility = "-";
         }else{
             visibility = "#";
         }
 
-        QStandardItem* Items = new QStandardItem(QString::fromStdString(visibility + " " + item->getType().getName()+" "+item->getName()));
+        QStandardItem* Items = new QStandardItem(QString::fromStdString(visibility + " " + item.getType().getName()+" "+item.getName()));
         qaimMembers->appendRow(Items);
     }
 
@@ -161,10 +160,9 @@ QWidget* ClassWidget::makeCompactWidget(){
 
     qlvMembers->setFixedSize(qlvMembers->sizeHintForColumn(0) + 2 * qlvMembers->frameWidth(), qlvMembers->sizeHintForRow(0) * memberVariables.count() + 2 * qlvMembers->frameWidth());
 
-    qlvMembers->setMinimumSize(80,0);
     qvblClassCompact->addWidget(qlvMembers);
 
-    QLabel* qlMethods = new QLabel("Methods:");
+//    QLabel* qlMethods = new QLabel("Methods:");
     //qvblClassCompact->addWidget(qlMethods);
 
     QListView* qlvMethods = new QListView();
@@ -174,25 +172,24 @@ QWidget* ClassWidget::makeCompactWidget(){
 
     QStandardItemModel* qaimMethods = new QStandardItemModel();;
 
-
-    foreach( MemberFunction* item, memberFuncions)
+    foreach( MemberFunction item, memberFuncions)
     {
         std::string method;
 
         std::string visibility;
-        if(item->getVisibility() == PUBLIC){
+        if(item.getVisibility() == PUBLIC){
             method = "+ ";
-        }else if(item->getVisibility() == PRIVATE){
+        }else if(item.getVisibility() == PRIVATE){
             method = "- ";
         }else{
             method = "# ";
         }
 
-        method+=item->getReturnType().getName()+" "+ item->getName()+"(";
+        method+=item.getReturnType().getName()+" "+ item.getName()+"(";
 
-        int n = item->getParameters().size();
+        int n = item.getParameters().size();
         for(int i=0;i<n;i++){
-            Variable parameter = item->getParameters()[i];
+            Variable parameter = item.getParameters()[i];
             method+=parameter.getType().getName() + " " + parameter.getName() + (i!=n-1 ? ", ":"");
 
         }
@@ -205,11 +202,20 @@ QWidget* ClassWidget::makeCompactWidget(){
 
     qlvMethods->setFixedSize(qlvMethods->sizeHintForColumn(0) + 2 * qlvMethods->frameWidth(), qlvMethods->sizeHintForRow(0) * memberFuncions.count() + 2 * qlvMethods->frameWidth());
 
-    qlvMethods->setMinimumSize(80,0);
     qvblClassCompact->addWidget(qlvMethods);
 
     qwCompactView->setLayout(qvblClassCompact);
-//    qvblClassCompact->setSizeConstraint(QLayout::SetFixedSize);
+    qvblClassCompact->setSizeConstraint(QLayout::SetMaximumSize);
+
+
+    if(qlvMethods->width()>qlvMembers->width()){
+        qlvMembers->setFixedWidth(qlvMethods->width());
+    }else{
+        qlvMethods->setFixedWidth(qlvMembers->width());
+    }
+
+    qlvMembers->setMinimumSize(80,0);
+    qlvMethods->setMinimumSize(80,0);
 
     return qwCompactView;
 }
@@ -219,7 +225,7 @@ void ClassWidget::switchViews(){
     if(stackedLayout->currentIndex()==0){
         getMembers();
         getMemberFunctions();
-        name = qleClassName->text();
+        setContentsMargins(QMargins(5,5,5,5));
 
         if(name == ""){
                 QMessageBox msgBox;
@@ -230,9 +236,18 @@ void ClassWidget::switchViews(){
         stackedLayout->removeItem(stackedLayout->itemAt(1));
         stackedLayout->addWidget(makeCompactWidget());
         stackedLayout->setCurrentIndex(1);
-        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
-        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,40));
+//        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
+//        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,40));
+
+        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->width(), stackedLayout->currentWidget()->sizeHint().height()+10);
+
+        resize(stackedLayout->currentWidget()->size()+QSize(10,50));
+        this->setCursor(Qt::ArrowCursor);
+
     }else{
+        this->setCursor(Qt::ArrowCursor);
+        resizePosition=-1;
+        setContentsMargins(QMargins(0,0,0,0));
         stackedLayout->setCurrentIndex(0);
         resize(sizeHint());
     }
@@ -405,7 +420,7 @@ void ClassWidget::lineEditTextChanged(){
 
 bool ClassWidget::insideRect(QPoint mousePos)
 {
-    int magicConst = 15;
+    int magicConst = 5;
 
     //leftTop coordinate
     QPoint a(magicConst , magicConst);
@@ -452,16 +467,18 @@ bool ClassWidget::insideRect(QPoint mousePos)
 
 void ClassWidget::hoverMove(QHoverEvent * event)
 {
-    int magicConst = 15;
+    if(stackedLayout->currentIndex()==1){
+    int magicConst = 5;
     QPoint mousePosition(event->pos().x() , event->pos().y());
     bool inside = insideRect(mousePosition);
 
     //left top edge
-    if(!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
+    if(resizePosition==0 ||!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
     {
         this->setCursor(Qt::SizeFDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=0;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffX > 0 || diffY > 0){
@@ -477,12 +494,13 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //left bottom edge
-    else if( !inside && mousePosition.x() < magicConst &&
+    else if( resizePosition==1 || !inside && mousePosition.x() < magicConst &&
                         mousePosition.y() > this->height() - magicConst )
     {
         this->setCursor(Qt::SizeBDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=1;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffX < 0 && diffY > 0)
@@ -497,12 +515,13 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //right top edge
-    else if( !inside && mousePosition.y() < magicConst &&
+    else if( resizePosition==2 ||!inside && mousePosition.y() < magicConst &&
                         mousePosition.x() > this->width() - magicConst )
     {
         this->setCursor(Qt::SizeBDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=2;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffX > 0 || diffY < 0)
@@ -517,12 +536,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //left edge
-    else if(!inside && mousePosition.x() < magicConst )
+    else if(resizePosition==3 ||!inside && mousePosition.x() < magicConst )
     {
-
         this->setCursor(Qt::SizeHorCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=3;
             int diffX = event->oldPos().x() - event->pos().x();
             if(diffX > 0){
                 resize( this->width() + diffX, this->height() );
@@ -536,12 +555,13 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //right bottom
-    else if(!inside && mousePosition.x() > (this->width() - magicConst) &&
+    else if(resizePosition==4 || !inside && mousePosition.x() > (this->width() - magicConst) &&
                        mousePosition.y() > (this->height() - magicConst) )
     {
         this->setCursor(Qt::SizeFDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=4;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
 
@@ -554,12 +574,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //right edge
-    else if(!inside && mousePosition.x() > this->width()- magicConst )
+    else if(resizePosition==5 || !inside && mousePosition.x() > this->width()- magicConst )
     {
-
         this->setCursor(Qt::SizeHorCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=5;
             int diffX = event->oldPos().x() - event->pos().x();
             if(diffX < 0){
                 resize( this->width() + -1*diffX, this->height() + 0);
@@ -570,11 +590,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //top edge
-    else if(!inside &&  mousePosition.y() <  magicConst )
+    else if(resizePosition==6 || !inside &&  mousePosition.y() <  magicConst )
     {
         this->setCursor(Qt::SizeVerCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=6;
             int diffY = event->oldPos().y() - event->pos().y();
 
             if(diffY < 0){
@@ -588,11 +609,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //bottom edge
-    else if(!inside &&  mousePosition.y() > this->height()- magicConst )
+    else if(resizePosition==7 || !inside &&  mousePosition.y() > this->height()- magicConst )
     {
         this->setCursor(Qt::SizeVerCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=7;
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffY > 0){
                 resize( this->width() + 0 , this->height() - diffY);
@@ -604,6 +626,8 @@ void ClassWidget::hoverMove(QHoverEvent * event)
     }
     else{
         this->setCursor(Qt::ArrowCursor);
+        resizePosition=-1;
+    }
     }
 }
 
@@ -619,11 +643,12 @@ bool ClassWidget::event(QEvent *e)
 void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
     offset = e->pos();
-    //if(insideRect(QPoint(e->pos())))
-    //{
+    if(stackedLayout->currentIndex()==0 || insideRect(QPoint(e->pos())))
+    {
         moving = true;
-    //}
-    //m_resize = true;
+    }else{
+        resizing = true;
+    }
     raise();
 }
 
@@ -660,7 +685,8 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
     moving = false;
-    m_resize = false;
+    resizing = false;
+    resizePosition = -1;
 }
 
 void ClassWidget::addMethodParameterClicked(){
@@ -703,7 +729,7 @@ void ClassWidget::getMemberFunctions(){
 //            msgBox.exec();
 
 
-        MemberFunction* memberFunction = new MemberFunction(Type(methodType->text().toStdString(),false), methodName->text().toStdString(),false,
+        MemberFunction memberFunction(Type(methodType->text().toStdString(),false), methodName->text().toStdString(),false,
                                                           methodAccessModifier->itemData(methodAccessModifier->currentIndex()).value<MemberVisibility>());
 
         for(int i=0;i<qhblParametersWrap->count();i++){
@@ -714,12 +740,12 @@ void ClassWidget::getMemberFunctions(){
 
             if(qslParameters.length()!=2){
                 QMessageBox msgBox;
-                msgBox.setText("Parametar "+ qsParameter + " u metodi " + QString::fromStdString(memberFunction->getName()) +" nije unesen u dobrom obliku!");
+                msgBox.setText("Parametar "+ qsParameter + " u metodi " + QString::fromStdString(memberFunction.getName()) +" nije unesen u dobrom obliku!");
                 msgBox.exec();
             }else{
                 Variable* parameter= new Variable(Type(QString(qslParameters.at(0)).toStdString(),false),QString(qslParameters.at(1)).toStdString());
 
-                memberFunction->addParameter(*parameter);
+                memberFunction.addParameter(*parameter);
             }
         }
 
@@ -740,7 +766,7 @@ void ClassWidget::getMembers(){
 
 //        if(memberAccessModifier->currentIndex())
         memberVariables.append(
-                    new MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
+                    MemberVariable(Type(memberType->text().toStdString(),false),memberName->text().toStdString(),"",
                                                   memberAccessModifier->itemData(memberAccessModifier->currentIndex()).value<MemberVisibility>()));
     }
 }
@@ -759,4 +785,12 @@ void ClassWidget::memberFunctionParameterChanged(){
     resize(sizeHint());
     qlwMembers->setFixedWidth(width());
     qlwMethods->setFixedWidth(width());
+}
+
+void ClassWidget::lineEditRenameClass(){
+    name= ((QLineEdit*)sender())->text();
+}
+
+Class ClassWidget::getClass(){
+    return Class(name.toStdString(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
 }

@@ -311,6 +311,9 @@
    </property>
   </action>
   <action name="actionSource_code_C">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Source code (C++)</string>
    </property>
@@ -343,5 +346,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionSource_code_C</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>GenerateCodeC()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>379</x>
+     <y>245</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>GenerateCodeC()</slot>
+ </slots>
 </ui>
