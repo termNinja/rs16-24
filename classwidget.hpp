@@ -74,7 +74,8 @@ private:
     //used for moving
     QPoint offset;
     bool moving;
-    bool m_resize;
+    bool resizing;
+    int resizePosition;
     void getMemberFunctions();
     void getMembers();
 

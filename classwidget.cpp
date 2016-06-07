@@ -12,7 +12,7 @@ ClassWidget::ClassWidget(QWidget *parent ){
     setAutoFillBackground(true);
     setPalette(Pal);
     //todo: vratiti resize kada se zavrsi sa compactview-om
-//    this->setAttribute(Qt::WA_Hover, true);
+    this->setAttribute(Qt::WA_Hover, true);
 
     QWidget* firstPageWidget = makeFullSizeWidget();
     QWidget* secondPageWidget = new QWidget();
@@ -65,7 +65,7 @@ QWidget* ClassWidget::makeFullSizeWidget(){
     qleClassName->setAlignment(Qt::AlignCenter);
 
 
-    //listview for member variables
+    //listWidget for member variables
     qlwMembers = new QListWidget();
     qlwMembers->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     qlwMembers->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -223,6 +223,7 @@ void ClassWidget::switchViews(){
         getMembers();
         getMemberFunctions();
         name = qleClassName->text();
+        setContentsMargins(QMargins(5,5,5,5));
 
         if(name == ""){
                 QMessageBox msgBox;
@@ -236,10 +237,15 @@ void ClassWidget::switchViews(){
 //        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
 //        resize(stackedLayout->currentWidget()->sizeHint()+QSize(0,40));
 
-        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->width(), stackedLayout->currentWidget()->sizeHint().height());
+        stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->width(), stackedLayout->currentWidget()->sizeHint().height()+10);
 
-        resize(stackedLayout->currentWidget()->size()+QSize(0,40));
+        resize(stackedLayout->currentWidget()->size()+QSize(10,50));
+        this->setCursor(Qt::ArrowCursor);
+
     }else{
+        this->setCursor(Qt::ArrowCursor);
+        resizePosition=-1;
+        setContentsMargins(QMargins(0,0,0,0));
         stackedLayout->setCurrentIndex(0);
         resize(sizeHint());
     }
@@ -412,7 +418,7 @@ void ClassWidget::lineEditTextChanged(){
 
 bool ClassWidget::insideRect(QPoint mousePos)
 {
-    int magicConst = 15;
+    int magicConst = 5;
 
     //leftTop coordinate
     QPoint a(magicConst , magicConst);
@@ -459,16 +465,18 @@ bool ClassWidget::insideRect(QPoint mousePos)
 
 void ClassWidget::hoverMove(QHoverEvent * event)
 {
-    int magicConst = 15;
+    if(stackedLayout->currentIndex()==1){
+    int magicConst = 5;
     QPoint mousePosition(event->pos().x() , event->pos().y());
     bool inside = insideRect(mousePosition);
 
     //left top edge
-    if(!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
+    if(resizePosition==0 ||!inside && mousePosition.x() < magicConst && mousePosition.y()<magicConst )
     {
         this->setCursor(Qt::SizeFDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=0;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffX > 0 || diffY > 0){
@@ -484,12 +492,13 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //left bottom edge
-    else if( !inside && mousePosition.x() < magicConst &&
+    else if( resizePosition==1 || !inside && mousePosition.x() < magicConst &&
                         mousePosition.y() > this->height() - magicConst )
     {
         this->setCursor(Qt::SizeBDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=1;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffX < 0 && diffY > 0)
@@ -504,12 +513,13 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //right top edge
-    else if( !inside && mousePosition.y() < magicConst &&
+    else if( resizePosition==2 ||!inside && mousePosition.y() < magicConst &&
                         mousePosition.x() > this->width() - magicConst )
     {
         this->setCursor(Qt::SizeBDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=2;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffX > 0 || diffY < 0)
@@ -524,12 +534,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //left edge
-    else if(!inside && mousePosition.x() < magicConst )
+    else if(resizePosition==3 ||!inside && mousePosition.x() < magicConst )
     {
-
         this->setCursor(Qt::SizeHorCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=3;
             int diffX = event->oldPos().x() - event->pos().x();
             if(diffX > 0){
                 resize( this->width() + diffX, this->height() );
@@ -543,12 +553,13 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //right bottom
-    else if(!inside && mousePosition.x() > (this->width() - magicConst) &&
+    else if(resizePosition==4 || !inside && mousePosition.x() > (this->width() - magicConst) &&
                        mousePosition.y() > (this->height() - magicConst) )
     {
         this->setCursor(Qt::SizeFDiagCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=4;
             int diffX = event->oldPos().x() - event->pos().x();
             int diffY = event->oldPos().y() - event->pos().y();
 
@@ -561,12 +572,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //right edge
-    else if(!inside && mousePosition.x() > this->width()- magicConst )
+    else if(resizePosition==5 || !inside && mousePosition.x() > this->width()- magicConst )
     {
-
         this->setCursor(Qt::SizeHorCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=5;
             int diffX = event->oldPos().x() - event->pos().x();
             if(diffX < 0){
                 resize( this->width() + -1*diffX, this->height() + 0);
@@ -577,11 +588,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //top edge
-    else if(!inside &&  mousePosition.y() <  magicConst )
+    else if(resizePosition==6 || !inside &&  mousePosition.y() <  magicConst )
     {
         this->setCursor(Qt::SizeVerCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=6;
             int diffY = event->oldPos().y() - event->pos().y();
 
             if(diffY < 0){
@@ -595,11 +607,12 @@ void ClassWidget::hoverMove(QHoverEvent * event)
         }
     }
     //bottom edge
-    else if(!inside &&  mousePosition.y() > this->height()- magicConst )
+    else if(resizePosition==7 || !inside &&  mousePosition.y() > this->height()- magicConst )
     {
         this->setCursor(Qt::SizeVerCursor);
-        if(m_resize)
+        if(resizing)
         {
+            resizePosition=7;
             int diffY = event->oldPos().y() - event->pos().y();
             if(diffY > 0){
                 resize( this->width() + 0 , this->height() - diffY);
@@ -611,6 +624,8 @@ void ClassWidget::hoverMove(QHoverEvent * event)
     }
     else{
         this->setCursor(Qt::ArrowCursor);
+        resizePosition=-1;
+    }
     }
 }
 
@@ -626,11 +641,12 @@ bool ClassWidget::event(QEvent *e)
 void ClassWidget::mousePressEvent(QMouseEvent *e)
 {
     offset = e->pos();
-    //if(insideRect(QPoint(e->pos())))
-    //{
+    if(stackedLayout->currentIndex()==0 || insideRect(QPoint(e->pos())))
+    {
         moving = true;
-    //}
-    //m_resize = true;
+    }else{
+        resizing = true;
+    }
     raise();
 }
 
@@ -667,7 +683,8 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
     moving = false;
-    m_resize = false;
+    resizing = false;
+    resizePosition = -1;
 }
 
 void ClassWidget::addMethodParameterClicked(){
