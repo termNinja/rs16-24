@@ -86,7 +86,7 @@ void MainWindow::on_pushButton_11_clicked()
     ClassWidget *clasa1 = allClassWidgets.at(0);
     ClassWidget *clasa2 = allClassWidgets.at(1);
 
-    relation r(ui->widget_2 , clasa1, clasa2);
+    relationWidget r(ui->widget_2 , clasa1, clasa2, 2);
 
 }
 

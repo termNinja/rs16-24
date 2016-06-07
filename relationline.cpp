@@ -1,12 +1,31 @@
 #include "relationline.hpp"
 
-relationLine::relationLine(QWidget *parent ,QPoint p1, QPoint p2 )
+//TODO: add types of relation
+// 0 <- association (blue)
+// 1 <- inheritance (red)
+// 2 <- aggregation (green)
+// 3 <- composition (black)
+
+
+relationLine::relationLine(QWidget *parent ,QPoint p1, QPoint p2 , int type )
 {
 
+    //association
     QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, Qt::black);
+    switch(type)
+    {
+     case 0: Pal.setColor(QPalette::Background, Qt::blue);
+             break;
+     case 1: Pal.setColor(QPalette::Background, Qt::red);
+             break;
+     case 2: Pal.setColor(QPalette::Background, Qt::green);
+             break;
+     case 3: Pal.setColor(QPalette::Background, Qt::black);
+             break;
+    }
     setAutoFillBackground(true);
     setPalette(Pal);
+
 
     //if return value 1 then is vertical line else is horizontal
     //this is vertical
