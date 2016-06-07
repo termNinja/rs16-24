@@ -9,20 +9,23 @@ relationLine::relationLine(QWidget *parent ,QPoint p1, QPoint p2 )
     setPalette(Pal);
 
     //if return value 1 then is vertical line else is horizontal
+    //this is vertical
     if(verticalOrHorizontal(p1,p2) == 1)
     {
-        this->setFixedHeight(500);
+        this->setFixedHeight(std::abs(p2.y() - p1.y()));
         this->setFixedWidth(2);
+        this->move(p2.x(),p2.y());
     }
+    //this is horizontal
     else
     {
         this->setFixedHeight(2);
-        this->setFixedWidth(500);
+        this->setFixedWidth(std::abs(p2.x() - p1.x()));
+        this->move(p1.x(),p1.y());
     }
 
     this->setParent(parent);
     this->setCursor(Qt::OpenHandCursor);
-    this->move(40,40);
     show();
 }
 

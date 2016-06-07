@@ -18,7 +18,7 @@ public:
 	 */
 	Class(std::string name);
 
-	// NOTE: Going to get removed in newer versions
+    // NOTE: Going to get removed in newer versions
 	Class(std::string className, std::vector<MemberFunction> memberFunctions);
 
 	// NOTE: Going to get removed in newer versions
