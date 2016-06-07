@@ -82,9 +82,11 @@ void MainWindow::on_choose_dir_clicked()
 
 void MainWindow::on_pushButton_11_clicked()
 {
-    ClassWidget *clasa1 = m_listOfClass.at(0);
-    ClassWidget *clasa2 = m_listOfClass.at(1);
+    if(m_listOfClass.size() >= 2 )
+    {
+        ClassWidget *clasa1 = m_listOfClass.at(0);
+        ClassWidget *clasa2 = m_listOfClass.at(1);
 
-    relation r(ui->widget_2 , clasa1, clasa2);
-
+        relation r(ui->widget_2 , clasa1, clasa2);
+    }
 }
