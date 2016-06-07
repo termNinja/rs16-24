@@ -20,6 +20,10 @@ class relationWidget
 public:
     relationWidget(QWidget *parent , ClassWidget *class1,  ClassWidget *class2 , int type);
 
+    ClassWidget* getSecondClass();
+    ClassWidget* getFirstClass();
+    int getType();
+    void deleteLines();
 protected:
     int numberOfLines(QPoint p1, QPoint p2 );
     std::vector<QPoint> getFourPoints(QPoint pos , int width , int height);
@@ -29,10 +33,12 @@ protected:
 
 
 private:
-    std::vector<relationLine> m_lines;
+    std::vector<relationLine*> m_lines;
     int m_firstClassPointPosition;
     int m_secondClassPointPosition;
     int m_type;
+    ClassWidget* m_firstClass;
+    ClassWidget* m_secondClass;
 };
 
 #endif // RELATION_HPP

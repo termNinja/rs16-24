@@ -382,8 +382,8 @@
    <slot>addRelationClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>47</x>
-     <y>439</y>
+     <x>66</x>
+     <y>376</y>
     </hint>
     <hint type="destinationlabel">
      <x>332</x>
@@ -398,8 +398,8 @@
    <slot>addRelationClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>70</x>
-     <y>488</y>
+     <x>89</x>
+     <y>376</y>
     </hint>
     <hint type="destinationlabel">
      <x>306</x>
@@ -414,8 +414,8 @@
    <slot>addRelationClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>517</y>
+     <x>78</x>
+     <y>376</y>
     </hint>
     <hint type="destinationlabel">
      <x>410</x>
@@ -430,8 +430,8 @@
    <slot>addRelationClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>89</x>
-     <y>456</y>
+     <x>108</x>
+     <y>376</y>
     </hint>
     <hint type="destinationlabel">
      <x>364</x>
@@ -443,5 +443,6 @@
  <slots>
   <slot>GenerateCodeC()</slot>
   <slot>addRelationClicked()</slot>
+  <slot>refreshRelationsPanel()</slot>
  </slots>
 </ui>

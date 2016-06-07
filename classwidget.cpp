@@ -800,6 +800,8 @@ void ClassWidget::mouseMoveEvent(QMouseEvent *e)
 }
 
 void ClassWidget::mouseReleaseEvent(QMouseEvent *e){
+    if(moving=true)
+        emit Moved();
     moving = false;
     resizing = false;
     resizePosition = -1;

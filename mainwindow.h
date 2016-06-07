@@ -42,13 +42,16 @@ private slots:
 
     void addRelationClicked();
     void makeRelation();
+    void on_toolBox_currentChanged(int index);
+
+    void RefreshRelation();
 protected:
     ClassWidget* getClass();
 
 private:
     Ui::MainWindow *ui;
     QList<ClassWidget*> allClassWidgets;
-
+    QList<relationWidget*> allRelationWidgets;
     QComboBox* qcbFirstClass;
     QComboBox* qcbSecondClass;
     QPushButton* qpbOk;

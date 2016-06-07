@@ -92,6 +92,8 @@ private:
 
     QStackedLayout* stackedLayout;
 
+signals:
+       void Moved();
 };
 
 #endif // CLASSWIDGET_HPP

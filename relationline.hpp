@@ -12,7 +12,7 @@
 // 2 <- aggregation (green)
 // 3 <- composition (black)
 
-class relationLine : QLabel
+class relationLine : public QLabel
 {
 public:
     relationLine(QWidget *parent , QPoint first , QPoint second , int type);
