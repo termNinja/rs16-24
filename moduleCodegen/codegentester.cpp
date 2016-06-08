@@ -2,6 +2,7 @@
 #include "moduleAppController/resourcemanager.hpp"
 #include "moduleLangExporter/cpplangexporter.hpp"
 #include "moduleLangExporter/javalangexporter.hpp"
+#include "moduleLangExporter/phplangexporter.hpp"
 #include "moduleCodegen/member.hpp"
 #include "relationmanager.hpp"
 
@@ -96,12 +97,16 @@ void codegenTester::peformTest() {
 	// ------------------------------------------------------------------------
 	lexp::CppLangExporter cppExporter;
 	lexp::JavaLangExporter javaExporter;
+	lexp::PhpLangExporter phpExporter;
 	std::cout << "C++ class: " << std::endl;
 	std::cout << cppExporter.genClass(c) << std::endl;
 	// cppExporter.startCodeGeneration(c);
 
 	std::cout << "Java class: " << std::endl;
 	std::cout << javaExporter.genClass(c) << std::endl;
+
+	std::cout << "Php class: " << std::endl;
+	std::cout << phpExporter.genClass(c) << std::endl;
 
 	std::cerr << "Beginning class PolyClass generation..." << std::endl;
 	std::cout << cppExporter.genClass(polyClass) << std::endl;

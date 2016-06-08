@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     relationwidget.cpp \
     moduleCodegen/relationmanager.cpp \
     interfacewidget.cpp \
-    moduleLangExporter/javalangexporter.cpp
+    moduleLangExporter/javalangexporter.cpp \
+    moduleLangExporter/phplangexporter.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -82,7 +83,8 @@ HEADERS  += mainwindow.h \
     relationwidget.hpp \
     moduleCodegen/relationmanager.hpp \
     interfacewidget.hpp \
-    moduleLangExporter/javalangexporter.hpp
+    moduleLangExporter/javalangexporter.hpp \
+    moduleLangExporter/phplangexporter.hpp
 
 FORMS    += mainwindow.ui
 
