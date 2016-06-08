@@ -18,7 +18,7 @@ void ParserTester::performTest()
 {
 	CppParser cppParser;
 	std::string parsingPath = "../rs16-24/parsingTests/cpp/10_full.hpp";
-	std::unique_ptr<std::vector<codegen::Class* > > result = cppParser.parseClassFile(parsingPath);
+	std::vector<codegen::Class* > *result = cppParser.parseClassFile(parsingPath);
 
 	lexp::CppLangExporter cppExp;
 	std::cout << "Parsing results (file: " << parsingPath << ")";
@@ -26,9 +26,9 @@ void ParserTester::performTest()
 	for (auto cls : *result)
 		std::cout << cppExp.genClass(*cls) << std::endl;
 
-
 	for (auto cls : *result)
 		delete cls;
+	delete result;
 
 }
 

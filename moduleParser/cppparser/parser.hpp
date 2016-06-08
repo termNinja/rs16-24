@@ -16,7 +16,7 @@ class Parser {
 public:
 	// This method returns an unique pointer to a vector of classes
 	// that were parsed from a file given by path parameter.
-	virtual unique_ptr<vector<codegen::Class *> > parseClassFile(string path) const = 0;
+	virtual vector<codegen::Class *>* parseClassFile(string path) const = 0;
 	virtual ~Parser() {}
 private:
 };
