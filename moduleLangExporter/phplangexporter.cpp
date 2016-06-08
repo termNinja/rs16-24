@@ -10,7 +10,6 @@ namespace lexp {
 
 PhpLangExporter::PhpLangExporter()
 {
-
 }
 
 string lexp::PhpLangExporter::genBasicVariable(codegen::Variable &var) const
@@ -68,7 +67,7 @@ string PhpLangExporter::genMemberConstructor(codegen::MemberConstructor &constru
 {
 	string s;
 
-	s.append("function __construct");
+	s.append("function __construct(");
 	auto funParams = constructor.getParameters();
 	if (! funParams.empty()) {
 		for (unsigned i = 0; i < constructor.getNumberOfParameters()-1; ++i)
@@ -88,7 +87,7 @@ string PhpLangExporter::genClassInclude(codegen::Class &cls) const
 	std::set<const codegen::Class*> relatedClasses = rm->getAllClassesThatUseGivenClass(&cls);
 
 	for (auto c : relatedClasses) {
-		s.append("include_once(");
+		s.append("include_once(\"");
 		s.append(c->getName() + ".php\")\n");
 	}
 

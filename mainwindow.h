@@ -30,7 +30,6 @@
 #include "relationwidget.hpp"
 #include "interfacewidget.hpp"
 #include "moduleCodegen/relationmanager.hpp"
-#include "moduleLangExporter/phplangexporter.hpp"
 
 namespace Ui {
 class MainWindow;
