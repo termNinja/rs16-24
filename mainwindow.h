@@ -35,8 +35,6 @@ public:
 private slots:
     void on_pushButton_10_clicked();
     void on_pushButton_clicked();
-    void on_choose_dir_clicked();
-    void on_pushButton_11_clicked();
 
     void GenerateCodeC();
 

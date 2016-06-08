@@ -140,7 +140,9 @@ void relationWidget::makeRelation(QWidget *parent , std::vector<QPoint> minDistT
 
 void relationWidget::mousePressEvent(QMouseEvent *e){
 
-    std::cout<<"dasdasdasdasdaasdsadsadasdsadadsadasdasdsasdasdasdsadasd"<<std::endl;
+    QMessageBox mbox;
+    mbox.setText("test");
+    mbox.exec();
 }
 
 

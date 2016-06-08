@@ -21,31 +21,11 @@
     <bool>true</bool>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QWidget" name="widget_2" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>300</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="sizeConstraint">
        <enum>QLayout::SetMinAndMaxSize</enum>
       </property>
-      <item>
-       <widget class="QPushButton" name="choose_dir">
-        <property name="text">
-         <string>Choose directory</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="maximumSize">
@@ -55,7 +35,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -89,7 +69,7 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>215</height>
+           <height>232</height>
           </rect>
          </property>
          <attribute name="label">
@@ -135,19 +115,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_12">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </widget>
@@ -157,7 +124,7 @@
            <x>0</x>
            <y>0</y>
            <width>200</width>
-           <height>215</height>
+           <height>232</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -253,10 +220,36 @@
            </item>
           </layout>
          </widget>
+         <zorder>layoutWidget</zorder>
+         <zorder>tabWidget</zorder>
+         <zorder>tabWidget</zorder>
         </widget>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="0" column="1">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>10000</width>
+         <height>10000</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>10000</width>
+         <height>10000</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -277,23 +270,29 @@
      <property name="title">
       <string>Export as </string>
      </property>
-     <addaction name="actionSource_code_C"/>
      <addaction name="actionPdf"/>
     </widget>
     <addaction name="actionNew_File"/>
     <addaction name="actionSave"/>
     <addaction name="menuExport"/>
+    <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
     <addaction name="actionRead_Help"/>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuC_code">
     <property name="title">
@@ -305,12 +304,15 @@
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
-   <addaction name="menu_Help"/>
    <addaction name="menuC_code"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNew_File">
    <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
@@ -318,6 +320,9 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -331,13 +336,16 @@
    </property>
   </action>
   <action name="actionPdf">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Pdf</string>
    </property>
   </action>
   <action name="actionRead_Help">
    <property name="text">
-    <string>Read Help</string>
+    <string>Help</string>
    </property>
   </action>
   <action name="actionC">
@@ -346,21 +354,75 @@
    </property>
   </action>
   <action name="actionPython">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Python</string>
+    <string extracomment=" ">Python</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
    </property>
   </action>
   <action name="actionJava">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Java</string>
    </property>
   </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>pushButton_10</tabstop>
+  <tabstop>pushButton_11</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>pushButton_13</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>pushButton_3</tabstop>
+  <tabstop>pushButton_12</tabstop>
+  <tabstop>pushButton_14</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>pushButton_15</tabstop>
+  <tabstop>pushButton_5</tabstop>
+  <tabstop>pushButton_6</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>pushButton_12</tabstop>
+  <tabstop>pushButton_14</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>pushButton_15</tabstop>
+  <tabstop>pushButton_5</tabstop>
+  <tabstop>pushButton_6</tabstop>
+  <tabstop>scrollArea</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>actionSource_code_C</sender>
+   <sender>actionC</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>GenerateCodeC()</slot>
@@ -436,6 +498,22 @@
     <hint type="destinationlabel">
      <x>364</x>
      <y>410</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>330</y>
     </hint>
    </hints>
   </connection>

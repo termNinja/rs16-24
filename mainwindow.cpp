@@ -34,38 +34,22 @@ void MainWindow::on_pushButton_10_clicked()
 //                                               tr("Input class name "), QLineEdit::Normal,
 //                                               "class name", &ok);
 
-    QWidget *parent  = ui->widget_2;
+    QWidget *parent  = ui->scrollArea->widget();
     ClassWidget* newClass = new ClassWidget(parent);
     connect(newClass, SIGNAL(Moved()), this , SLOT(RefreshRelation()));
     allClassWidgets.push_back(newClass);
 }
-
-void QWidget::paintEvent(QPaintEvent *)
-{
-
-    QPainter painter(this);
-
-    if(this->objectName().toStdString() == "widget_2")
-    {
-        QRectF rectangle(10.0, 20.0, 80.0, 60.0);
-        int startAngle = 30 * 16;
-        int spanAngle = 120 * 16;
-        painter.drawArc(rectangle, startAngle, spanAngle);
-    }
-
-}
-
 
 void MainWindow::on_pushButton_clicked()
 {
 //    bool ok;
 //    QString name = QInputDialog::getText(this, tr("Class name"),
 //                                               tr("Input class name "), QLineEdit::Normal,
-    QWidget *parent  = ui->widget_2;
+    QWidget *parent  = ui->scrollArea->widget();
     update();
 }
 
-void MainWindow::on_choose_dir_clicked()
+void MainWindow::GenerateCodeC()
 {
     QString path = QFileDialog::getExistingDirectory(
                   this,
@@ -73,29 +57,17 @@ void MainWindow::on_choose_dir_clicked()
                   "/home",
                   QFileDialog::ShowDirsOnly);
 
-	QString pathTONewDir = path + "/SourceCode";
+    QString pathTONewDir = path + "/SourceCode";
 
-	// Setting output path for resource manager
-	app::ResourceManager *rm = &app::ResourceManager::instance();
-	rm->setProjectPath(pathTONewDir);
+    // Setting output path for resource manager
+    app::ResourceManager *rm = &app::ResourceManager::instance();
+    rm->setProjectPath(pathTONewDir);
 
     QDir().mkdir(pathTONewDir);
-}
 
-void MainWindow::on_pushButton_11_clicked()
-{
-    ClassWidget *clasa1 = allClassWidgets.at(0);
-    ClassWidget *clasa2 = allClassWidgets.at(1);
-
-    relationWidget r(ui->widget_2 , clasa1, clasa2, 2);
-
-}
-
-void MainWindow::GenerateCodeC()
-{
 	lexp::CppLangExporter cppExporter;
-	app::ResourceManager* rm = &app::ResourceManager::instance();
-	bool codegenProcessSucceded= true;
+
+    bool codegenProcessSucceded= true;
 
     foreach(ClassWidget* currentClass, allClassWidgets)
     {
@@ -106,17 +78,16 @@ void MainWindow::GenerateCodeC()
 
 			// Report failed codegen proc
 			QMessageBox msgBox;
-			std::string errMsg = "Class generation for " + test.getName() + " has failed.";
-			errMsg.append("Generation of code was tried at " + rm->getProjectOutputPath().toStdString());
-			msgBox.setText(QString::fromStdString(errMsg));
+            QString errMsg = "Class generation for " + QString::fromStdString(test.getName()) + " has failed.";
+            errMsg.append("Generation of code was tried at " + rm->getProjectOutputPath());
+            msgBox.setText(errMsg);
 			msgBox.exec();
 		}
     }
 
 	if (codegenProcessSucceded) {
-		QMessageBox msgBox;
-		std::string msg = "All classes were successfully generated";
-		msgBox.setText(QString::fromStdString(msg));
+        QMessageBox msgBox;
+        msgBox.setText("All classes were successfully generated");
 		msgBox.exec();
 	}
 }
@@ -156,7 +127,7 @@ void MainWindow::makeRelation(){
     ClassWidget *clasa1 = allClassWidgets.at(qcbFirstClass->currentIndex());
     ClassWidget *clasa2 = allClassWidgets.at(qcbSecondClass->currentIndex());
 
-    relationWidget* r = new relationWidget(ui->widget_2 , clasa1, clasa2,relationType);
+    relationWidget* r = new relationWidget(ui->scrollArea->widget() , clasa1, clasa2,relationType);
 
     allRelationWidgets.push_back(r);
     ((QWidget*)qcbFirstClass->parent())->layout()->removeWidget(qcbFirstClass);
@@ -186,7 +157,7 @@ void MainWindow::RefreshRelation(){
 //            QMessageBox msgBox;
 //                msgBox.setText(QString::number(i));
 //                msgBox.exec();
-            item->deleteLines(ui->widget_2);
+            item->deleteLines(ui->scrollArea->widget());
 //            ui->widget_2->layout()->removeWidget(item);
 //            item = new relationWidget(ui->widget_2,allClassWidgets.at(0),allClassWidgets.at(1),item->getType());
         }
