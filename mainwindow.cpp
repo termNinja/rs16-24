@@ -179,13 +179,16 @@ void MainWindow::on_toolBox_currentChanged(int index)
 void MainWindow::RefreshRelation(){
     int i = allClassWidgets.indexOf((ClassWidget*)sender());
 
-    foreach(relationWidget* item,allRelationWidgets){
+    for(int j=0;j<allRelationWidgets.size();j++){
+        relationWidget* item = allRelationWidgets.at(j);
+//    foreach(relationWidget* item,allRelationWidgets){
         if(item->getFirstClass()== allClassWidgets.at(i) || item->getSecondClass()== allClassWidgets.at(i)){
 //            QMessageBox msgBox;
 //                msgBox.setText(QString::number(i));
 //                msgBox.exec();
-            item->deleteLines();
-            item = new relationWidget(ui->widget_2,item->getFirstClass(),item->getSecondClass(),item->getType());
+            item->deleteLines(ui->widget_2);
+//            ui->widget_2->layout()->removeWidget(item);
+//            item = new relationWidget(ui->widget_2,allClassWidgets.at(0),allClassWidgets.at(1),item->getType());
         }
     }
 

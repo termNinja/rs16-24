@@ -305,6 +305,7 @@ void ClassWidget::switchViews(){
         stackedLayout->setCurrentIndex(0);
         resize(sizeHint());
     }
+    emit Moved();
 
 
 //    stackedLayout->currentWidget()->resize(stackedLayout->currentWidget()->sizeHint());
