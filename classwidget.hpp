@@ -40,6 +40,7 @@ public:
     Class* getClass();
 
     void makeClass();
+
 protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);

@@ -299,6 +299,10 @@ void MainWindow::on_pushButton_11_clicked()
     connect(newInterface, SIGNAL(Deleted()), this , SLOT(InterfaceWidgetDeleted()));
 
     allInterfaceWidgets.push_back(newInterface);
+
+    QMessageBox msgBox;
+    msgBox.setText("Fully working interface coming soon");
+    msgBox.exec();
 }
 
 
@@ -320,7 +324,26 @@ void MainWindow::ClassWidgetDeleted(){
 }
 
 void MainWindow::InterfaceWidgetDeleted(){
-//    QMessageBox msgBox;
+//    QsMessageBox msgBox;
 //                    msgBox.setText("Test");
 //                    msgBox.exec();
 }
+
+
+//void MainWindow::GenerateUML(){
+
+//    QString path = QFileDialog::getExistingDirectory(
+//                  this,
+//                  tr("Please pick your directory to save code."),
+//                  "/home",
+//                  QFileDialog::ShowDirsOnly);
+
+//    parser::CppParser cppPar;
+
+//    std::vector<Class*> *parsedResult = cppPar.parseClassFile(path.toStdString());
+
+//    foreach (Class* ourClass, parsedResult) {
+//       ClassWidget* cw = new ClassWidget(ui->scrollArea->widget());
+//       ourClass->get
+//    }
+//}

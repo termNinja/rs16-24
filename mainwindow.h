@@ -31,6 +31,7 @@
 #include "interfacewidget.hpp"
 #include "moduleCodegen/relationmanager.hpp"
 #include "moduleLangExporter/phplangexporter.hpp"
+#include "moduleParser/cppparser/cppparser.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -60,6 +61,7 @@ private slots:
     void InterfaceWidgetDeleted();
     void generateCodeJava();
     void generateCodePhp();
+//    void GenerateUML();
 protected:
     ClassWidget* getClass();
 

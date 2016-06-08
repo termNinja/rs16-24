@@ -272,6 +272,7 @@
     <addaction name="actionNew_File"/>
     <addaction name="actionSave"/>
     <addaction name="menuExport"/>
+    <addaction name="actionImport_C"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -390,6 +391,14 @@
   <action name="actionClose">
    <property name="text">
     <string>Close</string>
+   </property>
+  </action>
+  <action name="actionImport_C">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Import C++</string>
    </property>
   </action>
  </widget>

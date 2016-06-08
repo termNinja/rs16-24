@@ -861,8 +861,16 @@ void ClassWidget::addConstructorParameterClicked(){
 
 void ClassWidget::makeClass()
 {
+
+    if(stackedLayout->currentIndex()==0){
+        getMemberVariables();
+        getMemberConstructors();
+        getMemberFunctions();
+    }
+
     myClass =  new Class(name.toStdString(),memberConstructors.toVector().toStdVector(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
 }
+
 
 void ClassWidget::getMemberVariables(){
 
