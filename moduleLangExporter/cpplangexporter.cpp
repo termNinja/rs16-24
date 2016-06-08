@@ -135,7 +135,7 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 		unsigned i;
 		s.append(" : ");
 		for (i = 0; i < inherits.size()-1; ++i) {
-			if (i % magicConstLineBreak == 0) {
+			if (i+1 % magicConstLineBreak == 0) {
 				s.append("\n" + ind);
 			}
 			// for now, public only
@@ -143,6 +143,8 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 		}
 		s.append("public " + inherits[i]->getName());
 
+	} else {
+		std::cout << "Received empty inheritance vector while generating code for class " << cls.getName() << std::endl;
 	}
 
 

@@ -80,7 +80,7 @@ public:
 	 *  \param newConstructor New constructor to be added.
 	 */
 
-	void addConstructor(MemberConstructor &newConstructor);
+	void addConstructor(MemberConstructor newConstructor);
 
 	/**
 	 *  \brief Returns the class name.

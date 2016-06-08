@@ -1,6 +1,7 @@
 #include "relationmanager.hpp"
 #include <utility>
 #include <algorithm>
+#include <iostream>
 
 namespace codegen {
 
@@ -76,14 +77,14 @@ unsigned RelationManager::deleteNonExistingRelations()
 	deletedRecords += cleanMap(m_composition);
 	deletedRecords += cleanMap(m_dependency);
 	deletedRecords += cleanMap(m_whoDoesKeyInherit);
-	deletedRecords += cleanMap(m_whoKeyInherits);
+	deletedRecords += cleanMap(m_keyIsInheritedBy);
 	return deletedRecords;
 }
 
 void RelationManager::addInheritanceRelation(const Class *imInherited, const Class *imInheriting)
 {
-	m_whoKeyInherits[imInherited].insert(imInheriting);
-	m_whoKeyInherits[imInheriting].insert(imInherited);
+	m_keyIsInheritedBy[imInherited].insert(imInheriting);
+	m_whoDoesKeyInherit[imInheriting].insert(imInherited);
 	m_using[imInheriting].insert(imInherited);
 }
 
@@ -115,8 +116,8 @@ std::vector<const Class *> RelationManager::getClassesThatInheritArgument(const 
 {
 	std::vector<const Class *> res;
 
-	const auto finder = m_whoKeyInherits.find(cls);
-	if (finder == m_whoKeyInherits.cend())
+	const auto finder = m_keyIsInheritedBy.find(cls);
+	if (finder == m_keyIsInheritedBy.cend())
 		return res;
 
 	for (auto iter = res.cbegin(); iter != res.cend(); iter++)
@@ -133,8 +134,15 @@ std::vector<const Class *> RelationManager::getClassesThatArgumentInherits(const
 	if (finder == m_whoDoesKeyInherit.cend())
 		return res;
 
-	for (auto iter = res.cbegin(); iter != res.cend(); iter++)
-		res.push_back(*iter);
+	// We iterate over set that contains classes that inherit given class
+	auto setOfElements = finder->second;
+	for (auto elem : setOfElements) {
+		res.push_back(elem);
+	}
+
+	std::cout << "Formed inheritance vector: " << std::endl;
+	for (auto c : res)
+		std::cout << c->getName() << " ";
 
 	return res;
 }
@@ -149,7 +157,7 @@ std::set<const Class *> RelationManager::getAllClassesThatUseGivenClass(const Cl
 
 std::ostream& operator <<(std::ostream &out, const RelationManager &rm)
 {
-	out << rm.showMap(rm.m_whoKeyInherits, "Class A inherits: B, C, D...:");
+	out << rm.showMap(rm.m_whoDoesKeyInherit, "Class A inherits: B, C, D...:");
 	out << rm.showMap(rm.m_aggregation, "Aggregation relations:");
 	out << rm.showMap(rm.m_composition, "Composition relations:");
 	out << rm.showMap(rm.m_dependency, "Dependency relations:");

@@ -69,10 +69,13 @@ private:
 	unsigned cleanMap(map<const Class*, set<const Class*> > &map);
 	unsigned cleanSet(set<const Class*> &s);
 
+	// Class A is using B, C, D IN SOME WAY mapped by other members
+	map<const Class*, set<const Class*> > m_using;
+
 protected:
 	// m_inher = {"Shape" -> ["Rectangle", "Circle"]}
 	// Shape is inherited by Rectangle and Circle (pretending we're working with strings instead of Class*
-	map<const Class*, set<const Class*> > m_whoKeyInherits;
+	map<const Class*, set<const Class*> > m_keyIsInheritedBy;
 	map<const Class*, set<const Class*> > m_whoDoesKeyInherit;
 
 	// A -> {B, C, D}
@@ -88,8 +91,6 @@ protected:
 	// Class A has B, C, D
 	map<const Class *, set<const Class*> > m_aggregation;
 
-	// Class A is using B, C, D IN SOME WAY
-	map<const Class*, set<const Class*> > m_using;
 
 };
 

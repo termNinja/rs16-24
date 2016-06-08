@@ -108,14 +108,15 @@ void codegenTester::peformTest() {
 	rm->addInheritanceRelation(&polyClass, &c);
 	rm->addInheritanceRelation(&c, &polyClass);
 	rm->addAssociationRelation(&polyClass, &c);
-	Class includeTester1 = Class("includeTester1");
-	Class includeTester2 = Class("includeTester2");
-	Class includeTester3 = Class("includeTester3");
-	Class includeTester4 = Class("includeTester4");
-	rm->addInheritanceRelation(&includeTester1, &polyClass);
-	rm->addAssociationRelation(&polyClass, &includeTester1);
-	rm->addAggregationRelation(&polyClass, &includeTester2);
-	rm->addCompositionRelation(&polyClass, &includeTester3);
+	Class rmTester1 = Class("rmTester1");
+	Class rmTester2 = Class("rmTester2");
+	Class rmTester3 = Class("rmTester3");
+	Class rmTester4 = Class("rmTester4");
+	rm->addInheritanceRelation(&rmTester1 , &polyClass);
+	rm->addAssociationRelation(&polyClass, &rmTester1 );
+	rm->addAggregationRelation(&polyClass, &rmTester2);
+	rm->addCompositionRelation(&polyClass, &rmTester3);
+	rm->addDependencyRelation(&polyClass, &rmTester4);
 	std::cout << *rm << std::endl;
 	std::cout << cppExporter.genClass(polyClass) << std::endl;
 }

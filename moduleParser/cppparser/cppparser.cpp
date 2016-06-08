@@ -15,7 +15,7 @@ using std::string;
 using std::unique_ptr;
 
 
-unique_ptr<vector<codegen::Class *> > CppParser::parseClassFile(string path) const
+vector<codegen::Class *>* CppParser::parseClassFile(string path) const
 {
 	// TODO: First we check does the file exist at all?
 	// ...
@@ -46,7 +46,8 @@ unique_ptr<vector<codegen::Class *> > CppParser::parseClassFile(string path) con
 		// 		the user is responisble for cleaning up dynamically allocated objects
 		// -> Quite often, vector shall contain only 1 class per file which is
 		// 		usually the practice, but some c++ files contain multiples classes => We use vector.
-		return unique_ptr<vector<codegen::Class *> >(parsingResult);
+//		return unique_ptr<vector<codegen::Class *> >(parsingResult);
+		return parsingResult;
 	}
 
 	return nullptr;

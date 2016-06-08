@@ -1,4 +1,5 @@
 #include "classwidget.hpp"
+#include <QColor>
 
 //todo: CompactView size problem
 ClassWidget::ClassWidget(QWidget *parent ){
@@ -8,7 +9,8 @@ ClassWidget::ClassWidget(QWidget *parent ){
     moving = false;
     //set color to widget so its easy to see dimensions
     QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, Qt::gray);
+//    Pal.setColor(QPalette::Background, Qt::gray);
+	Pal.setColor(QPalette::Background, QColor(60, 60, 60));
     setAutoFillBackground(true);
     setPalette(Pal);
     //todo: vratiti resize kada se zavrsi sa compactview-om

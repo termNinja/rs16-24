@@ -19,7 +19,7 @@ public:
 	 * @param path Path to given c++ header file.
 	 * @return unique_ptr to vector of Class* that contains classes that were found in the given header file.
 	 */
-	unique_ptr<vector<codegen::Class *> > parseClassFile(string path) const;
+	vector<codegen::Class *>*  parseClassFile(string path) const;
 };
 
 } // namespace end: parser
