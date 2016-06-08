@@ -129,7 +129,7 @@ std::vector<MemberConstructor> &Class::getProtectedConstructors()
 	return m_protConst;
 }
 
-void Class::addConstructor(MemberConstructor &c)
+void Class::addConstructor(MemberConstructor c)
 {
 	if (c.getVisibility() == MemberVisibility::PRIVATE)
 		m_privConst.push_back(c);
