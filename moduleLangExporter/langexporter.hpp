@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <cctype>
 #include "moduleCodegen/variable.hpp"
 #include "moduleCodegen/membervariable.hpp"
 #include "moduleCodegen/function.hpp"
@@ -25,6 +26,15 @@ public:
 	virtual std::string genClassInclude(codegen::Class &cls) const = 0;
 	virtual std::string genClass(codegen::Class &cls) const = 0;
 	virtual bool startCodeGeneration(codegen::Class &cls) const = 0;
+
+	std::string generateUpperCase(std::string s) const
+	{
+		std::string res = s;
+		for (auto &c : res)
+			if (isalpha(c))
+				c = static_cast<char>(toupper(c));
+		return res;
+	}
 
 	static std::string ind;
 };
