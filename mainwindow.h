@@ -61,7 +61,6 @@ private slots:
     void InterfaceWidgetDeleted();
     void generateCodeJava();
     void generateCodePhp();
-//    void GenerateUML();
 protected:
     ClassWidget* getClass();
 

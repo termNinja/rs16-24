@@ -127,7 +127,7 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 
 	// include guard
 	std::string bigCapsName = generateUpperCase(cls.getName());
-	s.append("ifndef " + bigCapsName + "_HPP\n");
+	s.append("#ifndef " + bigCapsName + "_HPP\n");
 	s.append("#define " + bigCapsName + "_HPP\n\n");
 
 	s.append(genClassInclude(cls));
