@@ -26,6 +26,7 @@
 #include <QLayoutItem>
 #include "moduleAppController/resourcemanager.hpp"
 #include "moduleLangExporter/cpplangexporter.hpp"
+#include "moduleLangExporter/javalangexporter.hpp"
 #include "relationwidget.hpp"
 #include "interfacewidget.hpp"
 
@@ -55,6 +56,7 @@ private slots:
 
     void ClassWidgetDeleted();
     void InterfaceWidgetDeleted();
+    void generateCodeJava();
 protected:
     ClassWidget* getClass();
 

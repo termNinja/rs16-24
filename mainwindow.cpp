@@ -80,6 +80,49 @@ void MainWindow::GenerateCodeC()
 	}
 }
 
+
+void MainWindow::generateCodeJava(){
+    QString path = QFileDialog::getExistingDirectory(
+                  this,
+                  tr("Please pick your directory to save code."),
+                  "/home",
+                  QFileDialog::ShowDirsOnly);
+
+    QString pathTONewDir = path + "/SourceCode";
+
+    // Setting output path for resource manager
+    app::ResourceManager *rm = &app::ResourceManager::instance();
+    rm->setProjectPath(pathTONewDir);
+
+    QDir().mkdir(pathTONewDir);
+
+    lexp::JavaLangExporter JavaExporter;
+
+    bool codegenProcessSucceded= true;
+
+    foreach(ClassWidget* currentClass, allClassWidgets)
+    {
+        Class test = currentClass->getClass();
+        bool codegenStatus = JavaExporter.startCodeGeneration(test);
+        if (codegenStatus == false) {
+            codegenProcessSucceded = false;
+
+            // Report failed codegen proc
+            QMessageBox msgBox;
+            QString errMsg = "Class generation for " + QString::fromStdString(test.getName()) + " has failed.";
+            errMsg.append("Generation of code was tried at " + rm->getProjectOutputPath());
+            msgBox.setText(errMsg);
+            msgBox.exec();
+        }
+    }
+
+    if (codegenProcessSucceded) {
+        QMessageBox msgBox;
+        msgBox.setText("All classes were successfully generated");
+        msgBox.exec();
+    }
+}
+
 void MainWindow::addRelationClicked(){
 
     QLayout* ql = ((QWidget*)((QPushButton*)sender())->parent())->layout();

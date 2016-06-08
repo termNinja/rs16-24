@@ -1,19 +1,20 @@
 #include <fstream>
-#include <iostream>
-#include <QDir>
-#include "cpplangexporter.hpp"
-#include "moduleAppController/resourcemanager.hpp"
+#include <set>
+#include "javalangexporter.hpp"
+#include "moduleCodegen/membervisibility.hpp"
 #include "moduleCodegen/relationmanager.hpp"
+#include "moduleAppController/resourcemanager.hpp"
 
 using std::string;
 
 namespace lexp {
 
-CppLangExporter::CppLangExporter()
+JavaLangExporter::JavaLangExporter()
 {
+
 }
 
-string CppLangExporter::genBasicVariable(codegen::Variable &var) const
+string JavaLangExporter::genBasicVariable(codegen::Variable &var) const
 {
 	string s;
 	if (var.isStatic())
@@ -26,25 +27,26 @@ string CppLangExporter::genBasicVariable(codegen::Variable &var) const
 	return s;
 }
 
-string CppLangExporter::genMemberVariable(codegen::MemberVariable &var) const
+string JavaLangExporter::genMemberVariable(codegen::MemberVariable &var) const
 {
 	string s;
+	s.append(codegen::getVisibilityAsString(var.getVisibility()) + " ");
 	if (var.isStatic())
 		s.append("static ");
 
 	if (var.getType().isConst())
-		s.append("const ");
+		s.append("final ");
 
 	s.append(var.getType().getName() + " ");
 	s.append(var.getName());
 	return s;
 }
 
-string CppLangExporter::genBasicFunction(codegen::Function &fun) const
+string JavaLangExporter::genBasicFunction(codegen::Function &fun) const
 {
 	string s;
 	if (fun.getReturnType().isConst())
-		s.append("const ");
+		s.append("final ");
 
 	s.append(fun.getReturnType().getName() + " ");
 	s.append(fun.getName());
@@ -59,15 +61,17 @@ string CppLangExporter::genBasicFunction(codegen::Function &fun) const
 	return s;
 }
 
-string CppLangExporter::genMemberFunction(codegen::MemberFunction &fun) const
+string JavaLangExporter::genMemberFunction(codegen::MemberFunction &fun) const
 {
 	string s;
+
+	s.append(codegen::getVisibilityAsString(fun.getVisibility()) + " ");
 
 	if (fun.isStatic())
 		s.append("static ");
 
 	if (fun.getReturnType().isConst())
-		s.append("const ");
+		s.append("final ");
 
 	s.append(fun.getReturnType().getName() + " ");
 	s.append(fun.getName());
@@ -80,33 +84,18 @@ string CppLangExporter::genMemberFunction(codegen::MemberFunction &fun) const
 		s.append(genBasicVariable(funParams.back()));
 	}
 	s.append(")");
-	if (fun.isConst())
-		s.append(" const");
+
+// Haha java doesn't have this :D
+//	if (fun.isConst())
+//		s.append(" const");
 	s.append(";");
 	return s;
 }
 
-
-string CppLangExporter::genMemberConstructor(codegen::MemberConstructor &constructor) const
-{
-	string s;
-
-	s.append(constructor.getClassName());
-	s.append(genConstructorBody(constructor));
-	return s;
-}
-
-string CppLangExporter::genMemberConstructor(codegen::MemberConstructor &constructor, string className) const
+string JavaLangExporter::genMemberConstructor(codegen::MemberConstructor &constructor, std::string className) const
 {
 	string s;
 	s.append(className);
-	s.append(genConstructorBody(constructor));
-	return s;
-}
-
-string CppLangExporter::genConstructorBody(codegen::MemberConstructor &constructor) const
-{
-	string s;
 	s.append("(");
 	auto funParams = constructor.getParameters();
 	if (! funParams.empty()) {
@@ -116,37 +105,32 @@ string CppLangExporter::genConstructorBody(codegen::MemberConstructor &construct
 	}
 	s.append(");");
 	return s;
+
 }
 
-
-string CppLangExporter::genClass(codegen::Class &cls) const
+string JavaLangExporter::genClass(codegen::Class &cls) const
 {
 	string s;
 	string ind = LangExporter::ind;
-	unsigned magicConstLineBreak = 4;
-
-	// include guard
-	std::string bigCapsName = generateUpperCase(cls.getName());
-	s.append("ifndef " + bigCapsName + "_HPP\n");
-	s.append("#define " + bigCapsName + "_HPP\n\n");
 
 	s.append(genClassInclude(cls));
 
-	s.append("class " + cls.getName());
+	s.append("public class " + cls.getName());
 
 	// Handling inheritance
 	std::vector<const codegen::Class*> inherits = cls.getClassesThatClassInherits();
 	if (! inherits.empty()) {
 		unsigned i;
-		s.append(" : ");
+		s.append(" extends ");
 		for (i = 0; i < inherits.size()-1; ++i) {
-			if (i+1 % magicConstLineBreak == 0) {
-				s.append("\n" + ind);
+			if (i == 1) {
+				std::cerr << "Multiple inheritance not supported in java!" << std::endl;
+				break;
 			}
+
 			// for now, public only
-			s.append("public " + inherits[i]->getName() + ", ");
+			s.append(inherits[i]->getName());
 		}
-		s.append("public " + inherits[i]->getName());
 
 	} else {
 		std::cout << "Received empty inheritance vector while generating code for class " << cls.getName() << std::endl;
@@ -160,7 +144,6 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 	if (!cls.getPublicMemberFunctions().empty()
 		|| !cls.getPublicMemberVariables().empty() || !cls.getPublicConstructors().empty()) {
 		// write public content
-		s.append("public:\n");
 		for (auto &a : cls.getPublicConstructors()) {
 			s.append(ind);
 			s.append(genMemberConstructor(a, cls.getName()) + "\n");
@@ -178,7 +161,7 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 
 	if (!cls.getProtectedMemberFunctions().empty() || !cls.getProtectedMemberVariables().empty()) {
 		// write protected content
-		s.append("\nprotected:\n");
+		s.append("\n");
 		for (auto &a : cls.getProtectedConstructors()) {
 			s.append(ind);
 			s.append(genMemberConstructor(a, cls.getName()) + "\n");
@@ -195,7 +178,7 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 
 	if (!cls.getPrivateMemberFunctions().empty() || !cls.getPrivateMemberVariables().empty()) {
 		// write private content
-		s.append("\nprivate:\n");
+		s.append("\n");
 		for (auto &a : cls.getPrivateConstructors()) {
 			s.append(ind);
 			s.append(genMemberConstructor(a, cls.getName()) + "\n");
@@ -210,14 +193,12 @@ string CppLangExporter::genClass(codegen::Class &cls) const
 		}
 	}
 
-
-	s.append("};");
-
-	s.append("\n\n#endif\n");
+	s.append("}");
 	return s;
+
 }
 
-string CppLangExporter::genClassInclude(codegen::Class &cls) const
+string JavaLangExporter::genClassInclude(codegen::Class &cls) const
 {
 	string res;
 
@@ -225,18 +206,18 @@ string CppLangExporter::genClassInclude(codegen::Class &cls) const
 	std::set<const codegen::Class*> relatedClasses = rm->getAllClassesThatUseGivenClass(&cls);
 
 	for (auto c : relatedClasses) {
-		res.append("#include \"");
-		res.append(c->getName() + ".hpp\"\n");
+		res.append("import ");
+		res.append(c->getName() + ";\n");
 	}
 
 	return res.append("\n");
 }
 
-bool CppLangExporter::startCodeGeneration(codegen::Class &cls) const
+bool JavaLangExporter::startCodeGeneration(codegen::Class &cls) const
 {
 	app::ResourceManager *rm = &app::ResourceManager::instance();
 	string outputPath = rm->getProjectOutputPath().toStdString();
-	string outputFilePath = outputPath + rm->getPlatformSeparator() + cls.getName() + ".hpp";
+	string outputFilePath = outputPath + rm->getPlatformSeparator() + cls.getName() + ".java";
 	std::ofstream outputFile(outputFilePath);
 
 	// For testing purposes
@@ -253,7 +234,7 @@ bool CppLangExporter::startCodeGeneration(codegen::Class &cls) const
 		std::cerr << "Attempted writing to: " << outputPath << std::endl;
 		return false;
 	}
-}
 
+}
 
 } // namespace end: lexp

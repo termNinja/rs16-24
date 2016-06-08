@@ -220,9 +220,6 @@
            </item>
           </layout>
          </widget>
-         <zorder>layoutWidget</zorder>
-         <zorder>tabWidget</zorder>
-         <zorder>tabWidget</zorder>
         </widget>
        </widget>
       </item>
@@ -299,8 +296,8 @@
      <string>Generate code</string>
     </property>
     <addaction name="actionC"/>
-    <addaction name="actionPython"/>
     <addaction name="actionJava"/>
+    <addaction name="actionPython"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
@@ -366,7 +363,7 @@
   </action>
   <action name="actionJava">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Java</string>
@@ -404,19 +401,7 @@
   <tabstop>pushButton_13</tabstop>
   <tabstop>pushButton_2</tabstop>
   <tabstop>pushButton_3</tabstop>
-  <tabstop>pushButton_12</tabstop>
-  <tabstop>pushButton_14</tabstop>
-  <tabstop>pushButton_4</tabstop>
-  <tabstop>pushButton_15</tabstop>
-  <tabstop>pushButton_5</tabstop>
-  <tabstop>pushButton_6</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>pushButton_12</tabstop>
-  <tabstop>pushButton_14</tabstop>
-  <tabstop>pushButton_4</tabstop>
-  <tabstop>pushButton_15</tabstop>
-  <tabstop>pushButton_5</tabstop>
-  <tabstop>pushButton_6</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
@@ -517,10 +502,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionJava</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>generateCodeJava()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>330</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>GenerateCodeC()</slot>
   <slot>addRelationClicked()</slot>
   <slot>refreshRelationsPanel()</slot>
+  <slot>generateCodeJava()</slot>
  </slots>
 </ui>

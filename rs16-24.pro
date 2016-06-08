@@ -55,7 +55,8 @@ SOURCES += main.cpp\
     moduleParser/cppparser/bisonmessage.cpp \
     relationwidget.cpp \
     moduleCodegen/relationmanager.cpp \
-    interfacewidget.cpp
+    interfacewidget.cpp \
+    moduleLangExporter/javalangexporter.cpp
 
 HEADERS  += mainwindow.h \
     moduleCodegen/type.hpp \
@@ -80,7 +81,8 @@ HEADERS  += mainwindow.h \
     moduleParser/cppparser/cppparser.hpp \
     relationwidget.hpp \
     moduleCodegen/relationmanager.hpp \
-    interfacewidget.hpp
+    interfacewidget.hpp \
+    moduleLangExporter/javalangexporter.hpp
 
 FORMS    += mainwindow.ui
 

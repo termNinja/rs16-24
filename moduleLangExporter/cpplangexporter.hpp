@@ -75,6 +75,11 @@ public:
 	std::string genClass(codegen::Class &cls) const;
 
 
+	/**
+	 * @brief Generates list of c++ preprocessor includes for classes given by relations in Relation Manager.
+	 * @param cls Class for which we are generating include list.
+	 * @return Returns c++ code that represents an include list.
+	 */
 	std::string genClassInclude(codegen::Class &cls) const;
 
 	/**
