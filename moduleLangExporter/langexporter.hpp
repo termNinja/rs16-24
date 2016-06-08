@@ -21,7 +21,10 @@ public:
 	virtual std::string genMemberVariable(codegen::MemberVariable &var) const = 0;
 	virtual std::string genBasicFunction(codegen::Function &fun) const = 0;
 	virtual std::string genMemberFunction(codegen::MemberFunction &fun) const = 0;
+	virtual std::string genMemberConstructor(codegen::MemberConstructor &constructor, std::string className) const = 0;
+	virtual std::string genClassInclude(codegen::Class &cls) const = 0;
 	virtual std::string genClass(codegen::Class &cls) const = 0;
+	virtual bool startCodeGeneration(codegen::Class &cls) const = 0;
 
 	static std::string ind;
 };
