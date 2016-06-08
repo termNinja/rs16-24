@@ -29,6 +29,8 @@
 #include "moduleLangExporter/javalangexporter.hpp"
 #include "relationwidget.hpp"
 #include "interfacewidget.hpp"
+#include "moduleCodegen/relationmanager.hpp"
+#include "moduleLangExporter/phplangexporter.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -57,6 +59,7 @@ private slots:
     void ClassWidgetDeleted();
     void InterfaceWidgetDeleted();
     void generateCodeJava();
+    void generateCodePhp();
 protected:
     ClassWidget* getClass();
 
@@ -70,6 +73,7 @@ private:
     QComboBox* qcbSecondClass;
     QPushButton* qpbOk;
     int relationType;
+    std::set<Class *> getClasses();
 };
 
 #endif // MAINWINDOW_H

@@ -297,7 +297,7 @@
     </property>
     <addaction name="actionC"/>
     <addaction name="actionJava"/>
-    <addaction name="actionPython"/>
+    <addaction name="actionPhp"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
@@ -350,12 +350,12 @@
     <string>C++</string>
    </property>
   </action>
-  <action name="actionPython">
+  <action name="actionPhp">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string extracomment=" ">Python</string>
+    <string extracomment=" ">Php</string>
    </property>
    <property name="whatsThis">
     <string/>
@@ -518,11 +518,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionPhp</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>generateCodePhp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>330</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>GenerateCodeC()</slot>
   <slot>addRelationClicked()</slot>
   <slot>refreshRelationsPanel()</slot>
   <slot>generateCodeJava()</slot>
+  <slot>generateCodePhp()</slot>
  </slots>
 </ui>

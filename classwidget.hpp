@@ -37,8 +37,9 @@ public:
     {};
     QString getName();
 
-    Class getClass();
+    Class* getClass();
 
+    void makeClass();
 protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -48,6 +49,7 @@ protected:
     bool event(QEvent *e);
     void moveClass(QMouseEvent *e);
     QPoint mousePoint;
+
 
 private slots:
     void addMemberClicked();
@@ -94,6 +96,7 @@ private:
 
     QStackedLayout* stackedLayout;
 
+    Class* myClass;
 signals:
        void Moved();
        void Deleted();

@@ -859,6 +859,11 @@ void ClassWidget::addConstructorParameterClicked(){
     qlwConstructors->setFixedWidth(width());
 }
 
+void ClassWidget::makeClass()
+{
+    myClass =  new Class(name.toStdString(),memberConstructors.toVector().toStdVector(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
+}
+
 void ClassWidget::getMemberVariables(){
 
     memberVariables.clear();
@@ -1000,6 +1005,6 @@ void ClassWidget::lineEditRenameClass(){
         qlwConstructors->setFixedWidth(width());
 }
 
-Class ClassWidget::getClass(){
-    return Class(name.toStdString(),memberConstructors.toVector().toStdVector(),memberFuncions.toVector().toStdVector(),memberVariables.toVector().toStdVector());
+Class* ClassWidget::getClass(){
+    return myClass;
 }
