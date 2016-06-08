@@ -24,7 +24,8 @@ public:
     ClassWidget* getSecondClass();
     ClassWidget* getFirstClass();
     int getType();
-    void deleteLines(QWidget *parent);
+    void refreshLines(QWidget *parent);
+    void deleteLines();
 protected:
     void mousePressEvent(QMouseEvent *e);
     int numberOfLines(QPoint p1, QPoint p2 );

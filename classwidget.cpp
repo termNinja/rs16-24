@@ -13,7 +13,7 @@ ClassWidget::ClassWidget(QWidget *parent ){
 	Pal.setColor(QPalette::Background, QColor(60, 60, 60));
     setAutoFillBackground(true);
     setPalette(Pal);
-    //todo: vratiti resize kada se zavrsi sa compactview-om
+
     this->setAttribute(Qt::WA_Hover, true);
 
     QWidget* firstPageWidget = makeFullSizeWidget();
@@ -319,6 +319,7 @@ void ClassWidget::switchViews(){
 }
 
 void ClassWidget::deleteWidget(){
+    emit Deleted();
     layout()->removeWidget(this);
     delete this;
 }

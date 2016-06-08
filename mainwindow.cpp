@@ -1,13 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <iostream>
-#include <QTableView>
-#include <QGraphicsRectItem>
-#include <QGraphicsScene>
-#include <QLayout>
-#include <QLayoutItem>
-#include "moduleAppController/resourcemanager.hpp"
-#include "moduleLangExporter/cpplangexporter.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,14 +21,10 @@ ClassWidget* MainWindow::getClass(){
 
 void MainWindow::on_pushButton_10_clicked()
 {
-    bool ok;
-//    QString name = QInputDialog::getText(this, tr("Class name"),
-//                                               tr("Input class name "), QLineEdit::Normal,
-//                                               "class name", &ok);
-
     QWidget *parent  = ui->scrollArea->widget();
     ClassWidget* newClass = new ClassWidget(parent);
     connect(newClass, SIGNAL(Moved()), this , SLOT(RefreshRelation()));
+    connect(newClass, SIGNAL(Deleted()), this , SLOT(ClassWidgetDeleted()));
     allClassWidgets.push_back(newClass);
 }
 
@@ -157,11 +145,45 @@ void MainWindow::RefreshRelation(){
 //            QMessageBox msgBox;
 //                msgBox.setText(QString::number(i));
 //                msgBox.exec();
-            item->deleteLines(ui->scrollArea->widget());
+            item->refreshLines(ui->scrollArea->widget());
 //            ui->widget_2->layout()->removeWidget(item);
 //            item = new relationWidget(ui->widget_2,allClassWidgets.at(0),allClassWidgets.at(1),item->getType());
         }
     }
 
 
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    QWidget *parent  = ui->scrollArea->widget();
+    interfaceWidget* newInterface = new interfaceWidget(parent);
+    connect(newInterface, SIGNAL(Moved()), this , SLOT(RefreshRelation()));
+    connect(newInterface, SIGNAL(Deleted()), this , SLOT(InterfaceWidgetDeleted()));
+
+    allInterfaceWidgets.push_back(newInterface);
+}
+
+
+void MainWindow::ClassWidgetDeleted(){
+
+    ClassWidget* classWidget = (ClassWidget*)sender();
+    foreach(relationWidget* item, allRelationWidgets){
+        if(item->getFirstClass()== classWidget || item->getSecondClass() == classWidget){
+
+            item->deleteLines();
+            item->deleteLater();
+            allRelationWidgets.removeOne(item);
+        }
+    }
+//    allClassWidgets.removeOne(classWidget);
+//    QMessageBox msgBox;
+//                    msgBox.setText(QString::number(allRelationWidgets.size()));
+//                    msgBox.exec();
+}
+
+void MainWindow::InterfaceWidgetDeleted(){
+    QMessageBox msgBox;
+                    msgBox.setText("Test");
+                    msgBox.exec();
 }

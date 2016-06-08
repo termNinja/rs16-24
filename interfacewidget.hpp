@@ -1,44 +1,31 @@
-#ifndef CLASSWIDGET_HPP
-#define CLASSWIDGET_HPP
+#ifndef INTERFACEWIDGET_H
+#define INTERFACEWIDGET_H
 
-#include <iostream>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QMainWindow>
-#include <QHBoxLayout>
-#include <QListView>
-#include <QStandardItem>
-#include <QPalette>
-#include <QGraphicsItem>
-#include <QMouseEvent>
-#include <QPoint>
-#include <QLabel>
-#include <QInputDialog>
+#include<iostream>
+#include <QLineEdit>
 #include <QListWidget>
-#include <QComboBox>
-#include <QHoverEvent>
 #include <QStackedLayout>
+#include <QWidget>
+#include <QComboBox>
+#include <QLabel>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QStandardItem>
+#include<QHoverEvent>
 #include <cmath>
-#include <moduleCodegen/memberfunction.hpp>
 #include <moduleCodegen/membervariable.hpp>
-#include <moduleCodegen/class.hpp>
+#include <moduleCodegen/memberfunction.hpp>
 #include <moduleCodegen/membervisibility.hpp>
 
 using namespace codegen;
 
-Q_DECLARE_METATYPE(MemberVisibility)
-
-class ClassWidget : public QWidget
+class interfaceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    ClassWidget(QWidget *parent);
-    ~ClassWidget()
-    {};
+    explicit interfaceWidget(QWidget *parent = 0);
+
     QString getName();
-
-    Class getClass();
-
 protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -46,7 +33,7 @@ protected:
     bool insideRect(QPoint mousePos);
     void hoverMove(QHoverEvent * event);
     bool event(QEvent *e);
-    void moveClass(QMouseEvent *e);
+    void moveInterface(QMouseEvent *e);
     QPoint mousePoint;
 
 private slots:
@@ -62,21 +49,16 @@ private slots:
     void deleteWidget();
 
     void ParameterChanged();
-    void lineEditRenameClass();
+    void lineEditRenameInterface();
 
-    void removeConstructorClicked();
-    void addConstructorClicked();
-    void addConstructorParameterClicked();
 private:
 
-    QLineEdit* qleClassName;
+    QLineEdit* qleInterfaceName;
     QListWidget* qlwMembers;
     QListWidget* qlwMethods;
-    QListWidget* qlwConstructors;
 
     QString name;
     QList<MemberVariable> memberVariables;
-    QList<MemberConstructor> memberConstructors;
     QList<MemberFunction> memberFuncions;
 
 
@@ -87,7 +69,6 @@ private:
     int resizePosition;
     void getMemberFunctions();
     void getMemberVariables();
-    void getMemberConstructors();
 
     QWidget *makeCompactWidget();
     QWidget *makeFullSizeWidget();
@@ -99,4 +80,4 @@ signals:
        void Deleted();
 };
 
-#endif // CLASSWIDGET_HPP
+#endif // INTERFACEWIDGET_H

@@ -19,7 +19,15 @@
 #include "relationline.hpp"
 #include <vector>
 #include <iostream>
+#include <QTableView>
+#include <QGraphicsRectItem>
+#include <QGraphicsScene>
+#include <QLayout>
+#include <QLayoutItem>
+#include "moduleAppController/resourcemanager.hpp"
+#include "moduleLangExporter/cpplangexporter.hpp"
 #include "relationwidget.hpp"
+#include "interfacewidget.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -43,6 +51,10 @@ private slots:
     void on_toolBox_currentChanged(int index);
 
     void RefreshRelation();
+    void on_pushButton_11_clicked();
+
+    void ClassWidgetDeleted();
+    void InterfaceWidgetDeleted();
 protected:
     ClassWidget* getClass();
 
@@ -50,6 +62,8 @@ private:
     Ui::MainWindow *ui;
     QList<ClassWidget*> allClassWidgets;
     QList<relationWidget*> allRelationWidgets;
+    QList<interfaceWidget*> allInterfaceWidgets;
+
     QComboBox* qcbFirstClass;
     QComboBox* qcbSecondClass;
     QPushButton* qpbOk;

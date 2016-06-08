@@ -209,7 +209,7 @@ std::vector<QPoint> relationWidget::minDist(std::vector<QPoint> &class1 , std::v
     return returnValue;
 }
 
-void relationWidget::deleteLines(QWidget *parent){
+void relationWidget::refreshLines(QWidget *parent){
     foreach(relationLine* item, m_lines){
         delete item;
     }
@@ -220,4 +220,11 @@ void relationWidget::deleteLines(QWidget *parent){
     std::vector<QPoint> minDistTwoPoints = minDist(pointsOfClass1 , pointsOfClass2);
 
     makeRelation(parent , minDistTwoPoints , m_type , m_firstClass , m_secondClass);
+}
+
+void relationWidget::deleteLines(){
+    foreach(relationLine* item, m_lines){
+        delete item;
+    }
+    m_lines.clear();
 }
